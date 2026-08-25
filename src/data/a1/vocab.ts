@@ -148,6 +148,24 @@ export const pluralSentences: OrderSentence[] = [
   { chunks: ["Türen", "die", "sind", "offen"], answer: ["die", "Türen", "sind", "offen"], meaning: { pt: "as portas estão abertas", en: "the doors are open" } },
 ];
 
+// ---- Capítulo 7: Nominativ, Akkusativ & Dativ ----
+export interface CaseNoun { de: string; meaning: Record<Lang, string>; nom: string; akk: string; dat: string; }
+export const caseNouns: CaseNoun[] = [
+  { de: "Mann", meaning: { pt: "homem", en: "man" }, nom: "der Mann", akk: "den Mann", dat: "dem Mann" },
+  { de: "Frau", meaning: { pt: "mulher", en: "woman" }, nom: "die Frau", akk: "die Frau", dat: "der Frau" },
+  { de: "Kind", meaning: { pt: "criança", en: "child" }, nom: "das Kind", akk: "das Kind", dat: "dem Kind" },
+  { de: "Hund", meaning: { pt: "cachorro", en: "dog" }, nom: "der Hund", akk: "den Hund", dat: "dem Hund" },
+  { de: "Tasche", meaning: { pt: "bolsa", en: "bag" }, nom: "die Tasche", akk: "die Tasche", dat: "der Tasche" },
+  { de: "Buch", meaning: { pt: "livro", en: "book" }, nom: "das Buch", akk: "das Buch", dat: "dem Buch" },
+];
+
+export const caseSentences: OrderSentence[] = [
+  { chunks: ["einen", "ich", "habe", "Hund"], answer: ["ich", "habe", "einen", "Hund"], meaning: { pt: "eu tenho um cachorro", en: "I have a dog" } },
+  { chunks: ["dem", "ich", "helfe", "Mann"], answer: ["ich", "helfe", "dem", "Mann"], meaning: { pt: "eu ajudo o homem", en: "I help the man" } },
+  { chunks: ["der", "gehört", "Frau", "das Buch"], answer: ["das Buch", "gehört", "der", "Frau"], meaning: { pt: "o livro pertence à mulher", en: "the book belongs to the woman" } },
+  { chunks: ["nehme", "ich", "die", "Tasche"], answer: ["ich", "nehme", "die", "Tasche"], meaning: { pt: "eu pego a bolsa", en: "I take the bag" } },
+];
+
 // ---- Capítulo 5: verbos modais ----
 export const modalVerbs: Verb[] = [
   { inf: "können", meaning: { pt: "poder / conseguir", en: "can / to be able to" }, forms: { ich: "kann", du: "kannst", er: "kann", wir: "können", ihr: "könnt", sie: "können" } },

@@ -1,6 +1,6 @@
 import type { Lang } from "../../i18n/types";
 import type { TopicMeta } from "../topics";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS } from "./exercises";
 
 interface TopicMetaI18n { id: string; icon: string; name: Record<Lang, string>; cardTitle: Record<Lang, string>; explanationHTML: Record<Lang, string>; }
 
@@ -61,6 +61,15 @@ const TOPICS_I18N: TopicMetaI18n[] = [
     explanationHTML: {
       pt: "<p>Revisão do der/die/das + os padrões de formação do plural (sempre com artigo die).</p>",
       en: "<p>Review of der/die/das + the patterns for forming the plural (always with the article die).</p>",
+    },
+  },
+  {
+    id: CH_CASOS, icon: "📐",
+    name: { pt: "Casos: Nom, Akk & Dativ", en: "Cases: Nom, Akk & Dativ" },
+    cardTitle: { pt: "📖 Nominativ, Akkusativ, Dativ", en: "📖 Nominative, Accusative, Dative" },
+    explanationHTML: {
+      pt: "<p>Como o artigo muda conforme a função do substantivo na frase: sujeito, objeto direto e objeto indireto.</p>",
+      en: "<p>How the article changes depending on the noun's role in the sentence: subject, direct object, and indirect object.</p>",
     },
   },
 ];

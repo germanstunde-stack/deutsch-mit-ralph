@@ -4,7 +4,7 @@
 // mesmo estilo do A0 (regra curta + exemplo + erros comuns de quem já fala
 // português/inglês).
 import type { Lang } from "../../i18n/types";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS } from "./exercises";
 
 const explanationsPT: Record<string, string> = {
   [CH_EU_VOCE_SEIN]:
@@ -100,6 +100,19 @@ const explanationsPT: Record<string, string> = {
     '<tr><td>+ -s (palavras estrangeiras)</td><td><span class="de" data-say="das Auto">das Auto</span> → <span class="de" data-say="die Autos">die Autos</span></td></tr></table>' +
     '<h3>⚠️ A regra que NUNCA falha</h3><p>Não importa se era der/die/das no singular — <b>no plural o artigo é sempre <span class="de" data-say="die">die</span></b>.</p>' +
     '<h3>💡 Dica de estudo</h3><p>Sempre que aprender uma palavra nova, aprenda junto: <b>artigo + palavra + plural</b> — ex.: <span class="de" data-say="das Buch, die Bücher">das Buch, die Bücher</span>. Os dicionários bons sempre mostram o plural do lado.</p>',
+
+  [CH_CASOS]:
+    '<h3>3 casos, mesmo substantivo</h3><p>O <b>artigo</b> muda conforme a função da palavra na frase — a palavra em si não muda.</p>' +
+    '<table class="br"><tr><td></td><td>Nominativ (sujeito)</td><td>Akkusativ (objeto direto)</td><td>Dativ (objeto indireto)</td></tr>' +
+    '<tr><td>masculino</td><td><span class="de" data-say="der Mann">der Mann</span></td><td><span class="de" data-say="den Mann">den Mann</span></td><td><span class="de" data-say="dem Mann">dem Mann</span></td></tr>' +
+    '<tr><td>feminino</td><td><span class="de" data-say="die Frau">die Frau</span></td><td><span class="de" data-say="die Frau">die Frau</span></td><td><span class="de" data-say="der Frau">der Frau</span></td></tr>' +
+    '<tr><td>neutro</td><td><span class="de" data-say="das Kind">das Kind</span></td><td><span class="de" data-say="das Kind">das Kind</span></td><td><span class="de" data-say="dem Kind">dem Kind</span></td></tr></table>' +
+    '<h3>⚠️ A única mudança do Akkusativ</h3><p>Só o <b class="de">der</b> masculino muda (→ <b class="de">den</b>); die e das ficam iguais ao Nominativ. Indefinido: <b class="de">ein</b> → <b class="de">einen</b>.</p>' +
+    '<h3>Quem usa cada caso?</h3><ul>' +
+    '<li><b>Nominativ</b>: o sujeito da frase (quem faz a ação).</li>' +
+    '<li><b>Akkusativ</b>: o objeto direto — verbos como <span class="de" data-say="haben">haben</span>, <span class="de" data-say="nehmen">nehmen</span> (pegar), <span class="de" data-say="möchten">möchten</span>: <span class="de" data-say="Ich habe einen Hund">Ich habe einen Hund.</span></li>' +
+    '<li><b>Dativ</b>: o objeto indireto — verbos como <span class="de" data-say="helfen">helfen</span> (ajudar), <span class="de" data-say="gehören">gehören</span> (pertencer), <span class="de" data-say="gefallen">gefallen</span> (agradar): <span class="de" data-say="Ich helfe dem Mann">Ich helfe dem Mann.</span></li></ul>' +
+    '<h3>💡 Dica</h3><p>O Dativ do feminino (<b class="de">der</b> Frau) parece com o Nominativ masculino (<b class="de">der</b> Mann) — mas são coisas diferentes! Preste atenção no substantivo pra saber qual é.</p>',
 };
 
 const explanationsEN: Record<string, string> = {
@@ -196,6 +209,19 @@ const explanationsEN: Record<string, string> = {
     '<tr><td>+ -s (foreign words)</td><td><span class="de" data-say="das Auto">das Auto</span> → <span class="de" data-say="die Autos">die Autos</span></td></tr></table>' +
     '<h3>⚠️ The rule that never fails</h3><p>No matter if it was der/die/das in the singular — <b>the plural article is always <span class="de" data-say="die">die</span></b>.</p>' +
     '<h3>💡 Study tip</h3><p>Whenever you learn a new word, learn it together with: <b>article + word + plural</b> — e.g., <span class="de" data-say="das Buch, die Bücher">das Buch, die Bücher</span>. Good dictionaries always show the plural right next to it.</p>',
+
+  [CH_CASOS]:
+    '<h3>3 cases, same noun</h3><p>The <b>article</b> changes depending on the word’s role in the sentence — the word itself does not change.</p>' +
+    '<table class="br"><tr><td></td><td>Nominative (subject)</td><td>Accusative (direct object)</td><td>Dative (indirect object)</td></tr>' +
+    '<tr><td>masculine</td><td><span class="de" data-say="der Mann">der Mann</span></td><td><span class="de" data-say="den Mann">den Mann</span></td><td><span class="de" data-say="dem Mann">dem Mann</span></td></tr>' +
+    '<tr><td>feminine</td><td><span class="de" data-say="die Frau">die Frau</span></td><td><span class="de" data-say="die Frau">die Frau</span></td><td><span class="de" data-say="der Frau">der Frau</span></td></tr>' +
+    '<tr><td>neuter</td><td><span class="de" data-say="das Kind">das Kind</span></td><td><span class="de" data-say="das Kind">das Kind</span></td><td><span class="de" data-say="dem Kind">dem Kind</span></td></tr></table>' +
+    '<h3>⚠️ The only Accusative change</h3><p>Only masculine <b class="de">der</b> changes (→ <b class="de">den</b>); die and das stay the same as the Nominative. Indefinite: <b class="de">ein</b> → <b class="de">einen</b>.</p>' +
+    '<h3>Who uses each case?</h3><ul>' +
+    '<li><b>Nominative</b>: the subject of the sentence (who does the action).</li>' +
+    '<li><b>Accusative</b>: the direct object — verbs like <span class="de" data-say="haben">haben</span>, <span class="de" data-say="nehmen">nehmen</span> (to take), <span class="de" data-say="möchten">möchten</span>: <span class="de" data-say="Ich habe einen Hund">Ich habe einen Hund.</span></li>' +
+    '<li><b>Dative</b>: the indirect object — verbs like <span class="de" data-say="helfen">helfen</span> (to help), <span class="de" data-say="gehören">gehören</span> (to belong to), <span class="de" data-say="gefallen">gefallen</span> (to please): <span class="de" data-say="Ich helfe dem Mann">Ich helfe dem Mann.</span></li></ul>' +
+    '<h3>💡 Tip</h3><p>The feminine Dative (<b class="de">der</b> Frau) looks like the masculine Nominative (<b class="de">der</b> Mann) — but they are different things! Pay attention to the noun itself to know which one it is.</p>',
 };
 
 export function explanationsFor(lang: Lang): Record<string, string> {

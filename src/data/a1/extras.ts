@@ -1,7 +1,7 @@
 import type { Lang } from "../../i18n/types";
 import type { Profile } from "../../auth/AuthProvider";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL } from "./exercises";
-import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural } from "./vocab";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS } from "./exercises";
+import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural, caseNouns } from "./vocab";
 
 export interface Flash { de: string; pt: string; emo: string; }
 
@@ -43,6 +43,12 @@ const sentencesPT: Record<string, [string, string][]> = {
     ["Sie hat drei Kinder.", "Ela tem três filhos."],
     ["Die Türen sind offen.", "As portas estão abertas."],
   ],
+  [CH_CASOS]: [
+    ["Ich habe einen Hund.", "Eu tenho um cachorro."],
+    ["Ich helfe dem Mann.", "Eu ajudo o homem."],
+    ["Das Buch gehört der Frau.", "O livro pertence à mulher."],
+    ["Ich nehme die Tasche.", "Eu pego a bolsa."],
+  ],
 };
 const sentencesEN: Record<string, [string, string][]> = {
   [CH_EU_VOCE_SEIN]: [
@@ -81,6 +87,12 @@ const sentencesEN: Record<string, [string, string][]> = {
     ["Die Äpfel sind frisch.", "The apples are fresh."],
     ["Sie hat drei Kinder.", "She has three children."],
     ["Die Türen sind offen.", "The doors are open."],
+  ],
+  [CH_CASOS]: [
+    ["Ich habe einen Hund.", "I have a dog."],
+    ["Ich helfe dem Mann.", "I help the man."],
+    ["Das Buch gehört der Frau.", "The book belongs to the woman."],
+    ["Ich nehme die Tasche.", "I take the bag."],
   ],
 };
 
@@ -128,6 +140,9 @@ export function deckForTopic(id: string, lang: Lang): Flash[] {
   }
   if (id === CH_GENERO_PLURAL) {
     return nounsPlural.map((n) => ({ de: `${n.art} ${n.de} → die ${n.plural}`, pt: n.meaning[lang], emo: "🔢" }));
+  }
+  if (id === CH_CASOS) {
+    return caseNouns.map((n) => ({ de: `${n.nom} / ${n.akk} / ${n.dat}`, pt: n.meaning[lang], emo: "📐" }));
   }
   return [];
 }

@@ -8,6 +8,7 @@ import {
   perfektHabenRegular, perfektHabenIrregular, perfektSein, perfektSentences,
   modalVerbs, modalSentences,
   nounsPlural, pluralSentences,
+  caseNouns, caseSentences,
   type Verb, type OrderSentence,
 } from "./vocab";
 
@@ -243,3 +244,49 @@ export function gTypePlural(lang: Lang): TypedQ {
 }
 
 export const gOrderPlural = (lang: Lang): OrderData => gOrder(lang, pluralSentences);
+
+/* ---------- capítulo 7: Nominativ, Akkusativ & Dativ ---------- */
+type CaseKey = "nom" | "akk" | "dat";
+const CASE_KEYS: CaseKey[] = ["nom", "akk", "dat"];
+const CASE_LABEL = {
+  pt: { nom: "nominativo", akk: "acusativo", dat: "dativo" },
+  en: { nom: "nominative", akk: "accusative", dat: "dative" },
+} as const;
+
+export function gCaseNounMeaning(lang: Lang): Question {
+  const n = rand(caseNouns);
+  const opts = sample(caseNouns, 3, n).map((o) => ({ label: o.meaning[lang], correct: false }));
+  opts.push({ label: n.meaning[lang], correct: true });
+  const prompt = lang === "pt" ? `O que significa <span class="big">${n.nom}</span>?` : `What does <span class="big">${n.nom}</span> mean?`;
+  return q({ promptHTML: prompt, speak: n.nom, options: shuffle(opts), word: n.de, wordpt: n.meaning.pt });
+}
+
+export function gCaseMC(lang: Lang): Question {
+  const n = rand(caseNouns);
+  const c = rand(CASE_KEYS);
+  const correct = n[c];
+  const wrongPool = CASE_KEYS.filter((k) => k !== c).map((k) => n[k]);
+  const wrong = [...new Set(wrongPool)].filter((f) => f !== correct);
+  while (wrong.length < 3) {
+    const other = rand(caseNouns.filter((o) => o.de !== n.de));
+    const candidate = other[c];
+    if (candidate !== correct && !wrong.includes(candidate)) wrong.push(candidate);
+  }
+  const opts = wrong.slice(0, 3).map((f) => ({ label: f, correct: false }));
+  opts.push({ label: correct, correct: true });
+  const prompt = lang === "pt"
+    ? `Qual é o <span class="k">${CASE_LABEL.pt[c]}</span> de <span class="big">${n.de}</span> (${n.meaning.pt})?`
+    : `What's the <span class="k">${CASE_LABEL.en[c]}</span> of <span class="big">${n.de}</span> (${n.meaning.en})?`;
+  return q({ promptHTML: prompt, speak: correct, options: shuffle(opts), word: correct, wordpt: n.de });
+}
+
+export function gTypeCaseForm(lang: Lang): TypedQ {
+  const n = rand(caseNouns);
+  const c = rand(CASE_KEYS);
+  const prompt = lang === "pt"
+    ? `Escreva o <span class="k">${CASE_LABEL.pt[c]}</span> de <span class="big">${n.de}</span> (${n.meaning.pt}):`
+    : `Write the <span class="k">${CASE_LABEL.en[c]}</span> of <span class="big">${n.de}</span> (${n.meaning.en}):`;
+  return { promptHTML: prompt, answer: n[c], speak: n[c], word: n[c], wordpt: n.de };
+}
+
+export const gOrderCase = (lang: Lang): OrderData => gOrder(lang, caseSentences);
