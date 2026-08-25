@@ -12,6 +12,7 @@ import {
   gPronCaseMC, gTypePronCase, gIndefMeaning, gOrderPronoun,
   gPossMeaning, gPossMC, gTypePoss, gArticleUsage, gOrderArticle,
   gPrepMeaning, gPrepCategoryMC, gPrepFillMC, gTypePrep, gOrderPrep,
+  gQWMeaning, gQWFillMC, gTypeQW, gYesNoMC, gNegationMC, gConnectorMeaning, gOrderQuestion,
 } from "./generators";
 
 export const CH_EU_VOCE_SEIN = "eu-voce-sein";
@@ -24,11 +25,11 @@ export const CH_CASOS = "nominativ-akkusativ-dativ";
 export const CH_PRONOMES = "pronomes-indefinidos";
 export const CH_ARTIGOS = "artigos-possessivos";
 export const CH_PREPOSICOES = "preposicoes";
+export const CH_PERGUNTAS = "perguntas-ordem-frase";
 
-// Ordem oficial das unidades do "Grammatik leicht A1": cada id aqui vira um
-// capítulo (20 pts na prática, igual ao A0). Os outros entram nas próximas
-// entregas.
-export const CHAPTER_IDS = [CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES];
+// Ordem oficial das unidades do "Grammatik leicht A1": os 11 capítulos do
+// módulo A1 completo.
+export const CHAPTER_IDS = [CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES, CH_PERGUNTAS];
 
 function specsForChapter(id: string, lang: Lang): ExSpec[] {
   switch (id) {
@@ -111,6 +112,16 @@ function specsForChapter(id: string, lang: Lang): ExSpec[] {
         { kind: "mc", gen: () => gPrepFillMC(lang) },
         { kind: "typed", gen: () => gTypePrep(lang) },
         { kind: "order", gen: () => gOrderPrep(lang) },
+      ];
+    case CH_PERGUNTAS:
+      return [
+        { kind: "mc", gen: () => gQWMeaning(lang) },
+        { kind: "mc", gen: () => gQWFillMC(lang) },
+        { kind: "typed", gen: () => gTypeQW(lang) },
+        { kind: "mc", gen: () => gYesNoMC(lang) },
+        { kind: "mc", gen: () => gNegationMC(lang) },
+        { kind: "mc", gen: () => gConnectorMeaning(lang) },
+        { kind: "order", gen: () => gOrderQuestion(lang) },
       ];
     default:
       return [{ kind: "mc", gen: () => gPronounMeaning(lang) }];

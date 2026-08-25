@@ -4,7 +4,7 @@
 // mesmo estilo do A0 (regra curta + exemplo + erros comuns de quem já fala
 // português/inglês).
 import type { Lang } from "../../i18n/types";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES, CH_PERGUNTAS } from "./exercises";
 
 const explanationsPT: Record<string, string> = {
   [CH_EU_VOCE_SEIN]:
@@ -165,6 +165,22 @@ const explanationsPT: Record<string, string> = {
     '<tr><td>bei + dem</td><td><span class="de" data-say="beim">beim</span></td></tr>' +
     '<tr><td>zu + dem</td><td><span class="de" data-say="zum">zum</span></td></tr></table>' +
     '<p>Todas essas preposições de lugar/tempo/modo pedem <b>Dativ</b> (por isso o artigo vira <span class="de">dem</span>/<span class="de">der</span>) — só "in"/"auf" quando indicam movimento (pra onde?) pedem <b>Akkusativ</b>.</p>',
+
+  [CH_PERGUNTAS]:
+    '<h3>W-Fragen (perguntas abertas)</h3><p>Começam com uma palavra interrogativa + verbo na 2ª posição:</p>' +
+    '<table class="br"><tr><td><span class="de" data-say="wer">wer</span></td><td>quem</td></tr>' +
+    '<tr><td><span class="de" data-say="was">was</span></td><td>o quê</td></tr>' +
+    '<tr><td><span class="de" data-say="wo">wo</span></td><td>onde</td></tr>' +
+    '<tr><td><span class="de" data-say="wann">wann</span></td><td>quando</td></tr>' +
+    '<tr><td><span class="de" data-say="warum">warum</span></td><td>por quê</td></tr>' +
+    '<tr><td><span class="de" data-say="wie">wie</span></td><td>como</td></tr>' +
+    '<tr><td><span class="de" data-say="woher">woher</span></td><td>de onde</td></tr></table>' +
+    '<p><span class="de" data-say="Wie heißt du">Wie heißt du?</span> — <b>wie</b> (posição 1), <b>heißt</b> (posição 2, o verbo), <b>du</b> (sujeito).</p>' +
+    '<h3>Ja-/Nein-Fragen (perguntas fechadas)</h3><p>Sem palavra interrogativa — o <b>verbo vai pro início</b> da frase: <span class="de" data-say="Er kommt">Er kommt.</span> → <span class="de" data-say="Kommt er">Kommt er?</span> (ele vem → ele vem?)</p>' +
+    '<h3>📐 Regra de ouro: o verbo sempre na posição 2</h3><p>Já vimos isso com <b class="de">sein</b>, <b class="de">haben</b>, modais, Perfekt e separáveis. Vale pra frase inteira: se outra coisa (não o sujeito) for pra posição 1, o <b>sujeito pula pra depois do verbo</b>: <span class="de" data-say="Morgen kommt er">Morgen kommt er.</span> (amanhã ele vem — não “morgen er kommt”).</p>' +
+    '<h3>Negação com <span class="de">nicht</span></h3><p><b class="de">nicht</b> nega o verbo/a frase toda; <b class="de">kein</b> nega um substantivo com <b class="de">ein</b> (visto no capítulo de artigos). <span class="de" data-say="Ich komme nicht">Ich komme nicht.</span> (eu não venho) × <span class="de" data-say="Das ist kein Auto">Das ist kein Auto.</span> (não é um carro).</p>' +
+    '<h3>Conectores: und, oder, aber, denn</h3><p>Ligam duas frases <b>sem mudar a ordem</b> de nenhuma delas (o verbo continua na posição 2 em cada uma):</p>' +
+    '<p><span class="de" data-say="und">und</span> (e), <span class="de" data-say="oder">oder</span> (ou), <span class="de" data-say="aber">aber</span> (mas), <span class="de" data-say="denn">denn</span> (porque/pois): <span class="de" data-say="Ich bin müde, aber ich arbeite">Ich bin müde, aber ich arbeite.</span></p>',
 };
 
 const explanationsEN: Record<string, string> = {
@@ -326,6 +342,22 @@ const explanationsEN: Record<string, string> = {
     '<tr><td>bei + dem</td><td><span class="de" data-say="beim">beim</span></td></tr>' +
     '<tr><td>zu + dem</td><td><span class="de" data-say="zum">zum</span></td></tr></table>' +
     '<p>All these place/time/manner prepositions take the <b>Dative</b> (that\'s why the article becomes <span class="de">dem</span>/<span class="de">der</span>) — only "in"/"auf" indicating movement (where to?) take the <b>Accusative</b>.</p>',
+
+  [CH_PERGUNTAS]:
+    '<h3>W-Fragen (open questions)</h3><p>Start with a question word + verb in 2nd position:</p>' +
+    '<table class="br"><tr><td><span class="de" data-say="wer">wer</span></td><td>who</td></tr>' +
+    '<tr><td><span class="de" data-say="was">was</span></td><td>what</td></tr>' +
+    '<tr><td><span class="de" data-say="wo">wo</span></td><td>where</td></tr>' +
+    '<tr><td><span class="de" data-say="wann">wann</span></td><td>when</td></tr>' +
+    '<tr><td><span class="de" data-say="warum">warum</span></td><td>why</td></tr>' +
+    '<tr><td><span class="de" data-say="wie">wie</span></td><td>how</td></tr>' +
+    '<tr><td><span class="de" data-say="woher">woher</span></td><td>where from</td></tr></table>' +
+    '<p><span class="de" data-say="Wie heißt du">Wie heißt du?</span> — <b>wie</b> (position 1), <b>heißt</b> (position 2, the verb), <b>du</b> (subject).</p>' +
+    '<h3>Ja-/Nein-Fragen (closed questions)</h3><p>No question word — the <b>verb moves to the front</b> of the sentence: <span class="de" data-say="Er kommt">Er kommt.</span> → <span class="de" data-say="Kommt er">Kommt er?</span> (he is coming → is he coming?)</p>' +
+    '<h3>📐 Golden rule: the verb is always in position 2</h3><p>We already saw this with <b class="de">sein</b>, <b class="de">haben</b>, modals, Perfekt and separable verbs. It holds for every sentence: if something other than the subject takes position 1, the <b>subject jumps after the verb</b>: <span class="de" data-say="Morgen kommt er">Morgen kommt er.</span> (tomorrow he is coming — not "morgen er kommt").</p>' +
+    '<h3>Negation with <span class="de">nicht</span></h3><p><b class="de">nicht</b> negates the verb/the whole sentence; <b class="de">kein</b> negates a noun that has <b class="de">ein</b> (seen in the articles chapter). <span class="de" data-say="Ich komme nicht">Ich komme nicht.</span> (I am not coming) vs <span class="de" data-say="Das ist kein Auto">Das ist kein Auto.</span> (it is not a car).</p>' +
+    '<h3>Connectors: und, oder, aber, denn</h3><p>They join two sentences <b>without changing the word order</b> of either one (the verb stays in position 2 in each):</p>' +
+    '<p><span class="de" data-say="und">und</span> (and), <span class="de" data-say="oder">oder</span> (or), <span class="de" data-say="aber">aber</span> (but), <span class="de" data-say="denn">denn</span> (because/for): <span class="de" data-say="Ich bin müde, aber ich arbeite">Ich bin müde, aber ich arbeite.</span></p>',
 };
 
 export function explanationsFor(lang: Lang): Record<string, string> {

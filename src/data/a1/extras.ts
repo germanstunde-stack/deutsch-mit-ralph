@@ -1,7 +1,7 @@
 import type { Lang } from "../../i18n/types";
 import type { Profile } from "../../auth/AuthProvider";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES } from "./exercises";
-import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural, caseNouns, personalPronouns, indefPronouns, possessives, prepositions } from "./vocab";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES, CH_PERGUNTAS } from "./exercises";
+import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural, caseNouns, personalPronouns, indefPronouns, possessives, prepositions, questionWords, connectors } from "./vocab";
 
 export interface Flash { de: string; pt: string; emo: string; }
 
@@ -67,6 +67,12 @@ const sentencesPT: Record<string, [string, string][]> = {
     ["Ich fahre mit dem Auto.", "Eu vou de carro."],
     ["Am Wochenende schlafe ich lange.", "No fim de semana eu durmo até tarde."],
   ],
+  [CH_PERGUNTAS]: [
+    ["Wie heißt du?", "Como você se chama?"],
+    ["Woher kommst du?", "De onde você vem?"],
+    ["Ich komme nicht, denn ich bin krank.", "Eu não venho, porque estou doente."],
+    ["Möchtest du Kaffee oder Tee?", "Você quer café ou chá?"],
+  ],
 };
 const sentencesEN: Record<string, [string, string][]> = {
   [CH_EU_VOCE_SEIN]: [
@@ -130,6 +136,12 @@ const sentencesEN: Record<string, [string, string][]> = {
     ["Ich fahre mit dem Auto.", "I go by car."],
     ["Am Wochenende schlafe ich lange.", "On the weekend I sleep in."],
   ],
+  [CH_PERGUNTAS]: [
+    ["Wie heißt du?", "What is your name?"],
+    ["Woher kommst du?", "Where are you from?"],
+    ["Ich komme nicht, denn ich bin krank.", "I am not coming, because I am sick."],
+    ["Möchtest du Kaffee oder Tee?", "Do you want coffee or tea?"],
+  ],
 };
 
 // Personaliza a 1ª frase do capítulo com o apelido do usuário logado, igual
@@ -191,6 +203,12 @@ export function deckForTopic(id: string, lang: Lang): Flash[] {
   }
   if (id === CH_PREPOSICOES) {
     return prepositions.map((p) => ({ de: `${p.de} — ${p.example}`, pt: p.meaning[lang], emo: "🧭" }));
+  }
+  if (id === CH_PERGUNTAS) {
+    return [
+      ...questionWords.map((w) => ({ de: w.de, pt: w.meaning[lang], emo: "❓" })),
+      ...connectors.map((c) => ({ de: c.de, pt: c.meaning[lang], emo: "🔗" })),
+    ];
   }
   return [];
 }

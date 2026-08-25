@@ -257,6 +257,46 @@ export const prepSentences: OrderSentence[] = [
   { chunks: ["Tisch", "Buch", "ist", "das", "auf", "dem"], answer: ["das", "Buch", "ist", "auf", "dem", "Tisch"], meaning: { pt: "o livro está em cima da mesa", en: "the book is on the table" } },
 ];
 
+// ---- Capítulo 11: perguntas & ordem da frase ----
+export interface QuestionWord { de: string; meaning: Record<Lang, string>; example: string; exampleMeaning: Record<Lang, string>; }
+export const questionWords: QuestionWord[] = [
+  { de: "wer", meaning: { pt: "quem", en: "who" }, example: "Wer bist du?", exampleMeaning: { pt: "quem é você?", en: "who are you?" } },
+  { de: "was", meaning: { pt: "o quê", en: "what" }, example: "Was machst du?", exampleMeaning: { pt: "o que você faz?", en: "what do you do?" } },
+  { de: "wo", meaning: { pt: "onde", en: "where" }, example: "Wo wohnst du?", exampleMeaning: { pt: "onde você mora?", en: "where do you live?" } },
+  { de: "wann", meaning: { pt: "quando", en: "when" }, example: "Wann kommst du?", exampleMeaning: { pt: "quando você vem?", en: "when are you coming?" } },
+  { de: "warum", meaning: { pt: "por quê", en: "why" }, example: "Warum lernst du Deutsch?", exampleMeaning: { pt: "por que você aprende alemão?", en: "why are you learning German?" } },
+  { de: "wie", meaning: { pt: "como", en: "how" }, example: "Wie heißt du?", exampleMeaning: { pt: "qual é o seu nome?", en: "what is your name?" } },
+  { de: "woher", meaning: { pt: "de onde", en: "where from" }, example: "Woher kommst du?", exampleMeaning: { pt: "de onde você vem?", en: "where are you from?" } },
+];
+
+export interface TransformCase { promptHTML: Record<Lang, string>; speak: string; options: string[]; correct: string; word: string; }
+export const yesNoCases: TransformCase[] = [
+  { promptHTML: { pt: 'Qual é a pergunta sim/não de: <span class="big">Er kommt.</span>', en: 'What is the yes/no question for: <span class="big">Er kommt.</span>' }, speak: "Kommt er?", options: ["Kommt er?", "Er kommt?", "Wer kommt?"], correct: "Kommt er?", word: "Kommt er?" },
+  { promptHTML: { pt: 'Qual é a pergunta sim/não de: <span class="big">Du sprichst Deutsch.</span>', en: 'What is the yes/no question for: <span class="big">Du sprichst Deutsch.</span>' }, speak: "Sprichst du Deutsch?", options: ["Sprichst du Deutsch?", "Du sprichst Deutsch?", "Was sprichst du?"], correct: "Sprichst du Deutsch?", word: "Sprichst du Deutsch?" },
+  { promptHTML: { pt: 'Qual é a pergunta sim/não de: <span class="big">Sie ist müde.</span>', en: 'What is the yes/no question for: <span class="big">Sie ist müde.</span>' }, speak: "Ist sie müde?", options: ["Ist sie müde?", "Sie ist müde?", "Wie ist sie?"], correct: "Ist sie müde?", word: "Ist sie müde?" },
+];
+
+export const negationCases: TransformCase[] = [
+  { promptHTML: { pt: 'Complete a negação: <span class="big">Ich komme ___.</span> (eu não venho)', en: 'Complete the negation: <span class="big">Ich komme ___.</span> (I am not coming)' }, speak: "Ich komme nicht.", options: ["nicht", "kein", "keine"], correct: "nicht", word: "nicht" },
+  { promptHTML: { pt: 'Complete a negação: <span class="big">Er ist ___ hier.</span> (ele não está aqui)', en: 'Complete the negation: <span class="big">Er ist ___ hier.</span> (he is not here)' }, speak: "Er ist nicht hier.", options: ["nicht", "kein", "keine"], correct: "nicht", word: "nicht" },
+  { promptHTML: { pt: 'Complete: <span class="big">Das ist ___ Auto.</span> (nega "ein Auto", não é UM carro)', en: 'Complete: <span class="big">Das ist ___ Auto.</span> (negates "ein Auto", not A car)' }, speak: "Das ist kein Auto.", options: ["kein", "nicht", "keine"], correct: "kein", word: "kein" },
+];
+
+export interface Connector { de: string; meaning: Record<Lang, string>; example: string; exampleMeaning: Record<Lang, string>; }
+export const connectors: Connector[] = [
+  { de: "und", meaning: { pt: "e", en: "and" }, example: "Ich lerne Deutsch und Englisch.", exampleMeaning: { pt: "eu aprendo alemão e inglês", en: "I learn German and English" } },
+  { de: "oder", meaning: { pt: "ou", en: "or" }, example: "Möchtest du Kaffee oder Tee?", exampleMeaning: { pt: "você quer café ou chá?", en: "do you want coffee or tea?" } },
+  { de: "aber", meaning: { pt: "mas", en: "but" }, example: "Ich bin müde, aber ich arbeite.", exampleMeaning: { pt: "eu estou cansado, mas eu trabalho", en: "I am tired, but I work" } },
+  { de: "denn", meaning: { pt: "porque / pois", en: "because / for" }, example: "Ich bleibe zu Hause, denn ich bin krank.", exampleMeaning: { pt: "eu fico em casa, porque estou doente", en: "I stay home, because I am sick" } },
+];
+
+export const questionSentences: OrderSentence[] = [
+  { chunks: ["heißt", "du", "wie"], answer: ["wie", "heißt", "du"], meaning: { pt: "como você se chama", en: "what is your name" } },
+  { chunks: ["kommst", "du", "woher"], answer: ["woher", "kommst", "du"], meaning: { pt: "de onde você vem", en: "where do you come from" } },
+  { chunks: ["kommt", "morgen", "er"], answer: ["morgen", "kommt", "er"], meaning: { pt: "amanhã ele vem", en: "tomorrow he is coming" } },
+  { chunks: ["nicht", "ich", "komme"], answer: ["ich", "komme", "nicht"], meaning: { pt: "eu não venho", en: "I am not coming" } },
+];
+
 // ---- Capítulo 5: verbos modais ----
 export const modalVerbs: Verb[] = [
   { inf: "können", meaning: { pt: "poder / conseguir", en: "can / to be able to" }, forms: { ich: "kann", du: "kannst", er: "kann", wir: "können", ihr: "könnt", sie: "können" } },

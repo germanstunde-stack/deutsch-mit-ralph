@@ -1,7 +1,7 @@
 import type { Lang } from "../../i18n/types";
 import type { CardItem } from "../../components/Cards";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES } from "./exercises";
-import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural, caseNouns, personalPronouns, indefPronouns, possessives, possessiveNouns, prepositions, type Verb, type PerfektVerb } from "./vocab";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES, CH_PERGUNTAS } from "./exercises";
+import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural, caseNouns, personalPronouns, indefPronouns, possessives, possessiveNouns, prepositions, questionWords, connectors, type Verb, type PerfektVerb } from "./vocab";
 
 export interface CardsData { items: CardItem[]; gridClass: string; legend?: boolean; }
 
@@ -73,6 +73,12 @@ function prepCards(lang: Lang): CardItem[] {
     pt: `${p.meaning[lang]} — ${p.exampleMeaning[lang]}`, speak: p.example,
   }));
 }
+function questionCards(lang: Lang): CardItem[] {
+  return [
+    ...questionWords.map((w) => ({ deHTML: `<b>${w.de}</b><br><small>${w.example}</small>`, pt: w.meaning[lang], speak: w.example })),
+    ...connectors.map((c) => ({ deHTML: `<b>${c.de}</b><br><small>${c.example}</small>`, pt: c.meaning[lang], speak: c.example })),
+  ];
+}
 function perfektCards(pool: PerfektVerb[], lang: Lang): CardItem[] {
   return pool.map((v) => ({
     deHTML: `${v.inf} → <b>${v.partizip}</b><br><small>${v.auxiliary}</small>`,
@@ -110,6 +116,9 @@ export function cardsForTopic(id: string, lang: Lang): CardsData {
   }
   if (id === CH_PREPOSICOES) {
     return { gridClass: "grid", items: prepCards(lang) };
+  }
+  if (id === CH_PERGUNTAS) {
+    return { gridClass: "grid", items: questionCards(lang) };
   }
   return { gridClass: "grid", items: [] };
 }

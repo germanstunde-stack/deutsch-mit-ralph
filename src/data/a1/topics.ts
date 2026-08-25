@@ -1,6 +1,6 @@
 import type { Lang } from "../../i18n/types";
 import type { TopicMeta } from "../topics";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES, CH_PERGUNTAS } from "./exercises";
 
 interface TopicMetaI18n { id: string; icon: string; name: Record<Lang, string>; cardTitle: Record<Lang, string>; explanationHTML: Record<Lang, string>; }
 
@@ -97,6 +97,15 @@ const TOPICS_I18N: TopicMetaI18n[] = [
     explanationHTML: {
       pt: "<p>Preposições de lugar (aus, in, auf, bei, zu), tempo (um, am, im, vor, nach) e modo (mit).</p>",
       en: "<p>Prepositions of place (aus, in, auf, bei, zu), time (um, am, im, vor, nach) and manner (mit).</p>",
+    },
+  },
+  {
+    id: CH_PERGUNTAS, icon: "❓",
+    name: { pt: "Perguntas & ordem da frase", en: "Questions & word order" },
+    cardTitle: { pt: "📖 Fragen & Satzstellung", en: "📖 Questions & sentence order" },
+    explanationHTML: {
+      pt: "<p>W-Fragen, perguntas sim/não (verbo no início), negação com nicht, e os conectores und/oder/aber/denn. Fecha o A1!</p>",
+      en: "<p>W-questions, yes/no questions (verb at the start), negation with nicht, and the connectors und/oder/aber/denn. Wraps up A1!</p>",
     },
   },
 ];

@@ -12,6 +12,7 @@ import {
   personalPronouns, indefPronouns, pronounSentences,
   possessives, possessiveNouns, articleCases, articleSentences,
   prepositions, prepSentences,
+  questionWords, yesNoCases, negationCases, connectors, questionSentences,
   type Verb, type OrderSentence,
 } from "./vocab";
 
@@ -424,3 +425,58 @@ export function gTypePrep(lang: Lang): TypedQ {
 }
 
 export const gOrderPrep = (lang: Lang): OrderData => gOrder(lang, prepSentences);
+
+/* ---------- capítulo 11: perguntas & ordem da frase ---------- */
+export function gQWMeaning(lang: Lang): Question {
+  const w = rand(questionWords);
+  const opts = sample(questionWords, 3, w).map((o) => ({ label: o.meaning[lang], correct: false }));
+  opts.push({ label: w.meaning[lang], correct: true });
+  const prompt = lang === "pt" ? `O que significa <span class="big">${w.de}</span>?` : `What does <span class="big">${w.de}</span> mean?`;
+  return q({ promptHTML: prompt, speak: w.example, options: shuffle(opts), word: w.de, wordpt: w.meaning.pt });
+}
+
+export function gQWFillMC(lang: Lang): Question {
+  const w = rand(questionWords);
+  const rest = w.example.split(" ").slice(1).join(" ");
+  const wrongPool = questionWords.filter((o) => o.de !== w.de).map((o) => o.de);
+  const wrong = [...new Set(sample(wrongPool, 3, w.de))];
+  const opts = wrong.map((f) => ({ label: f, correct: false }));
+  opts.push({ label: w.de, correct: true });
+  const prompt = lang === "pt"
+    ? `Complete: <span class="big">___ ${rest}</span> (${w.exampleMeaning.pt})`
+    : `Complete: <span class="big">___ ${rest}</span> (${w.exampleMeaning.en})`;
+  return q({ promptHTML: prompt, speak: w.example, options: shuffle(opts), word: w.de, wordpt: w.exampleMeaning.pt });
+}
+
+export function gTypeQW(lang: Lang): TypedQ {
+  const w = rand(questionWords);
+  const rest = w.example.split(" ").slice(1).join(" ");
+  const prompt = lang === "pt"
+    ? `Complete: <span class="big">___ ${rest}</span> (${w.exampleMeaning.pt})`
+    : `Complete: <span class="big">___ ${rest}</span> (${w.exampleMeaning.en})`;
+  return { promptHTML: prompt, answer: w.de, speak: w.example, word: w.de, wordpt: w.exampleMeaning.pt };
+}
+
+export function gYesNoMC(lang: Lang): Question {
+  const c = rand(yesNoCases);
+  const opts = shuffle(c.options).map((o) => ({ label: o, correct: o === c.correct }));
+  return q({ promptHTML: c.promptHTML[lang], speak: c.speak, options: opts, word: c.word, wordpt: "" });
+}
+
+export function gNegationMC(lang: Lang): Question {
+  const c = rand(negationCases);
+  const opts = shuffle(c.options).map((o) => ({ label: o, correct: o === c.correct }));
+  return q({ promptHTML: c.promptHTML[lang], speak: c.speak, options: opts, word: c.word, wordpt: "" });
+}
+
+export function gConnectorMeaning(lang: Lang): Question {
+  const c = rand(connectors);
+  const opts = sample(connectors, 3, c).map((o) => ({ label: o.meaning[lang], correct: false }));
+  opts.push({ label: c.meaning[lang], correct: true });
+  const prompt = lang === "pt"
+    ? `O que significa <span class="big">${c.de}</span> em “${c.example}”?`
+    : `What does <span class="big">${c.de}</span> mean in “${c.example}”?`;
+  return q({ promptHTML: prompt, speak: c.example, options: shuffle(opts), word: c.de, wordpt: c.meaning.pt });
+}
+
+export const gOrderQuestion = (lang: Lang): OrderData => gOrder(lang, questionSentences);
