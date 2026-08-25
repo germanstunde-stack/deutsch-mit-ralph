@@ -3,6 +3,7 @@ import { useTheme } from "./theme";
 import { topics } from "./data/topics";
 import { TopicView } from "./components/TopicView";
 import { Mascot } from "./components/Mascot";
+import { BgArt } from "./components/BgArt";
 
 // LOGIN DESLIGADO por enquanto (o código de auth/cadastro/ranking está pronto em
 // auth/AuthProvider, auth/LoginScreen, components/Cadastro, components/Ranking e na
@@ -24,6 +25,8 @@ export default function App() {
   }
 
   return (
+    <>
+    <BgArt />
     <div className="wrap">
       <div className="top">
         <div className="brand"><span className="flag">🇩🇪</span><div><small>German</small><b>Stunde</b></div></div>
@@ -73,5 +76,6 @@ export default function App() {
         <TopicView key={tab} id={tab} onResult={reportResult} />
       )}
     </div>
+    </>
   );
 }

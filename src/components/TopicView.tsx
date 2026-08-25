@@ -1,9 +1,12 @@
 import { useRef, useState, type MouseEvent } from "react";
 import { CardGrid } from "./Cards";
 import { Exercise } from "./Engines";
+import { Flashcards } from "./Flashcards";
+import { Calc, Clock, Calendar } from "./Tools";
 import { exSpecsForTopic } from "../data/exercises";
 import { topics } from "../data/topics";
 import { explanations } from "../data/explanations";
+import { sentences, deckForTopic } from "../data/extras";
 import { speak } from "../lib/speech";
 
 export function TopicView({ id, onResult }: { id: string; onResult: (correct: number, wrong: number) => void }) {
@@ -11,6 +14,8 @@ export function TopicView({ id, onResult }: { id: string; onResult: (correct: nu
   const [round, setRound] = useState(0);
   const [specs, setSpecs] = useState(() => exSpecsForTopic(id));
   const resolvedRef = useRef<boolean[]>([]);
+  const deck = deckForTopic(id);
+  const sents = sentences[id];
 
   function resolve(i: number, c: number, w: number) {
     if (resolvedRef.current[i]) return;
@@ -19,7 +24,7 @@ export function TopicView({ id, onResult }: { id: string; onResult: (correct: nu
   }
   function trocar() {
     const unresolved = specs.filter((_, i) => !resolvedRef.current[i]).length;
-    if (unresolved > 0) onResult(0, unresolved); // não-preenchidos contam como erro
+    if (unresolved > 0) onResult(0, unresolved);
     resolvedRef.current = [];
     setSpecs(exSpecsForTopic(id));
     setRound((r) => r + 1);
@@ -40,7 +45,36 @@ export function TopicView({ id, onResult }: { id: string; onResult: (correct: nu
         <div className="tcol right">
           <div className="subhead">🗣️ Explicação &amp; pronúncia</div>
           <div className="expl" onClick={explClick} dangerouslySetInnerHTML={{ __html: explanations[id] ?? meta.explanationHTML }} />
-          <div className="subhead">🎮 Praticar <span style={{ fontWeight: 400, fontSize: ".75rem", color: "var(--ink-soft)" }}>· conta pro ranking (clique pra ouvir as palavras sublinhadas)</span></div>
+
+          {id === "numeros" && (<>
+            <div className="subhead">🧮 Calculadora falante <span style={{ fontWeight: 400, fontSize: ".75rem", color: "var(--ink-soft)" }}>· acerte pra ouvir a conta</span></div>
+            <Calc />
+            <div className="subhead">⏰ Relógio (24h)</div>
+            <Clock />
+          </>)}
+          {id === "dias" && (<>
+            <div className="subhead">📅 Calendário</div>
+            <Calendar />
+          </>)}
+
+          {sents && (<>
+            <div className="subhead">💬 Frases de exemplo</div>
+            <div className="sents">
+              {sents.map((s, i) => (
+                <div className="sent" key={i}>
+                  <div className="txt"><span className="de">{s[0]}</span><span className="pt">{s[1]}</span></div>
+                  <button className="listen play" onClick={() => speak(s[0])}>🔊</button>
+                </div>
+              ))}
+            </div>
+          </>)}
+
+          {deck.length > 0 && (<>
+            <div className="subhead">🃏 Revisão rápida</div>
+            <Flashcards deck={deck} />
+          </>)}
+
+          <div className="subhead">🎮 Praticar <span style={{ fontWeight: 400, fontSize: ".75rem", color: "var(--ink-soft)" }}>· clique pra ouvir as palavras sublinhadas</span></div>
           {specs.map((s, i) => (
             <Exercise key={round + "-" + i} spec={s} num={i + 1} onResolve={(c, w) => resolve(i, c, w)} />
           ))}

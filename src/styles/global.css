@@ -150,3 +150,33 @@ table.br td{border:2px solid var(--border);padding:6px 8px} table.br td:first-ch
 .enum .ei input.ok{border-color:var(--good)} .enum .ei input.no{border-color:var(--bad)}
 .enumlist{columns:2;font-weight:800;font-size:.86rem;margin-top:10px} .enumlist>div{break-inside:avoid;margin-bottom:4px} .enumlist .n{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--brand);color:#fff;font-size:.75rem;margin-right:6px}
 .qcard .big{font-family:"Baloo 2",sans-serif;font-size:1.2rem;color:var(--ink)}
+
+/* ===== Fase 2b (parte 1): fundo, frases, flashcards, ferramentas ===== */
+.bgart{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.9}
+:root[data-theme="dark"] .bgart, :root:not([data-theme="light"]) .bgart{opacity:.5}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .bgart{opacity:.9}}
+
+.sents{display:grid;gap:8px;margin-top:6px}
+.sent{display:flex;gap:10px;align-items:center;background:var(--surface2);border:2px solid var(--border);border-radius:12px;padding:9px 11px}
+.sent .txt .de{font-family:"Baloo 2",sans-serif;font-weight:700} .sent .txt .pt{color:var(--ink-soft);font-weight:700;font-size:.8rem;display:block}
+.sent .play{margin-left:auto;flex:0 0 auto}
+
+.flash{border:2.5px solid var(--border);border-radius:16px;background:var(--surface2);padding:16px;text-align:center}
+.flash .fc{min-height:120px;display:grid;place-items:center;cursor:pointer;border-radius:12px;background:var(--surface);border:2px dashed var(--border)}
+.flash .fc .emo{font-size:2.6rem} .flash .fc .big{font-family:"Baloo 2",sans-serif;font-size:1.7rem} .flash .fc .pt{color:var(--brand-ink);font-weight:800;font-size:1.4rem}
+.flash .hintf{color:var(--ink-soft);font-weight:700;font-size:.76rem;margin-top:6px}
+.flash .nav{display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+
+.tool{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;background:var(--surface2);border:2.5px solid var(--border);border-radius:16px;padding:12px;margin:8px 0;font-family:"Baloo 2",sans-serif;font-weight:800;font-size:1.3rem}
+.tool button{font:inherit;font-size:1.1rem;border:2.5px solid var(--border);background:var(--surface);color:var(--ink);min-width:42px;height:42px;padding:0 8px;border-radius:12px;cursor:pointer;box-shadow:0 4px 0 var(--shadow)}
+.tool button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--shadow)}
+.tool .op{color:var(--brand-ink)} .tool .eq{color:var(--ink-soft)} .tool .res{color:var(--gruen);min-width:44px;text-align:center}
+.clock-wrap{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;margin:10px 0} .clock{width:120px;height:120px}
+.mini{border:none;background:none;color:var(--bad);font:inherit;font-weight:800;cursor:pointer;font-size:.8rem;text-decoration:underline;margin-top:6px}
+.today{background:var(--surface2);border:2.5px solid var(--border);border-radius:16px;padding:14px;text-align:center;margin:8px 0;overflow:hidden} .today .big{font-family:"Baloo 2",sans-serif;font-size:1.1rem;color:var(--brand-ink)}
+.calnav{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;font-family:"Baloo 2",sans-serif;font-weight:800;margin-top:6px}
+.calnav .tbtn{padding:6px 11px;min-width:36px} .calnav .cmo{min-width:120px;text-align:center;color:var(--brand-ink)}
+.calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;margin-top:10px;max-width:100%}
+.calgrid .cd{aspect-ratio:1;min-width:0;display:grid;place-items:center;border-radius:8px;background:var(--surface);border:2px solid var(--border);font-weight:800;font-size:clamp(.6rem,2.3vw,.82rem);cursor:pointer}
+.calgrid .cd.hd{background:none;border:none;color:var(--ink-soft);font-size:clamp(.55rem,2vw,.7rem);cursor:default} .calgrid .cd.today{background:var(--brand);color:#fff;border-color:transparent} .calgrid .cd.empty{background:none;border:none;cursor:default}
+.hero .mascot{width:64px;height:64px;flex:0 0 auto}
