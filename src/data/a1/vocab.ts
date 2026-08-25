@@ -75,3 +75,31 @@ export const verbSentences: OrderSentence[] = [
   { chunks: ["isst", "sie", "gern", "Pizza"], answer: ["sie", "isst", "gern", "Pizza"], meaning: { pt: "ela come pizza com gosto", en: "she likes eating pizza" } },
   { chunks: ["viel", "arbeitet", "er"], answer: ["er", "arbeitet", "viel"], meaning: { pt: "ele trabalha muito", en: "he works a lot" } },
 ];
+
+// ---- Capítulo 3: imperativo & verbos separáveis ----
+// du/ihr/sie SEM "!" (pra exercício de escrever não exigir pontuação) — quem
+// exibe a frase de verdade (cards, explicação, frases) acrescenta o "!" na hora.
+export interface ImperativeVerb { inf: string; meaning: Record<Lang, string>; du: string; ihr: string; sie: string; }
+export const imperativeVerbs: ImperativeVerb[] = [
+  { inf: "kommen", meaning: { pt: "vir", en: "to come" }, du: "Komm", ihr: "Kommt", sie: "Kommen Sie" },
+  { inf: "gehen", meaning: { pt: "ir", en: "to go" }, du: "Geh", ihr: "Geht", sie: "Gehen Sie" },
+  { inf: "warten", meaning: { pt: "esperar", en: "to wait" }, du: "Warte", ihr: "Wartet", sie: "Warten Sie" },
+  { inf: "essen", meaning: { pt: "comer", en: "to eat" }, du: "Iss", ihr: "Esst", sie: "Essen Sie" },
+  { inf: "sprechen", meaning: { pt: "falar", en: "to speak" }, du: "Sprich", ihr: "Sprecht", sie: "Sprechen Sie" },
+  { inf: "fahren", meaning: { pt: "dirigir / ir", en: "to drive / go" }, du: "Fahr", ihr: "Fahrt", sie: "Fahren Sie" },
+];
+
+export interface Verb6 { inf: string; prefix: string; meaning: Record<Lang, string>; forms: Record<"ich" | "du" | "er" | "wir" | "ihr" | "sie", string>; }
+export const separableVerbs: Verb6[] = [
+  { inf: "aufstehen", prefix: "auf", meaning: { pt: "levantar-se / acordar", en: "to get up" }, forms: { ich: "stehe auf", du: "stehst auf", er: "steht auf", wir: "stehen auf", ihr: "steht auf", sie: "stehen auf" } },
+  { inf: "einkaufen", prefix: "ein", meaning: { pt: "fazer compras", en: "to go shopping" }, forms: { ich: "kaufe ein", du: "kaufst ein", er: "kauft ein", wir: "kaufen ein", ihr: "kauft ein", sie: "kaufen ein" } },
+  { inf: "fernsehen", prefix: "fern", meaning: { pt: "assistir TV", en: "to watch TV" }, forms: { ich: "sehe fern", du: "siehst fern", er: "sieht fern", wir: "sehen fern", ihr: "seht fern", sie: "sehen fern" } },
+  { inf: "anrufen", prefix: "an", meaning: { pt: "telefonar / ligar", en: "to call (phone)" }, forms: { ich: "rufe an", du: "rufst an", er: "ruft an", wir: "rufen an", ihr: "ruft an", sie: "rufen an" } },
+];
+
+export const separableSentences: OrderSentence[] = [
+  { chunks: ["ein", "ich", "kaufe", "Brot"], answer: ["ich", "kaufe", "Brot", "ein"], meaning: { pt: "eu compro pão", en: "I buy bread" } },
+  { chunks: ["an", "seine", "er", "ruft", "Mutter"], answer: ["er", "ruft", "seine", "Mutter", "an"], meaning: { pt: "ele liga pra mãe dele", en: "he calls his mother" } },
+  { chunks: ["fern", "wir", "jeden Abend", "sehen"], answer: ["wir", "sehen", "jeden Abend", "fern"], meaning: { pt: "nós assistimos TV toda noite", en: "we watch TV every evening" } },
+  { chunks: ["auf", "früh", "du", "stehst"], answer: ["du", "stehst", "früh", "auf"], meaning: { pt: "você acorda cedo", en: "you get up early" } },
+];

@@ -1,7 +1,7 @@
 import type { Lang } from "../../i18n/types";
 import type { CardItem } from "../../components/Cards";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN } from "./exercises";
-import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, type Verb } from "./vocab";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO } from "./exercises";
+import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, type Verb } from "./vocab";
 
 export interface CardsData { items: CardItem[]; gridClass: string; legend?: boolean; }
 
@@ -23,12 +23,28 @@ function verbCards(pool: Verb[], lang: Lang): CardItem[] {
   }));
 }
 
+function imperativeCards(lang: Lang): CardItem[] {
+  return imperativeVerbs.map((v) => ({
+    deHTML: `<b>${v.du}!</b><br><small>ihr ${v.ihr}! · Sie ${v.sie}!</small>`,
+    pt: v.meaning[lang], speak: v.du,
+  }));
+}
+function separableCards(lang: Lang): CardItem[] {
+  return separableVerbs.map((v) => ({
+    deHTML: `<b>${v.inf}</b><br><small>ich ${v.forms.ich} · er ${v.forms.er}</small>`,
+    pt: v.meaning[lang], speak: v.inf,
+  }));
+}
+
 export function cardsForTopic(id: string, lang: Lang): CardsData {
   if (id === CH_EU_VOCE_SEIN) {
     return { gridClass: "grid", items: [...pronounCards(lang), ...seinCards(lang)] };
   }
   if (id === CH_VERBOS_HABEN) {
     return { gridClass: "grid", items: [...verbCards(regularVerbs, lang), ...habenCards(lang), ...verbCards(vowelChangeVerbs, lang)] };
+  }
+  if (id === CH_IMPERATIVO) {
+    return { gridClass: "grid", items: [...imperativeCards(lang), ...separableCards(lang)] };
   }
   return { gridClass: "grid", items: [] };
 }

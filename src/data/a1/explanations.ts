@@ -4,7 +4,7 @@
 // mesmo estilo do A0 (regra curta + exemplo + erros comuns de quem já fala
 // português/inglês).
 import type { Lang } from "../../i18n/types";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO } from "./exercises";
 
 const explanationsPT: Record<string, string> = {
   [CH_EU_VOCE_SEIN]:
@@ -49,6 +49,21 @@ const explanationsPT: Record<string, string> = {
     '<h3>⚠️ Cuidado</h3><ul>' +
     '<li>A mudança de vogal <b>nunca</b> acontece com <b class="de">ich</b>, <b class="de">wir</b>, <b class="de">ihr</b> ou <b class="de">sie/Sie</b> — só du e er/es/sie.</li>' +
     '<li>O verbo continua na <b>2ª posição</b> da frase, exatamente como no capítulo anterior com <b class="de">sein</b>.</li></ul>',
+
+  [CH_IMPERATIVO]:
+    '<h3>Imperativo (dar ordens/conselhos)</h3><p>3 formas, uma pra cada tratamento:</p>' +
+    '<table class="br"><tr><td>du</td><td>tira o <b>-st</b> do presente: <span class="de" data-say="Komm">Komm!</span></td></tr>' +
+    '<tr><td>ihr</td><td>igual ao presente: <span class="de" data-say="Kommt">Kommt!</span></td></tr>' +
+    '<tr><td>Sie</td><td>verbo + Sie (como uma pergunta invertida): <span class="de" data-say="Kommen Sie">Kommen Sie!</span></td></tr></table>' +
+    '<h3>⚠️ E os verbos com mudança de vogal?</h3><ul>' +
+    '<li><b>e → i / e → ie</b> mantém a mudança no imperativo (du): <span class="de" data-say="Iss">Iss!</span> (comer), <span class="de" data-say="Sprich">Sprich!</span> (falar).</li>' +
+    '<li><b>a → ä</b> NÃO aparece no imperativo (du): <span class="de" data-say="Fahr">Fahr!</span> (não “Führ”), <span class="de" data-say="Fahr vorsichtig">Fahr vorsichtig!</span> (dirija com cuidado).</li></ul>' +
+    '<h3>Verbos separáveis (trennbare Verben)</h3><p>Um prefixo (auf-, ein-, an-, fern-...) se separa do verbo e vai pro <b>final da frase</b>:</p>' +
+    '<p><span class="de" data-say="aufstehen">aufstehen</span> (levantar-se) → <span class="de" data-say="Ich stehe um sieben Uhr auf">Ich stehe um sieben Uhr auf.</span> (eu levanto às 7h)</p>' +
+    '<p><span class="de" data-say="einkaufen">einkaufen</span> (fazer compras) → <span class="de" data-say="Er kauft Brot ein">Er kauft Brot ein.</span> (ele compra pão)</p>' +
+    '<h3>⚠️ Cuidado</h3><ul>' +
+    '<li>No infinitivo o prefixo fica junto (<b class="de">aufstehen</b>), mas conjugado ele <b>sempre</b> vai pro fim: <span class="de" data-say="ich stehe auf">ich stehe auf</span>, nunca “ich aufstehe”.</li>' +
+    '<li>No imperativo o prefixo também vai pro final: <span class="de" data-say="Steh auf">Steh auf!</span> (levanta!).</li></ul>',
 };
 
 const explanationsEN: Record<string, string> = {
@@ -94,6 +109,21 @@ const explanationsEN: Record<string, string> = {
     '<h3>⚠️ Watch out</h3><ul>' +
     '<li>The vowel change <b>never</b> happens with <b class="de">ich</b>, <b class="de">wir</b>, <b class="de">ihr</b> or <b class="de">sie/Sie</b> — only du and er/es/sie.</li>' +
     '<li>The verb still stays in <b>2nd position</b> in the sentence, exactly like in the previous chapter with <b class="de">sein</b>.</li></ul>',
+
+  [CH_IMPERATIVO]:
+    '<h3>Imperative (giving orders/advice)</h3><p>3 forms, one for each way of addressing people:</p>' +
+    '<table class="br"><tr><td>du</td><td>drop the <b>-st</b> from the present tense: <span class="de" data-say="Komm">Komm!</span></td></tr>' +
+    '<tr><td>ihr</td><td>same as the present tense: <span class="de" data-say="Kommt">Kommt!</span></td></tr>' +
+    '<tr><td>Sie</td><td>verb + Sie (like an inverted question): <span class="de" data-say="Kommen Sie">Kommen Sie!</span></td></tr></table>' +
+    '<h3>⚠️ What about vowel-changing verbs?</h3><ul>' +
+    '<li><b>e → i / e → ie</b> keeps the change in the (du) imperative: <span class="de" data-say="Iss">Iss!</span> (eat), <span class="de" data-say="Sprich">Sprich!</span> (speak).</li>' +
+    '<li><b>a → ä</b> does NOT show up in the (du) imperative: <span class="de" data-say="Fahr">Fahr!</span> (not "Führ"), <span class="de" data-say="Fahr vorsichtig">Fahr vorsichtig!</span> (drive carefully).</li></ul>' +
+    '<h3>Separable verbs (trennbare Verben)</h3><p>A prefix (auf-, ein-, an-, fern-...) splits off the verb and moves to the <b>end of the sentence</b>:</p>' +
+    '<p><span class="de" data-say="aufstehen">aufstehen</span> (to get up) → <span class="de" data-say="Ich stehe um sieben Uhr auf">Ich stehe um sieben Uhr auf.</span> (I get up at 7)</p>' +
+    '<p><span class="de" data-say="einkaufen">einkaufen</span> (to go shopping) → <span class="de" data-say="Er kauft Brot ein">Er kauft Brot ein.</span> (he buys bread)</p>' +
+    '<h3>⚠️ Watch out</h3><ul>' +
+    '<li>In the infinitive the prefix stays attached (<b class="de">aufstehen</b>), but once conjugated it <b>always</b> moves to the end: <span class="de" data-say="ich stehe auf">ich stehe auf</span>, never "ich aufstehe".</li>' +
+    '<li>In the imperative the prefix also moves to the end: <span class="de" data-say="Steh auf">Steh auf!</span> (get up!).</li></ul>',
 };
 
 export function explanationsFor(lang: Lang): Record<string, string> {

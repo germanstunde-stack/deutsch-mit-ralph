@@ -1,12 +1,21 @@
 import { rand, sample, shuffle, type Question } from "../generators";
 import type { TypedQ, OrderData } from "../exercises";
 import type { Lang } from "../../i18n/types";
-import { pronouns, seinForms, seinSentences, regularVerbs, vowelChangeVerbs, habenForms, verbSentences, type Verb, type OrderSentence } from "./vocab";
+import {
+  pronouns, seinForms, seinSentences,
+  regularVerbs, vowelChangeVerbs, habenForms, verbSentences,
+  imperativeVerbs, separableVerbs, separableSentences,
+  type Verb, type OrderSentence,
+} from "./vocab";
 
 let uid = 0;
 function q(x: Omit<Question, "key">): Question { return { key: "a1q" + uid++, ...x }; }
 
 /* ---------- helpers genéricos (reaproveitados por vários capítulos) ---------- */
+type PronounKey = "ich" | "du" | "er" | "wir" | "ihr" | "sie";
+const PRONOUN_KEYS: PronounKey[] = ["ich", "du", "er", "wir", "ihr", "sie"];
+const PRONOUN_LABEL: Record<PronounKey, string> = { ich: "ich", du: "du", er: "er / es / sie", wir: "wir", ihr: "ihr", sie: "sie / Sie" };
+
 interface FormEntry { pron: string; form: string; speak: string; }
 
 function gFormMC(lang: Lang, label: string, forms: FormEntry[]): Question {
@@ -35,6 +44,40 @@ function gOrder(lang: Lang, pool: OrderSentence[]): OrderData {
   return { title, chunks: shuffle(s.chunks), answer: s.answer, single: true };
 }
 
+interface ConjugatedVerb { inf: string; meaning: Record<Lang, string>; forms: Record<PronounKey, string>; }
+
+function gVerbMeaningGeneric(lang: Lang, pool: ConjugatedVerb[]): Question {
+  const v = rand(pool);
+  const opts = sample(pool, 3, v).map((o) => ({ label: o.meaning[lang], correct: false }));
+  opts.push({ label: v.meaning[lang], correct: true });
+  const prompt = lang === "pt" ? `O que significa <span class="big">${v.inf}</span>?` : `What does <span class="big">${v.inf}</span> mean?`;
+  return q({ promptHTML: prompt, speak: v.inf, options: shuffle(opts), word: v.inf, wordpt: v.meaning.pt });
+}
+
+function gVerbFormMCGeneric(lang: Lang, pool: ConjugatedVerb[]): Question {
+  const v = rand(pool);
+  const key = rand(PRONOUN_KEYS);
+  const correct = v.forms[key];
+  const wrongPool = PRONOUN_KEYS.filter((k) => k !== key).map((k) => v.forms[k]);
+  const wrong = sample([...new Set(wrongPool)], 3, correct);
+  const opts = wrong.map((f) => ({ label: f, correct: false }));
+  opts.push({ label: correct, correct: true });
+  const prompt = lang === "pt"
+    ? `Qual forma de <span class="k">${v.inf}</span> vai com <span class="big">${PRONOUN_LABEL[key]}</span>?`
+    : `Which form of <span class="k">${v.inf}</span> goes with <span class="big">${PRONOUN_LABEL[key]}</span>?`;
+  return q({ promptHTML: prompt, speak: `${PRONOUN_LABEL[key]} ${correct}`, options: shuffle(opts), word: correct, wordpt: v.inf });
+}
+
+function gTypeVerbFormGeneric(lang: Lang, pool: ConjugatedVerb[]): TypedQ {
+  const v = rand(pool);
+  const key = rand(PRONOUN_KEYS);
+  const correct = v.forms[key];
+  const prompt = lang === "pt"
+    ? `Complete: <span class="big">${PRONOUN_LABEL[key]} ___</span> (${v.inf})`
+    : `Complete: <span class="big">${PRONOUN_LABEL[key]} ___</span> (${v.inf})`;
+  return { promptHTML: prompt, answer: correct, speak: `${PRONOUN_LABEL[key]} ${correct}`, word: correct, wordpt: v.inf };
+}
+
 /* ---------- capítulo 1: eu, você & sein ---------- */
 export function gPronounMeaning(lang: Lang): Question {
   const p = rand(pronouns);
@@ -50,42 +93,52 @@ export const gOrderSein = (lang: Lang): OrderData => gOrder(lang, seinSentences)
 
 /* ---------- capítulo 2: verbos regulares, haben, mudança de vogal ---------- */
 const CH2_VERBS: Verb[] = [...regularVerbs, ...vowelChangeVerbs];
-type PronounKey = "ich" | "du" | "er" | "wir" | "ihr" | "sie";
-const PRONOUN_KEYS: PronounKey[] = ["ich", "du", "er", "wir", "ihr", "sie"];
-const PRONOUN_LABEL: Record<PronounKey, string> = { ich: "ich", du: "du", er: "er / es / sie", wir: "wir", ihr: "ihr", sie: "sie / Sie" };
 
-export function gVerbMeaning(lang: Lang): Question {
-  const v = rand(CH2_VERBS);
-  const opts = sample(CH2_VERBS, 3, v).map((o) => ({ label: o.meaning[lang], correct: false }));
+export const gVerbMeaning = (lang: Lang): Question => gVerbMeaningGeneric(lang, CH2_VERBS);
+export const gVerbFormMC = (lang: Lang): Question => gVerbFormMCGeneric(lang, CH2_VERBS);
+export const gTypeVerbForm = (lang: Lang): TypedQ => gTypeVerbFormGeneric(lang, CH2_VERBS);
+export const gHabenForm = (lang: Lang): Question => gFormMC(lang, "haben", habenForms);
+export const gTypeHaben = (lang: Lang): TypedQ => gTypeForm(lang, "haben", habenForms);
+export const gOrderVerb = (lang: Lang): OrderData => gOrder(lang, verbSentences);
+
+/* ---------- capítulo 3: imperativo & verbos separáveis ---------- */
+type ImperativeTarget = "du" | "ihr" | "sie";
+const IMPERATIVE_TARGETS: ImperativeTarget[] = ["du", "ihr", "sie"];
+const IMPERATIVE_LABEL: Record<ImperativeTarget, string> = { du: "du", ihr: "ihr", sie: "Sie" };
+
+export function gImperativeMeaning(lang: Lang): Question {
+  const v = rand(imperativeVerbs);
+  const opts = sample(imperativeVerbs, 3, v).map((o) => ({ label: o.meaning[lang], correct: false }));
   opts.push({ label: v.meaning[lang], correct: true });
   const prompt = lang === "pt" ? `O que significa <span class="big">${v.inf}</span>?` : `What does <span class="big">${v.inf}</span> mean?`;
   return q({ promptHTML: prompt, speak: v.inf, options: shuffle(opts), word: v.inf, wordpt: v.meaning.pt });
 }
 
-export function gVerbFormMC(lang: Lang): Question {
-  const v = rand(CH2_VERBS);
-  const key = rand(PRONOUN_KEYS);
-  const correct = v.forms[key];
-  const wrongPool = PRONOUN_KEYS.filter((k) => k !== key).map((k) => v.forms[k]);
+export function gImperativeMC(lang: Lang): Question {
+  const v = rand(imperativeVerbs);
+  const target = rand(IMPERATIVE_TARGETS);
+  const correct = v[target];
+  const wrongPool = imperativeVerbs.filter((o) => o.inf !== v.inf).map((o) => o[target]);
   const wrong = sample([...new Set(wrongPool)], 3, correct);
-  const opts = wrong.map((f) => ({ label: f, correct: false }));
-  opts.push({ label: correct, correct: true });
+  const opts = wrong.map((f) => ({ label: f + "!", correct: false }));
+  opts.push({ label: correct + "!", correct: true });
   const prompt = lang === "pt"
-    ? `Qual forma de <span class="k">${v.inf}</span> vai com <span class="big">${PRONOUN_LABEL[key]}</span>?`
-    : `Which form of <span class="k">${v.inf}</span> goes with <span class="big">${PRONOUN_LABEL[key]}</span>?`;
-  return q({ promptHTML: prompt, speak: `${PRONOUN_LABEL[key]} ${correct}`, options: shuffle(opts), word: correct, wordpt: v.inf });
+    ? `Qual é o imperativo (${IMPERATIVE_LABEL[target]}) de <span class="big">${v.inf}</span>?`
+    : `What's the (${IMPERATIVE_LABEL[target]}) imperative of <span class="big">${v.inf}</span>?`;
+  return q({ promptHTML: prompt, speak: correct, options: shuffle(opts), word: correct, wordpt: v.inf });
 }
 
-export function gTypeVerbForm(lang: Lang): TypedQ {
-  const v = rand(CH2_VERBS);
-  const key = rand(PRONOUN_KEYS);
-  const correct = v.forms[key];
+export function gTypeImperative(lang: Lang): TypedQ {
+  const v = rand(imperativeVerbs);
+  const target = rand(IMPERATIVE_TARGETS);
+  const correct = v[target];
   const prompt = lang === "pt"
-    ? `Complete: <span class="big">${PRONOUN_LABEL[key]} ___</span> (${v.inf})`
-    : `Complete: <span class="big">${PRONOUN_LABEL[key]} ___</span> (${v.inf})`;
-  return { promptHTML: prompt, answer: correct, speak: `${PRONOUN_LABEL[key]} ${correct}`, word: correct, wordpt: v.inf };
+    ? `Escreva o imperativo (${IMPERATIVE_LABEL[target]}) de <span class="big">${v.inf}</span> (sem pontuação):`
+    : `Write the (${IMPERATIVE_LABEL[target]}) imperative of <span class="big">${v.inf}</span> (no punctuation):`;
+  return { promptHTML: prompt, answer: correct, speak: correct, word: correct, wordpt: v.inf };
 }
 
-export const gHabenForm = (lang: Lang): Question => gFormMC(lang, "haben", habenForms);
-export const gTypeHaben = (lang: Lang): TypedQ => gTypeForm(lang, "haben", habenForms);
-export const gOrderVerb = (lang: Lang): OrderData => gOrder(lang, verbSentences);
+export const gSeparableMeaning = (lang: Lang): Question => gVerbMeaningGeneric(lang, separableVerbs);
+export const gSeparableFormMC = (lang: Lang): Question => gVerbFormMCGeneric(lang, separableVerbs);
+export const gTypeSeparableForm = (lang: Lang): TypedQ => gTypeVerbFormGeneric(lang, separableVerbs);
+export const gOrderSeparable = (lang: Lang): OrderData => gOrder(lang, separableSentences);

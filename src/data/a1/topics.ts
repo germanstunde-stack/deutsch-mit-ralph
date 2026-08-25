@@ -1,6 +1,6 @@
 import type { Lang } from "../../i18n/types";
 import type { TopicMeta } from "../topics";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO } from "./exercises";
 
 interface TopicMetaI18n { id: string; icon: string; name: Record<Lang, string>; cardTitle: Record<Lang, string>; explanationHTML: Record<Lang, string>; }
 
@@ -25,6 +25,15 @@ const TOPICS_I18N: TopicMetaI18n[] = [
     explanationHTML: {
       pt: "<p>Conjugação regular no presente, o verbo <b class='de'>haben</b> (ter) e verbos que mudam de vogal (fahren, sehen, essen...).</p>",
       en: "<p>Regular present-tense conjugation, the verb <b class='de'>haben</b> (to have), and vowel-changing verbs (fahren, sehen, essen...).</p>",
+    },
+  },
+  {
+    id: CH_IMPERATIVO, icon: "❗",
+    name: { pt: "Imperativo & separáveis", en: "Imperative & separable verbs" },
+    cardTitle: { pt: "📖 Der Imperativ & trennbare Verben", en: "📖 The imperative & separable verbs" },
+    explanationHTML: {
+      pt: "<p>Como dar ordens/pedidos (du/ihr/Sie) e verbos com prefixo separável (aufstehen, einkaufen...) que manda o prefixo pro fim da frase.</p>",
+      en: "<p>How to give orders/requests (du/ihr/Sie) and separable-prefix verbs (aufstehen, einkaufen...) that send the prefix to the end of the sentence.</p>",
     },
   },
 ];

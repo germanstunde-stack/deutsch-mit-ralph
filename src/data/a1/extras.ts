@@ -1,7 +1,7 @@
 import type { Lang } from "../../i18n/types";
 import type { Profile } from "../../auth/AuthProvider";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN } from "./exercises";
-import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms } from "./vocab";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO } from "./exercises";
+import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs } from "./vocab";
 
 export interface Flash { de: string; pt: string; emo: string; }
 
@@ -19,6 +19,12 @@ const sentencesPT: Record<string, [string, string][]> = {
     ["Sprichst du Deutsch?", "Você fala alemão?"],
     ["Sie isst gern Pizza.", "Ela come pizza com gosto."],
   ],
+  [CH_IMPERATIVO]: [
+    ["Komm bitte her!", "Vem cá, por favor!"],
+    ["Ich stehe um sieben Uhr auf.", "Eu levanto às sete horas."],
+    ["Kaufst du bitte Milch ein?", "Você compra leite, por favor?"],
+    ["Rufen Sie mich bitte an!", "Me ligue, por favor! (formal)"],
+  ],
 };
 const sentencesEN: Record<string, [string, string][]> = {
   [CH_EU_VOCE_SEIN]: [
@@ -33,6 +39,12 @@ const sentencesEN: Record<string, [string, string][]> = {
     ["Er hat einen Hund.", "He has a dog."],
     ["Sprichst du Deutsch?", "Do you speak German?"],
     ["Sie isst gern Pizza.", "She likes eating pizza."],
+  ],
+  [CH_IMPERATIVO]: [
+    ["Komm bitte her!", "Come here, please!"],
+    ["Ich stehe um sieben Uhr auf.", "I get up at seven."],
+    ["Kaufst du bitte Milch ein?", "Can you buy milk, please?"],
+    ["Rufen Sie mich bitte an!", "Please call me! (formal)"],
   ],
 };
 
@@ -60,6 +72,12 @@ export function deckForTopic(id: string, lang: Lang): Flash[] {
       ...regularVerbs.map((v) => ({ de: v.inf, pt: v.meaning[lang], emo: "🔤" })),
       ...vowelChangeVerbs.map((v) => ({ de: v.inf, pt: v.meaning[lang], emo: "🔀" })),
       ...habenForms.map((h) => ({ de: `${h.pron} ${h.form}`, pt: h.meaning[lang], emo: "🎒" })),
+    ];
+  }
+  if (id === CH_IMPERATIVO) {
+    return [
+      ...imperativeVerbs.map((v) => ({ de: `${v.du}!`, pt: v.meaning[lang], emo: "❗" })),
+      ...separableVerbs.map((v) => ({ de: v.inf, pt: v.meaning[lang], emo: "🧩" })),
     ];
   }
   return [];
