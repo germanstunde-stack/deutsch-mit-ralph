@@ -4,7 +4,7 @@
 // mesmo estilo do A0 (regra curta + exemplo + erros comuns de quem já fala
 // português/inglês).
 import type { Lang } from "../../i18n/types";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES } from "./exercises";
 
 const explanationsPT: Record<string, string> = {
   [CH_EU_VOCE_SEIN]:
@@ -145,6 +145,26 @@ const explanationsPT: Record<string, string> = {
     '<h3>⚠️ Cuidado</h3><ul>' +
     '<li><b class="de">sein</b> = dele (masc/neutro) ≠ <b class="de">ihr</b> = dela — não confunda com o pronome <b class="de">sie</b> (ela/eles).</li>' +
     '<li><b class="de">euer</b> perde o “e” do meio antes de -e: <span class="de" data-say="eure Mutter">eure Mutter</span> (não “euere Mutter”).</li></ul>',
+
+  [CH_PREPOSICOES]:
+    '<h3>Preposições de lugar</h3><ul>' +
+    '<li><b class="de">aus</b> = origem (de onde): <span class="de" data-say="Ich komme aus Deutschland">Ich komme aus Deutschland.</span></li>' +
+    '<li><b class="de">nach</b> = direção a cidade/país, sem artigo: <span class="de" data-say="Ich fahre nach Berlin">Ich fahre nach Berlin.</span></li>' +
+    '<li><b class="de">in</b> = "em" — <b>Dativ</b> se for lugar parado (onde?): <span class="de" data-say="im Haus">im Haus</span> (in+dem); <b>Akkusativ</b> se for movimento (pra onde?): <span class="de" data-say="ins Kino">ins Kino</span> (in+das).</li>' +
+    '<li><b class="de">auf</b> = em cima de: <span class="de" data-say="auf dem Tisch">auf dem Tisch</span>.</li>' +
+    '<li><b class="de">bei</b> / <b class="de">zu</b> = na casa/com alguém: <span class="de" data-say="beim Arzt">beim Arzt</span> (bei+dem, já estou lá), <span class="de" data-say="zum Arzt">zum Arzt</span> (zu+dem, movimento).</li></ul>' +
+    '<h3>Preposições de tempo</h3><ul>' +
+    '<li><b class="de">um</b> = hora exata: <span class="de" data-say="um 20 Uhr">um 20 Uhr</span>.</li>' +
+    '<li><b class="de">am</b> = dia da semana/data: <span class="de" data-say="am Montag">am Montag</span>.</li>' +
+    '<li><b class="de">im</b> = mês/estação: <span class="de" data-say="im Mai">im Mai</span>.</li>' +
+    '<li><b class="de">vor</b> / <b class="de">nach</b> = antes / depois: <span class="de" data-say="vor dem Spiel">vor dem Spiel</span>, <span class="de" data-say="nach dem Spiel">nach dem Spiel</span>.</li></ul>' +
+    '<h3>Preposição de modo</h3><p><b class="de">mit</b> + meio de transporte: <span class="de" data-say="mit dem Bus">mit dem Bus</span> (de ônibus).</p>' +
+    '<h3>⚠️ Contrações que você já usa sem perceber</h3><table class="br">' +
+    '<tr><td>in + dem</td><td><span class="de" data-say="im">im</span></td></tr>' +
+    '<tr><td>in + das</td><td><span class="de" data-say="ins">ins</span></td></tr>' +
+    '<tr><td>bei + dem</td><td><span class="de" data-say="beim">beim</span></td></tr>' +
+    '<tr><td>zu + dem</td><td><span class="de" data-say="zum">zum</span></td></tr></table>' +
+    '<p>Todas essas preposições de lugar/tempo/modo pedem <b>Dativ</b> (por isso o artigo vira <span class="de">dem</span>/<span class="de">der</span>) — só "in"/"auf" quando indicam movimento (pra onde?) pedem <b>Akkusativ</b>.</p>',
 };
 
 const explanationsEN: Record<string, string> = {
@@ -286,6 +306,26 @@ const explanationsEN: Record<string, string> = {
     '<h3>⚠️ Watch out</h3><ul>' +
     '<li><b class="de">sein</b> = his/its (masc/neuter) ≠ <b class="de">ihr</b> = her — don’t confuse it with the pronoun <b class="de">sie</b> (she/they).</li>' +
     '<li><b class="de">euer</b> drops the middle "e" before -e: <span class="de" data-say="eure Mutter">eure Mutter</span> (not "euere Mutter").</li></ul>',
+
+  [CH_PREPOSICOES]:
+    '<h3>Prepositions of place</h3><ul>' +
+    '<li><b class="de">aus</b> = origin (where from): <span class="de" data-say="Ich komme aus Deutschland">Ich komme aus Deutschland.</span></li>' +
+    '<li><b class="de">nach</b> = direction to a city/country, no article: <span class="de" data-say="Ich fahre nach Berlin">Ich fahre nach Berlin.</span></li>' +
+    '<li><b class="de">in</b> = "in" — <b>Dative</b> for a static place (where?): <span class="de" data-say="im Haus">im Haus</span> (in+dem); <b>Accusative</b> for movement (where to?): <span class="de" data-say="ins Kino">ins Kino</span> (in+das).</li>' +
+    '<li><b class="de">auf</b> = on top of: <span class="de" data-say="auf dem Tisch">auf dem Tisch</span>.</li>' +
+    '<li><b class="de">bei</b> / <b class="de">zu</b> = at someone’s place: <span class="de" data-say="beim Arzt">beim Arzt</span> (bei+dem, already there), <span class="de" data-say="zum Arzt">zum Arzt</span> (zu+dem, movement).</li></ul>' +
+    '<h3>Prepositions of time</h3><ul>' +
+    '<li><b class="de">um</b> = exact time: <span class="de" data-say="um 20 Uhr">um 20 Uhr</span>.</li>' +
+    '<li><b class="de">am</b> = day of the week/date: <span class="de" data-say="am Montag">am Montag</span>.</li>' +
+    '<li><b class="de">im</b> = month/season: <span class="de" data-say="im Mai">im Mai</span>.</li>' +
+    '<li><b class="de">vor</b> / <b class="de">nach</b> = before / after: <span class="de" data-say="vor dem Spiel">vor dem Spiel</span>, <span class="de" data-say="nach dem Spiel">nach dem Spiel</span>.</li></ul>' +
+    '<h3>Preposition of manner</h3><p><b class="de">mit</b> + means of transport: <span class="de" data-say="mit dem Bus">mit dem Bus</span> (by bus).</p>' +
+    '<h3>⚠️ Contractions you already use without noticing</h3><table class="br">' +
+    '<tr><td>in + dem</td><td><span class="de" data-say="im">im</span></td></tr>' +
+    '<tr><td>in + das</td><td><span class="de" data-say="ins">ins</span></td></tr>' +
+    '<tr><td>bei + dem</td><td><span class="de" data-say="beim">beim</span></td></tr>' +
+    '<tr><td>zu + dem</td><td><span class="de" data-say="zum">zum</span></td></tr></table>' +
+    '<p>All these place/time/manner prepositions take the <b>Dative</b> (that\'s why the article becomes <span class="de">dem</span>/<span class="de">der</span>) — only "in"/"auf" indicating movement (where to?) take the <b>Accusative</b>.</p>',
 };
 
 export function explanationsFor(lang: Lang): Record<string, string> {

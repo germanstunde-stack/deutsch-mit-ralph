@@ -11,6 +11,7 @@ import {
   caseNouns, caseSentences,
   personalPronouns, indefPronouns, pronounSentences,
   possessives, possessiveNouns, articleCases, articleSentences,
+  prepositions, prepSentences,
   type Verb, type OrderSentence,
 } from "./vocab";
 
@@ -377,3 +378,49 @@ export function gArticleUsage(lang: Lang): Question {
 }
 
 export const gOrderArticle = (lang: Lang): OrderData => gOrder(lang, articleSentences);
+
+/* ---------- capítulo 10: preposições (lugar, tempo, modo) ---------- */
+const PREP_CAT_LABEL = {
+  pt: { lugar: "lugar", tempo: "tempo", modo: "modo" },
+  en: { lugar: "place", tempo: "time", modo: "manner" },
+} as const;
+
+export function gPrepMeaning(lang: Lang): Question {
+  const p = rand(prepositions);
+  const pool = prepositions.filter((o) => o.de !== p.de);
+  const opts = sample(pool, 3, p).map((o) => ({ label: o.meaning[lang], correct: false }));
+  opts.push({ label: p.meaning[lang], correct: true });
+  const prompt = lang === "pt"
+    ? `O que significa <span class="big">${p.de}</span> em “${p.example}”?`
+    : `What does <span class="big">${p.de}</span> mean in “${p.example}”?`;
+  return q({ promptHTML: prompt, speak: p.example, options: shuffle(opts), word: p.de, wordpt: p.meaning.pt });
+}
+
+export function gPrepCategoryMC(lang: Lang): Question {
+  const p = rand(prepositions);
+  const opts = (["lugar", "tempo", "modo"] as const).map((c) => ({ label: PREP_CAT_LABEL[lang][c], correct: c === p.category }));
+  const prompt = lang === "pt"
+    ? `<span class="big">${p.de}</span> em “${p.example}” é preposição de...`
+    : `<span class="big">${p.de}</span> in “${p.example}” is a preposition of...`;
+  return q({ promptHTML: prompt, speak: p.example, options: shuffle(opts), word: p.de, wordpt: p.category });
+}
+
+export function gPrepFillMC(lang: Lang): Question {
+  const p = rand(prepositions);
+  const pool = prepositions.filter((o) => o.de !== p.de);
+  const wrong = [...new Set(sample(pool, 3, p).map((o) => o.de))];
+  const opts = wrong.map((f) => ({ label: f, correct: false }));
+  opts.push({ label: p.de, correct: true });
+  const prompt = `Complete: <span class="big">${p.template}</span>`;
+  return q({ promptHTML: prompt, speak: p.example, options: shuffle(opts), word: p.de, wordpt: p.exampleMeaning.pt });
+}
+
+export function gTypePrep(lang: Lang): TypedQ {
+  const p = rand(prepositions);
+  const prompt = lang === "pt"
+    ? `Complete: <span class="big">${p.template}</span> (${p.exampleMeaning.pt})`
+    : `Complete: <span class="big">${p.template}</span> (${p.exampleMeaning.en})`;
+  return { promptHTML: prompt, answer: p.de, speak: p.example, word: p.de, wordpt: p.exampleMeaning.pt };
+}
+
+export const gOrderPrep = (lang: Lang): OrderData => gOrder(lang, prepSentences);

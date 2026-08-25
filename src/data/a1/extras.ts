@@ -1,7 +1,7 @@
 import type { Lang } from "../../i18n/types";
 import type { Profile } from "../../auth/AuthProvider";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS } from "./exercises";
-import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural, caseNouns, personalPronouns, indefPronouns, possessives } from "./vocab";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES } from "./exercises";
+import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural, caseNouns, personalPronouns, indefPronouns, possessives, prepositions } from "./vocab";
 
 export interface Flash { de: string; pt: string; emo: string; }
 
@@ -61,6 +61,12 @@ const sentencesPT: Record<string, [string, string][]> = {
     ["Ist das dein Auto?", "Esse é o seu carro?"],
     ["Unsere Schwester wohnt in Berlin.", "Nossa irmã mora em Berlim."],
   ],
+  [CH_PREPOSICOES]: [
+    ["Ich komme aus Brasilien.", "Eu venho do Brasil."],
+    ["Wir gehen ins Kino.", "Nós vamos ao cinema."],
+    ["Ich fahre mit dem Auto.", "Eu vou de carro."],
+    ["Am Wochenende schlafe ich lange.", "No fim de semana eu durmo até tarde."],
+  ],
 };
 const sentencesEN: Record<string, [string, string][]> = {
   [CH_EU_VOCE_SEIN]: [
@@ -117,6 +123,12 @@ const sentencesEN: Record<string, [string, string][]> = {
     ["Ihre Mutter ist nett.", "Her mother is nice."],
     ["Ist das dein Auto?", "Is that your car?"],
     ["Unsere Schwester wohnt in Berlin.", "Our sister lives in Berlin."],
+  ],
+  [CH_PREPOSICOES]: [
+    ["Ich komme aus Brasilien.", "I come from Brazil."],
+    ["Wir gehen ins Kino.", "We're going to the cinema."],
+    ["Ich fahre mit dem Auto.", "I go by car."],
+    ["Am Wochenende schlafe ich lange.", "On the weekend I sleep in."],
   ],
 };
 
@@ -176,6 +188,9 @@ export function deckForTopic(id: string, lang: Lang): Flash[] {
   }
   if (id === CH_ARTIGOS) {
     return possessives.map((p) => ({ de: `${p.stem} (${p.pronoun})`, pt: p.meaning[lang], emo: "🏷️" }));
+  }
+  if (id === CH_PREPOSICOES) {
+    return prepositions.map((p) => ({ de: `${p.de} — ${p.example}`, pt: p.meaning[lang], emo: "🧭" }));
   }
   return [];
 }

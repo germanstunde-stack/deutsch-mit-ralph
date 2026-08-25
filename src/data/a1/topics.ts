@@ -1,6 +1,6 @@
 import type { Lang } from "../../i18n/types";
 import type { TopicMeta } from "../topics";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES } from "./exercises";
 
 interface TopicMetaI18n { id: string; icon: string; name: Record<Lang, string>; cardTitle: Record<Lang, string>; explanationHTML: Record<Lang, string>; }
 
@@ -88,6 +88,15 @@ const TOPICS_I18N: TopicMetaI18n[] = [
     explanationHTML: {
       pt: "<p>Definido × indefinido × sem artigo × kein, e os possessivos mein/dein/sein/ihr/unser/euer.</p>",
       en: "<p>Definite vs indefinite vs no article vs kein, and the possessives mein/dein/sein/ihr/unser/euer.</p>",
+    },
+  },
+  {
+    id: CH_PREPOSICOES, icon: "🧭",
+    name: { pt: "Preposições", en: "Prepositions" },
+    cardTitle: { pt: "📖 Präpositionen", en: "📖 Prepositions" },
+    explanationHTML: {
+      pt: "<p>Preposições de lugar (aus, in, auf, bei, zu), tempo (um, am, im, vor, nach) e modo (mit).</p>",
+      en: "<p>Prepositions of place (aus, in, auf, bei, zu), time (um, am, im, vor, nach) and manner (mit).</p>",
     },
   },
 ];

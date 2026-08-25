@@ -232,6 +232,31 @@ export const articleSentences: OrderSentence[] = [
   { chunks: ["Schwester", "ist", "unsere", "nett"], answer: ["unsere", "Schwester", "ist", "nett"], meaning: { pt: "nossa irmã é legal", en: "our sister is nice" } },
 ];
 
+// ---- Capítulo 10: preposições (lugar, tempo, modo) ----
+export interface Preposition { de: string; meaning: Record<Lang, string>; example: string; template: string; exampleMeaning: Record<Lang, string>; category: "lugar" | "tempo" | "modo"; }
+export const prepositions: Preposition[] = [
+  { de: "aus", meaning: { pt: "de (origem)", en: "from (origin)" }, example: "Ich komme aus Deutschland.", template: "Ich komme ___ Deutschland.", exampleMeaning: { pt: "eu venho da Alemanha", en: "I come from Germany" }, category: "lugar" },
+  { de: "nach", meaning: { pt: "para (direção, sem artigo)", en: "to (direction, no article)" }, example: "Ich fahre nach Berlin.", template: "Ich fahre ___ Berlin.", exampleMeaning: { pt: "eu vou pra Berlim", en: "I'm going to Berlin" }, category: "lugar" },
+  { de: "im", meaning: { pt: "em (lugar parado — in+dem)", en: "in (static place — in+dem)" }, example: "Ich wohne im Haus.", template: "Ich wohne ___ Haus.", exampleMeaning: { pt: "eu moro na casa", en: "I live in the house" }, category: "lugar" },
+  { de: "ins", meaning: { pt: "pra dentro de (movimento — in+das)", en: "into (movement — in+das)" }, example: "Wir gehen ins Kino.", template: "Wir gehen ___ Kino.", exampleMeaning: { pt: "nós vamos ao cinema", en: "we're going to the cinema" }, category: "lugar" },
+  { de: "auf", meaning: { pt: "em cima de", en: "on top of" }, example: "Das Buch ist auf dem Tisch.", template: "Das Buch ist ___ dem Tisch.", exampleMeaning: { pt: "o livro está em cima da mesa", en: "the book is on the table" }, category: "lugar" },
+  { de: "beim", meaning: { pt: "na casa/consultório de (bei+dem)", en: "at (someone's place — bei+dem)" }, example: "Ich bin beim Arzt.", template: "Ich bin ___ Arzt.", exampleMeaning: { pt: "estou no médico", en: "I'm at the doctor's" }, category: "lugar" },
+  { de: "zum", meaning: { pt: "para (zu+dem)", en: "to (zu+dem)" }, example: "Ich gehe zum Arzt.", template: "Ich gehe ___ Arzt.", exampleMeaning: { pt: "eu vou ao médico", en: "I'm going to the doctor" }, category: "lugar" },
+  { de: "um", meaning: { pt: "às (hora exata)", en: "at (exact time)" }, example: "Ich komme um 20 Uhr.", template: "Ich komme ___ 20 Uhr.", exampleMeaning: { pt: "eu chego às 20h", en: "I arrive at 8pm" }, category: "tempo" },
+  { de: "am", meaning: { pt: "em/na (dia)", en: "on (day/date)" }, example: "Am Montag arbeite ich.", template: "___ Montag arbeite ich.", exampleMeaning: { pt: "na segunda eu trabalho", en: "on Monday I work" }, category: "tempo" },
+  { de: "im", meaning: { pt: "em (mês/estação)", en: "in (month/season)" }, example: "Im Mai ist es warm.", template: "___ Mai ist es warm.", exampleMeaning: { pt: "em maio está quente", en: "in May it's warm" }, category: "tempo" },
+  { de: "vor", meaning: { pt: "antes de", en: "before" }, example: "Vor dem Spiel esse ich.", template: "___ dem Spiel esse ich.", exampleMeaning: { pt: "antes do jogo eu como", en: "before the game I eat" }, category: "tempo" },
+  { de: "nach", meaning: { pt: "depois de", en: "after" }, example: "Nach dem Spiel schlafe ich.", template: "___ dem Spiel schlafe ich.", exampleMeaning: { pt: "depois do jogo eu durmo", en: "after the game I sleep" }, category: "tempo" },
+  { de: "mit", meaning: { pt: "de (transporte) / com", en: "by (transport) / with" }, example: "Ich fahre mit dem Bus.", template: "Ich fahre ___ dem Bus.", exampleMeaning: { pt: "eu vou de ônibus", en: "I go by bus" }, category: "modo" },
+];
+
+export const prepSentences: OrderSentence[] = [
+  { chunks: ["Deutschland", "ich", "komme", "aus"], answer: ["ich", "komme", "aus", "Deutschland"], meaning: { pt: "eu venho da Alemanha", en: "I come from Germany" } },
+  { chunks: ["Bus", "ich", "fahre", "mit", "dem"], answer: ["ich", "fahre", "mit", "dem", "Bus"], meaning: { pt: "eu vou de ônibus", en: "I go by bus" } },
+  { chunks: ["Montag", "arbeite", "am", "ich"], answer: ["ich", "arbeite", "am", "Montag"], meaning: { pt: "eu trabalho na segunda", en: "I work on Monday" } },
+  { chunks: ["Tisch", "Buch", "ist", "das", "auf", "dem"], answer: ["das", "Buch", "ist", "auf", "dem", "Tisch"], meaning: { pt: "o livro está em cima da mesa", en: "the book is on the table" } },
+];
+
 // ---- Capítulo 5: verbos modais ----
 export const modalVerbs: Verb[] = [
   { inf: "können", meaning: { pt: "poder / conseguir", en: "can / to be able to" }, forms: { ich: "kann", du: "kannst", er: "kann", wir: "können", ihr: "könnt", sie: "können" } },
