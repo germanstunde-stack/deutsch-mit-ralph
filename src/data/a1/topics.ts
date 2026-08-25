@@ -1,6 +1,6 @@
 import type { Lang } from "../../i18n/types";
 import type { TopicMeta } from "../topics";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS } from "./exercises";
 
 interface TopicMetaI18n { id: string; icon: string; name: Record<Lang, string>; cardTitle: Record<Lang, string>; explanationHTML: Record<Lang, string>; }
 
@@ -79,6 +79,15 @@ const TOPICS_I18N: TopicMetaI18n[] = [
     explanationHTML: {
       pt: "<p>Pronomes pessoais no Akkusativ/Dativ (er → ihn/ihm...) e os indefinidos alles/etwas/nichts/man.</p>",
       en: "<p>Personal pronouns in the Accusative/Dative (er → ihn/ihm...) and the indefinites alles/etwas/nichts/man.</p>",
+    },
+  },
+  {
+    id: CH_ARTIGOS, icon: "🏷️",
+    name: { pt: "Artigos & possessivos", en: "Articles & possessives" },
+    cardTitle: { pt: "📖 Artikelwörter", en: "📖 Article words" },
+    explanationHTML: {
+      pt: "<p>Definido × indefinido × sem artigo × kein, e os possessivos mein/dein/sein/ihr/unser/euer.</p>",
+      en: "<p>Definite vs indefinite vs no article vs kein, and the possessives mein/dein/sein/ihr/unser/euer.</p>",
     },
   },
 ];

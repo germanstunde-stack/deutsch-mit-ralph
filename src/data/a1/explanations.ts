@@ -4,7 +4,7 @@
 // mesmo estilo do A0 (regra curta + exemplo + erros comuns de quem já fala
 // português/inglês).
 import type { Lang } from "../../i18n/types";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS } from "./exercises";
 
 const explanationsPT: Record<string, string> = {
   [CH_EU_VOCE_SEIN]:
@@ -129,6 +129,22 @@ const explanationsPT: Record<string, string> = {
     '<tr><td><span class="de" data-say="nichts">nichts</span></td><td>nada</td></tr>' +
     '<tr><td><span class="de" data-say="man">man</span></td><td>a gente / se (impessoal)</td></tr></table>' +
     '<p><span class="de" data-say="man">man</span> é usado quando não se especifica quem faz a ação: <span class="de" data-say="Man spricht hier Deutsch">Man spricht hier Deutsch.</span> (fala-se alemão aqui / aqui a gente fala alemão)</p>',
+
+  [CH_ARTIGOS]:
+    '<h3>Definido, indefinido ou nenhum?</h3><ul>' +
+    '<li><b class="de">der/die/das</b> — coisa específica, já conhecida: <span class="de" data-say="Die Studentin kommt aus Nigeria">Die Studentin kommt aus Nigeria.</span> (a estudante que a gente já mencionou)</li>' +
+    '<li><b class="de">ein/eine</b> — uma coisa qualquer, 1ª menção: <span class="de" data-say="Ich möchte einen Kaffee">Ich möchte einen Kaffee.</span></li>' +
+    '<li><b>sem artigo (Nullartikel)</b> — profissões/nacionalidades depois de <span class="de" data-say="sein">sein</span>: <span class="de" data-say="Ich bin Lehrer">Ich bin Lehrer.</span> (não “ein Lehrer”)</li>' +
+    '<li><b class="de">kein/keine</b> — nega um <span class="de">ein</span>: <span class="de" data-say="Das ist kein Baum">Das ist kein Baum.</span> (não é uma árvore)</li></ul>' +
+    '<h3>Possessivos: mein, dein, sein, ihr, unser, euer</h3>' +
+    '<table class="br"><tr><td>ich → <span class="de" data-say="mein">mein</span></td><td>wir → <span class="de" data-say="unser">unser</span></td></tr>' +
+    '<tr><td>du → <span class="de" data-say="dein">dein</span></td><td>ihr → <span class="de" data-say="euer">euer</span></td></tr>' +
+    '<tr><td>er/es → <span class="de" data-say="sein">sein</span></td><td>sie(pl)/Sie → <span class="de" data-say="ihr">ihr</span> / <span class="de" data-say="Ihr">Ihr</span></td></tr>' +
+    '<tr><td>sie → <span class="de" data-say="ihr">ihr</span></td><td></td></tr></table>' +
+    '<p>Seguem a <b>mesma terminação de <span class="de" data-say="ein">ein</span></b>: sem nada pra der/das, <b>-e</b> pra die: <span class="de" data-say="mein Vater">mein Vater</span> (masc), <span class="de" data-say="meine Mutter">meine Mutter</span> (fem), <span class="de" data-say="mein Auto">mein Auto</span> (neutro).</p>' +
+    '<h3>⚠️ Cuidado</h3><ul>' +
+    '<li><b class="de">sein</b> = dele (masc/neutro) ≠ <b class="de">ihr</b> = dela — não confunda com o pronome <b class="de">sie</b> (ela/eles).</li>' +
+    '<li><b class="de">euer</b> perde o “e” do meio antes de -e: <span class="de" data-say="eure Mutter">eure Mutter</span> (não “euere Mutter”).</li></ul>',
 };
 
 const explanationsEN: Record<string, string> = {
@@ -254,6 +270,22 @@ const explanationsEN: Record<string, string> = {
     '<tr><td><span class="de" data-say="nichts">nichts</span></td><td>nothing</td></tr>' +
     '<tr><td><span class="de" data-say="man">man</span></td><td>one / people (impersonal)</td></tr></table>' +
     '<p><span class="de" data-say="man">man</span> is used when you don’t specify who does the action: <span class="de" data-say="Man spricht hier Deutsch">Man spricht hier Deutsch.</span> (German is spoken here / people speak German here)</p>',
+
+  [CH_ARTIGOS]:
+    '<h3>Definite, indefinite, or none?</h3><ul>' +
+    '<li><b class="de">der/die/das</b> — a specific, already-known thing: <span class="de" data-say="Die Studentin kommt aus Nigeria">Die Studentin kommt aus Nigeria.</span> (the student we already mentioned)</li>' +
+    '<li><b class="de">ein/eine</b> — any one thing, first mention: <span class="de" data-say="Ich möchte einen Kaffee">Ich möchte einen Kaffee.</span></li>' +
+    '<li><b>no article (Nullartikel)</b> — professions/nationalities after <span class="de" data-say="sein">sein</span>: <span class="de" data-say="Ich bin Lehrer">Ich bin Lehrer.</span> (not "ein Lehrer")</li>' +
+    '<li><b class="de">kein/keine</b> — negates an <span class="de">ein</span>: <span class="de" data-say="Das ist kein Baum">Das ist kein Baum.</span> (it is not a tree)</li></ul>' +
+    '<h3>Possessives: mein, dein, sein, ihr, unser, euer</h3>' +
+    '<table class="br"><tr><td>ich → <span class="de" data-say="mein">mein</span></td><td>wir → <span class="de" data-say="unser">unser</span></td></tr>' +
+    '<tr><td>du → <span class="de" data-say="dein">dein</span></td><td>ihr → <span class="de" data-say="euer">euer</span></td></tr>' +
+    '<tr><td>er/es → <span class="de" data-say="sein">sein</span></td><td>sie(pl)/Sie → <span class="de" data-say="ihr">ihr</span> / <span class="de" data-say="Ihr">Ihr</span></td></tr>' +
+    '<tr><td>sie → <span class="de" data-say="ihr">ihr</span></td><td></td></tr></table>' +
+    '<p>They take the <b>same endings as <span class="de" data-say="ein">ein</span></b>: nothing for der/das, <b>-e</b> for die: <span class="de" data-say="mein Vater">mein Vater</span> (masc), <span class="de" data-say="meine Mutter">meine Mutter</span> (fem), <span class="de" data-say="mein Auto">mein Auto</span> (neuter).</p>' +
+    '<h3>⚠️ Watch out</h3><ul>' +
+    '<li><b class="de">sein</b> = his/its (masc/neuter) ≠ <b class="de">ihr</b> = her — don’t confuse it with the pronoun <b class="de">sie</b> (she/they).</li>' +
+    '<li><b class="de">euer</b> drops the middle "e" before -e: <span class="de" data-say="eure Mutter">eure Mutter</span> (not "euere Mutter").</li></ul>',
 };
 
 export function explanationsFor(lang: Lang): Record<string, string> {

@@ -195,6 +195,43 @@ export const pronounSentences: OrderSentence[] = [
   { chunks: ["nichts", "weiß", "ich"], answer: ["ich", "weiß", "nichts"], meaning: { pt: "eu não sei nada", en: "I know nothing" } },
 ];
 
+// ---- Capítulo 9: artigos & possessivos ----
+export interface PossessivePerson { pronoun: string; stem: string; meaning: Record<Lang, string>; }
+export const possessives: PossessivePerson[] = [
+  { pronoun: "ich", stem: "mein", meaning: { pt: "meu / minha", en: "my" } },
+  { pronoun: "du", stem: "dein", meaning: { pt: "teu / tua (seu/sua informal)", en: "your (informal)" } },
+  { pronoun: "er / es", stem: "sein", meaning: { pt: "dele", en: "his / its" } },
+  { pronoun: "sie", stem: "ihr", meaning: { pt: "dela", en: "her" } },
+  { pronoun: "wir", stem: "unser", meaning: { pt: "nosso / nossa", en: "our" } },
+  { pronoun: "ihr", stem: "euer", meaning: { pt: "vosso / de vocês", en: "your (plural, informal)" } },
+];
+
+export interface PossessiveNoun { de: string; art: "der" | "die" | "das"; meaning: Record<Lang, string>; }
+export const possessiveNouns: PossessiveNoun[] = [
+  { de: "Vater", art: "der", meaning: { pt: "pai", en: "father" } },
+  { de: "Mutter", art: "die", meaning: { pt: "mãe", en: "mother" } },
+  { de: "Auto", art: "das", meaning: { pt: "carro", en: "car" } },
+  { de: "Schwester", art: "die", meaning: { pt: "irmã", en: "sister" } },
+  { de: "Bruder", art: "der", meaning: { pt: "irmão", en: "brother" } },
+  { de: "Haus", art: "das", meaning: { pt: "casa", en: "house" } },
+];
+
+// Uso do artigo definido/indefinido/nulo/negativo (topics 27-29 do livro) —
+// exemplos fixos, curados, em vez de gerados a partir de vocabulário solto.
+export interface ArticleCase { promptHTML: Record<Lang, string>; speak: string; options: string[]; correct: string; word: string; }
+export const articleCases: ArticleCase[] = [
+  { promptHTML: { pt: 'Complete: <span class="big">Ich bin ___ Lehrer.</span> (profissão, sem artigo)', en: 'Complete: <span class="big">Ich bin ___ Lehrer.</span> (profession, no article)' }, speak: "Ich bin Lehrer", options: ["ein", "der", "—"], correct: "—", word: "Lehrer" },
+  { promptHTML: { pt: 'Complete: <span class="big">Ich möchte ___ Kaffee, bitte.</span> (um café qualquer, 1ª menção)', en: 'Complete: <span class="big">Ich möchte ___ Kaffee, bitte.</span> (any coffee, first mention)' }, speak: "Ich möchte einen Kaffee", options: ["einen", "der", "kein"], correct: "einen", word: "Kaffee" },
+  { promptHTML: { pt: 'Complete: <span class="big">___ Studentin kommt aus Nigeria.</span> (a estudante que já conhecemos)', en: 'Complete: <span class="big">___ Studentin kommt aus Nigeria.</span> (the student we already know)' }, speak: "Die Studentin kommt aus Nigeria", options: ["Die", "Eine", "—"], correct: "Die", word: "Studentin" },
+  { promptHTML: { pt: 'Complete: <span class="big">Das ist ___ Baum.</span> (negando "ein Baum")', en: 'Complete: <span class="big">Das ist ___ Baum.</span> (negating "ein Baum")' }, speak: "Das ist kein Baum", options: ["kein", "nicht", "keine"], correct: "kein", word: "Baum" },
+];
+
+export const articleSentences: OrderSentence[] = [
+  { chunks: ["Vater", "ist", "mein", "Lehrer"], answer: ["mein", "Vater", "ist", "Lehrer"], meaning: { pt: "meu pai é professor", en: "my father is a teacher" } },
+  { chunks: ["Auto", "ist", "sein", "neu"], answer: ["sein", "Auto", "ist", "neu"], meaning: { pt: "o carro dele é novo", en: "his car is new" } },
+  { chunks: ["Schwester", "ist", "unsere", "nett"], answer: ["unsere", "Schwester", "ist", "nett"], meaning: { pt: "nossa irmã é legal", en: "our sister is nice" } },
+];
+
 // ---- Capítulo 5: verbos modais ----
 export const modalVerbs: Verb[] = [
   { inf: "können", meaning: { pt: "poder / conseguir", en: "can / to be able to" }, forms: { ich: "kann", du: "kannst", er: "kann", wir: "können", ihr: "könnt", sie: "können" } },

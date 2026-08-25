@@ -1,7 +1,7 @@
 import type { Lang } from "../../i18n/types";
 import type { CardItem } from "../../components/Cards";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES } from "./exercises";
-import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural, caseNouns, personalPronouns, indefPronouns, type Verb, type PerfektVerb } from "./vocab";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS } from "./exercises";
+import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural, caseNouns, personalPronouns, indefPronouns, possessives, possessiveNouns, type Verb, type PerfektVerb } from "./vocab";
 
 export interface CardsData { items: CardItem[]; gridClass: string; legend?: boolean; }
 
@@ -53,6 +53,20 @@ function pronCards(lang: Lang): CardItem[] {
     ...indefPronouns.map((w) => ({ deHTML: w.de, pt: w.meaning[lang], speak: w.de })),
   ];
 }
+function possForm(stem: string, art: "der" | "die" | "das"): string {
+  if (art !== "die") return stem;
+  if (stem === "euer") return "eure";
+  return stem + "e";
+}
+function possCards(lang: Lang): CardItem[] {
+  const sample = possessiveNouns[0]; // der Vater — mostra as 3 formas de gênero num exemplo fixo
+  const dieSample = possessiveNouns.find((n) => n.art === "die")!;
+  const dasSample = possessiveNouns.find((n) => n.art === "das")!;
+  return possessives.map((p) => ({
+    deHTML: `<b>${p.stem}</b><br><small>${possForm(p.stem, sample.art)} ${sample.de} · ${possForm(p.stem, dieSample.art)} ${dieSample.de} · ${possForm(p.stem, dasSample.art)} ${dasSample.de}</small>`,
+    pt: p.meaning[lang], speak: p.stem,
+  }));
+}
 function perfektCards(pool: PerfektVerb[], lang: Lang): CardItem[] {
   return pool.map((v) => ({
     deHTML: `${v.inf} → <b>${v.partizip}</b><br><small>${v.auxiliary}</small>`,
@@ -84,6 +98,9 @@ export function cardsForTopic(id: string, lang: Lang): CardsData {
   }
   if (id === CH_PRONOMES) {
     return { gridClass: "grid", items: pronCards(lang) };
+  }
+  if (id === CH_ARTIGOS) {
+    return { gridClass: "grid", items: possCards(lang) };
   }
   return { gridClass: "grid", items: [] };
 }

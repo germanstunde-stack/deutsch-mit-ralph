@@ -10,6 +10,7 @@ import {
   nounsPlural, pluralSentences,
   caseNouns, caseSentences,
   personalPronouns, indefPronouns, pronounSentences,
+  possessives, possessiveNouns, articleCases, articleSentences,
   type Verb, type OrderSentence,
 } from "./vocab";
 
@@ -327,3 +328,52 @@ export function gIndefMeaning(lang: Lang): Question {
 }
 
 export const gOrderPronoun = (lang: Lang): OrderData => gOrder(lang, pronounSentences);
+
+/* ---------- capítulo 9: artigos & possessivos ---------- */
+function possForm(stem: string, art: "der" | "die" | "das"): string {
+  if (art !== "die") return stem;
+  if (stem === "euer") return "eure";
+  return stem + "e";
+}
+
+export function gPossMeaning(lang: Lang): Question {
+  const p = rand(possessives);
+  const opts = sample(possessives, 3, p).map((o) => ({ label: o.meaning[lang], correct: false }));
+  opts.push({ label: p.meaning[lang], correct: true });
+  const prompt = lang === "pt"
+    ? `O que significa <span class="big">${p.stem}</span> (${p.pronoun})?`
+    : `What does <span class="big">${p.stem}</span> (${p.pronoun}) mean?`;
+  return q({ promptHTML: prompt, speak: p.stem, options: shuffle(opts), word: p.stem, wordpt: p.pronoun });
+}
+
+export function gPossMC(lang: Lang): Question {
+  const p = rand(possessives);
+  const n = rand(possessiveNouns);
+  const correct = possForm(p.stem, n.art);
+  const wrongPool = possessives.filter((o) => o !== p).map((o) => possForm(o.stem, n.art));
+  const wrong = sample([...new Set(wrongPool)], 3, correct);
+  const opts = wrong.map((f) => ({ label: f, correct: false }));
+  opts.push({ label: correct, correct: true });
+  const prompt = lang === "pt"
+    ? `Complete: <span class="big">${p.pronoun} ___ ${n.de}</span> (${n.meaning.pt})`
+    : `Complete: <span class="big">${p.pronoun} ___ ${n.de}</span> (${n.meaning.en})`;
+  return q({ promptHTML: prompt, speak: `${correct} ${n.de}`, options: shuffle(opts), word: correct, wordpt: n.de });
+}
+
+export function gTypePoss(lang: Lang): TypedQ {
+  const p = rand(possessives);
+  const n = rand(possessiveNouns);
+  const correct = possForm(p.stem, n.art);
+  const prompt = lang === "pt"
+    ? `Complete: <span class="big">${p.pronoun} ___ ${n.de}</span> (${n.meaning.pt} — ${p.meaning.pt})`
+    : `Complete: <span class="big">${p.pronoun} ___ ${n.de}</span> (${n.meaning.en} — ${p.meaning.en})`;
+  return { promptHTML: prompt, answer: correct, speak: `${correct} ${n.de}`, word: correct, wordpt: n.de };
+}
+
+export function gArticleUsage(lang: Lang): Question {
+  const c = rand(articleCases);
+  const opts = shuffle(c.options).map((o) => ({ label: o, correct: o === c.correct }));
+  return q({ promptHTML: c.promptHTML[lang], speak: c.speak, options: opts, word: c.word, wordpt: "" });
+}
+
+export const gOrderArticle = (lang: Lang): OrderData => gOrder(lang, articleSentences);
