@@ -71,7 +71,7 @@ export function TopicView({ id, mod, onResult, next }: { id: string; mod: Module
       <div className="tsplit">
         <div className="tcol left">
           <div className="subhead">{meta.cardTitle} — {t("card_click_hint")}</div>
-          <CardGrid id={id} />
+          <CardGrid {...mod.cardsForTopic(id, lang)} />
         </div>
         <div className="tcol right">
           <div className="subhead">{t("explanation_title")}</div>

@@ -1,6 +1,6 @@
 import type { Lang } from "../../i18n/types";
 import type { TopicMeta } from "../topics";
-import { CH_EU_VOCE_SEIN } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN } from "./exercises";
 
 interface TopicMetaI18n { id: string; icon: string; name: Record<Lang, string>; cardTitle: Record<Lang, string>; explanationHTML: Record<Lang, string>; }
 
@@ -16,6 +16,15 @@ const TOPICS_I18N: TopicMetaI18n[] = [
     explanationHTML: {
       pt: "<p>Pronomes pessoais (ich, du, er...) e a conjugação do verbo <b class='de'>sein</b> (ser/estar) — a base de qualquer frase em alemão.</p>",
       en: "<p>Personal pronouns (ich, du, er...) and the conjugation of the verb <b class='de'>sein</b> (to be) — the foundation of every German sentence.</p>",
+    },
+  },
+  {
+    id: CH_VERBOS_HABEN, icon: "🗣️",
+    name: { pt: "Verbos regulares & haben", en: "Regular verbs & haben" },
+    cardTitle: { pt: "📖 Verben im Präsens", en: "📖 Verbs in the present tense" },
+    explanationHTML: {
+      pt: "<p>Conjugação regular no presente, o verbo <b class='de'>haben</b> (ter) e verbos que mudam de vogal (fahren, sehen, essen...).</p>",
+      en: "<p>Regular present-tense conjugation, the verb <b class='de'>haben</b> (to have), and vowel-changing verbs (fahren, sehen, essen...).</p>",
     },
   },
 ];

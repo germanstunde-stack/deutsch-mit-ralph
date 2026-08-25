@@ -1,14 +1,18 @@
 import { shuffle } from "../generators";
 import type { ExSpec } from "../exercises";
 import type { Lang } from "../../i18n/types";
-import { gPronounMeaning, gSeinForm, gTypeSein, gOrderSein } from "./generators";
+import {
+  gPronounMeaning, gSeinForm, gTypeSein, gOrderSein,
+  gVerbMeaning, gVerbFormMC, gTypeVerbForm, gHabenForm, gTypeHaben, gOrderVerb,
+} from "./generators";
 
 export const CH_EU_VOCE_SEIN = "eu-voce-sein";
+export const CH_VERBOS_HABEN = "verbos-regulares-haben";
 
 // Ordem oficial das unidades do "Grammatik leicht A1": cada id aqui vira um
-// capítulo (20 pts na prática, igual ao A0). Só o primeiro está implementado
-// por enquanto — os outros entram nas próximas entregas.
-export const CHAPTER_IDS = [CH_EU_VOCE_SEIN];
+// capítulo (20 pts na prática, igual ao A0). Só os 2 primeiros estão
+// implementados por enquanto — os outros entram nas próximas entregas.
+export const CHAPTER_IDS = [CH_EU_VOCE_SEIN, CH_VERBOS_HABEN];
 
 function specsForChapter(id: string, lang: Lang): ExSpec[] {
   switch (id) {
@@ -18,6 +22,15 @@ function specsForChapter(id: string, lang: Lang): ExSpec[] {
         { kind: "mc", gen: () => gSeinForm(lang) },
         { kind: "typed", gen: () => gTypeSein(lang) },
         { kind: "order", gen: () => gOrderSein(lang) },
+      ];
+    case CH_VERBOS_HABEN:
+      return [
+        { kind: "mc", gen: () => gVerbMeaning(lang) },
+        { kind: "mc", gen: () => gVerbFormMC(lang) },
+        { kind: "typed", gen: () => gTypeVerbForm(lang) },
+        { kind: "mc", gen: () => gHabenForm(lang) },
+        { kind: "typed", gen: () => gTypeHaben(lang) },
+        { kind: "order", gen: () => gOrderVerb(lang) },
       ];
     default:
       return [{ kind: "mc", gen: () => gPronounMeaning(lang) }];

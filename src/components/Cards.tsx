@@ -3,12 +3,15 @@ import { numDE } from "../lib/numbers";
 import { alphabet, animals, food, colors, greet, phrases, weekdays, daywords, months, opposites, measures, cognates, falseFriends, type Noun } from "../data/vocab";
 
 export interface CardItem { emo?: string; deHTML: string; pt?: string; ptBad?: string; speak: string; swatch?: string; say?: string; }
+export interface CardsData { items: CardItem[]; gridClass: string; legend?: boolean; }
 
 function nounCard(a: Noun): CardItem {
   return { emo: a.emo, deHTML: `<span class="art ${a.art}">${a.art}</span> ${a.de}`, pt: a.pt, speak: `${a.art} ${a.de}` };
 }
 
-export function cardsForTopic(id: string): { items: CardItem[]; gridClass: string; legend?: boolean } {
+// Cards do A0 (fiel ao protótipo). Módulos novos (A1+) trazem seus próprios
+// cardsForTopic — ver src/data/modules.ts.
+export function cardsForTopicA0(id: string): CardsData {
   switch (id) {
     case "alfabeto":
       return { gridClass: "grid tiny", items: alphabet.map(([l, name]) => ({ deHTML: l, say: "🔊 " + name, speak: l })) };
@@ -45,8 +48,7 @@ export function cardsForTopic(id: string): { items: CardItem[]; gridClass: strin
   }
 }
 
-export function CardGrid({ id }: { id: string }) {
-  const { items, gridClass, legend } = cardsForTopic(id);
+export function CardGrid({ items, gridClass, legend }: CardsData) {
   return (
     <>
       {legend && (
