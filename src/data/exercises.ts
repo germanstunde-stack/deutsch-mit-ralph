@@ -62,7 +62,7 @@ const SPECS: Record<string, ExSpec[]> = {
   similar: [{ kind: "mc", gen: mcGen("similar") }, { kind: "connect", gen: conCognate(5) }, { kind: "mc", gen: mcGen("similar") }, { kind: "typed", gen: gTypeCognate }, { kind: "dict", gen: gDictate(cognates.map((c) => [c.de, c.pt] as [string, string])) }],
 };
 
-export function exSpecsForTopic(id: string, count = 12): ExSpec[] {
+export function exSpecsForTopic(id: string, count = 20): ExSpec[] {
   const base = SPECS[id] ?? SPECS.similar;
   const out: ExSpec[] = [];
   for (let i = 0; i < count; i++) out.push(base[i % base.length]);

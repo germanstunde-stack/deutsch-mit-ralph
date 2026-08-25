@@ -9,8 +9,12 @@ import { explanations } from "../data/explanations";
 import { sentences, deckForTopic } from "../data/extras";
 import { speak } from "../lib/speech";
 
-export function TopicView({ id, onResult }: { id: string; onResult: (correct: number, wrong: number) => void }) {
+export function TopicView({ id, onResult, next }: { id: string; onResult: (correct: number, wrong: number) => void; next: { id: string; label: string } | null }) {
   const meta = topics.find((t) => t.id === id)!;
+  function goNext() {
+    const target = next ? "top-" + next.id : "prova";
+    document.getElementById(target)?.scrollIntoView({ behavior: "smooth" });
+  }
   const [round, setRound] = useState(0);
   const [specs, setSpecs] = useState(() => exSpecsForTopic(id));
   const resolvedRef = useRef<boolean[]>([]);
@@ -35,7 +39,7 @@ export function TopicView({ id, onResult }: { id: string; onResult: (correct: nu
   }
 
   return (
-    <section className="panel">
+    <section className="panel topic-sec" id={"top-" + id}>
       <h2>{meta.icon} {meta.name}</h2>
       <div className="tsplit">
         <div className="tcol left">
@@ -78,7 +82,10 @@ export function TopicView({ id, onResult }: { id: string; onResult: (correct: nu
           {specs.map((s, i) => (
             <Exercise key={round + "-" + i} spec={s} num={i + 1} onResolve={(c, w) => resolve(i, c, w)} />
           ))}
-          <div className="btnrow"><button className="btn ghost" onClick={trocar}>🔁 Trocar exercícios</button></div>
+          <div className="btnrow"><button className="btn ghost" onClick={trocar}>🔁 Trocar exercícios (20 novos)</button></div>
+          <div className="btnrow" style={{ marginTop: 12 }}>
+            <button className="btn primary" onClick={goNext}>{next ? `Próximo: ${next.label} →` : "Ir pra Prova 📝 →"}</button>
+          </div>
         </div>
       </div>
     </section>
