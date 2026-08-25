@@ -6,6 +6,7 @@ import {
   regularVerbs, vowelChangeVerbs, habenForms, verbSentences,
   imperativeVerbs, separableVerbs, separableSentences,
   perfektHabenRegular, perfektHabenIrregular, perfektSein, perfektSentences,
+  modalVerbs, modalSentences,
   type Verb, type OrderSentence,
 } from "./vocab";
 
@@ -194,3 +195,9 @@ export function gTypePerfektAux(lang: Lang): TypedQ {
 }
 
 export const gOrderPerfekt = (lang: Lang): OrderData => gOrder(lang, perfektSentences);
+
+/* ---------- capítulo 5: verbos modais ---------- */
+export const gModalMeaning = (lang: Lang): Question => gVerbMeaningGeneric(lang, modalVerbs);
+export const gModalFormMC = (lang: Lang): Question => gVerbFormMCGeneric(lang, modalVerbs);
+export const gTypeModalForm = (lang: Lang): TypedQ => gTypeVerbFormGeneric(lang, modalVerbs);
+export const gOrderModal = (lang: Lang): OrderData => gOrder(lang, modalSentences);

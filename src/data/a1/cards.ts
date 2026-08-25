@@ -1,7 +1,7 @@
 import type { Lang } from "../../i18n/types";
 import type { CardItem } from "../../components/Cards";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT } from "./exercises";
-import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, type Verb, type PerfektVerb } from "./vocab";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS } from "./exercises";
+import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, type Verb, type PerfektVerb } from "./vocab";
 
 export interface CardsData { items: CardItem[]; gridClass: string; legend?: boolean; }
 
@@ -54,6 +54,9 @@ export function cardsForTopic(id: string, lang: Lang): CardsData {
   }
   if (id === CH_PERFEKT) {
     return { gridClass: "grid", items: [...perfektCards(perfektHabenRegular, lang), ...perfektCards(perfektHabenIrregular, lang), ...perfektCards(perfektSein, lang)] };
+  }
+  if (id === CH_MODAIS) {
+    return { gridClass: "grid", items: verbCards(modalVerbs, lang) };
   }
   return { gridClass: "grid", items: [] };
 }

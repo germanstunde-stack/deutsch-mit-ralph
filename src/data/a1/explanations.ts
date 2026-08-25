@@ -4,7 +4,7 @@
 // mesmo estilo do A0 (regra curta + exemplo + erros comuns de quem já fala
 // português/inglês).
 import type { Lang } from "../../i18n/types";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS } from "./exercises";
 
 const explanationsPT: Record<string, string> = {
   [CH_EU_VOCE_SEIN]:
@@ -74,6 +74,20 @@ const explanationsPT: Record<string, string> = {
     '<li>A maioria dos verbos usa <b class="de">haben</b>.</li>' +
     '<li>Verbos de <b>movimento de A pra B</b> (ou mudança de estado) usam <b class="de">sein</b>: <span class="de" data-say="gehen">gehen</span> → <span class="de" data-say="ich bin gegangen">ich bin gegangen</span>, <span class="de" data-say="fahren">fahren</span> → <span class="de" data-say="du bist gefahren">du bist gefahren</span>, <span class="de" data-say="kommen">kommen</span> → <span class="de" data-say="er ist gekommen">er ist gekommen</span>.</li>' +
     '<li>O particípio (gelernt, gegessen...) é <b>igual pra todo mundo</b> — só o auxiliar (habe/hast/hat.../bin/bist/ist...) muda de acordo com quem fala.</li></ul>',
+
+  [CH_MODAIS]:
+    '<h3>Verbos modais</h3><p>Expressam capacidade, obrigação, vontade, permissão ou conselho. Uma coisa estranha: <b class="de">ich</b> e <b class="de">er/es/sie</b> têm a <b>mesma forma</b> (sem -e nem -t)!</p>' +
+    '<table class="br"><tr><td>können (poder/conseguir)</td><td><span class="de" data-say="ich kann">kann</span> · <span class="de" data-say="du kannst">kannst</span> · <span class="de" data-say="er kann">kann</span></td></tr>' +
+    '<tr><td>müssen (precisar)</td><td><span class="de" data-say="ich muss">muss</span> · <span class="de" data-say="du musst">musst</span> · <span class="de" data-say="er muss">muss</span></td></tr>' +
+    '<tr><td>wollen (querer)</td><td><span class="de" data-say="ich will">will</span> · <span class="de" data-say="du willst">willst</span> · <span class="de" data-say="er will">will</span></td></tr>' +
+    '<tr><td>dürfen (poder/permissão)</td><td><span class="de" data-say="ich darf">darf</span> · <span class="de" data-say="du darfst">darfst</span> · <span class="de" data-say="er darf">darf</span></td></tr>' +
+    '<tr><td>sollen (dever)</td><td><span class="de" data-say="ich soll">soll</span> · <span class="de" data-say="du sollst">sollst</span> · <span class="de" data-say="er soll">soll</span></td></tr></table>' +
+    '<h3>💡 möchten = a versão educada de wollen</h3><p><span class="de" data-say="Ich will einen Kaffee">Ich will einen Kaffee</span> soa meio ríspido (eu QUERO um café!). Prefira <span class="de" data-say="Ich möchte einen Kaffee">Ich möchte einen Kaffee</span> (eu gostaria de um café) — e esse conjuga normal, com -e no ich/er.</p>' +
+    '<h3>📐 O infinitivo vai pro fim!</h3><p>O verbo modal fica na 2ª posição, e o verbo principal (no infinitivo, sem conjugar) vai pro <b>final</b> da frase — mesma Satzklammer do Perfekt e dos separáveis:</p>' +
+    '<p><span class="de" data-say="Ich kann gut schwimmen">Ich kann gut schwimmen.</span> (eu sei nadar bem) — <span class="k">kann</span> na 2ª posição, <span class="k">schwimmen</span> no fim.</p>' +
+    '<h3>⚠️ Cuidado com o significado</h3><ul>' +
+    '<li><b class="de">müssen</b> (obrigação de verdade) ≠ <b class="de">sollen</b> (conselho ou ordem de outra pessoa).</li>' +
+    '<li><b class="de">können</b> (capacidade: sei fazer) ≠ <b class="de">dürfen</b> (permissão: posso fazer).</li></ul>',
 };
 
 const explanationsEN: Record<string, string> = {
@@ -144,6 +158,20 @@ const explanationsEN: Record<string, string> = {
     '<li>Most verbs use <b class="de">haben</b>.</li>' +
     '<li>Verbs of <b>movement from A to B</b> (or a change of state) use <b class="de">sein</b>: <span class="de" data-say="gehen">gehen</span> → <span class="de" data-say="ich bin gegangen">ich bin gegangen</span>, <span class="de" data-say="fahren">fahren</span> → <span class="de" data-say="du bist gefahren">du bist gefahren</span>, <span class="de" data-say="kommen">kommen</span> → <span class="de" data-say="er ist gekommen">er ist gekommen</span>.</li>' +
     '<li>The participle (gelernt, gegessen...) is <b>the same for everyone</b> — only the auxiliary (habe/hast/hat.../bin/bist/ist...) changes depending on who is speaking.</li></ul>',
+
+  [CH_MODAIS]:
+    '<h3>Modal verbs</h3><p>They express ability, obligation, wish, permission or advice. A strange quirk: <b class="de">ich</b> and <b class="de">er/es/sie</b> have the <b>same form</b> (no -e or -t)!</p>' +
+    '<table class="br"><tr><td>können (can / to be able to)</td><td><span class="de" data-say="ich kann">kann</span> · <span class="de" data-say="du kannst">kannst</span> · <span class="de" data-say="er kann">kann</span></td></tr>' +
+    '<tr><td>müssen (must)</td><td><span class="de" data-say="ich muss">muss</span> · <span class="de" data-say="du musst">musst</span> · <span class="de" data-say="er muss">muss</span></td></tr>' +
+    '<tr><td>wollen (to want)</td><td><span class="de" data-say="ich will">will</span> · <span class="de" data-say="du willst">willst</span> · <span class="de" data-say="er will">will</span></td></tr>' +
+    '<tr><td>dürfen (may / permission)</td><td><span class="de" data-say="ich darf">darf</span> · <span class="de" data-say="du darfst">darfst</span> · <span class="de" data-say="er darf">darf</span></td></tr>' +
+    '<tr><td>sollen (should)</td><td><span class="de" data-say="ich soll">soll</span> · <span class="de" data-say="du sollst">sollst</span> · <span class="de" data-say="er soll">soll</span></td></tr></table>' +
+    '<h3>💡 möchten = the polite version of wollen</h3><p><span class="de" data-say="Ich will einen Kaffee">Ich will einen Kaffee</span> sounds a bit blunt (I WANT a coffee!). Prefer <span class="de" data-say="Ich möchte einen Kaffee">Ich möchte einen Kaffee</span> (I would like a coffee) — and this one conjugates regularly, with -e in ich/er.</p>' +
+    '<h3>📐 The infinitive goes to the end!</h3><p>The modal verb stays in 2nd position, and the main verb (in the infinitive, not conjugated) moves to the <b>end</b> of the sentence — the same Satzklammer pattern as Perfekt and separable verbs:</p>' +
+    '<p><span class="de" data-say="Ich kann gut schwimmen">Ich kann gut schwimmen.</span> (I can swim well) — <span class="k">kann</span> in 2nd position, <span class="k">schwimmen</span> at the end.</p>' +
+    '<h3>⚠️ Watch the meaning</h3><ul>' +
+    '<li><b class="de">müssen</b> (a real obligation) ≠ <b class="de">sollen</b> (advice or someone else’s instruction).</li>' +
+    '<li><b class="de">können</b> (ability: I know how) ≠ <b class="de">dürfen</b> (permission: I am allowed to).</li></ul>',
 };
 
 export function explanationsFor(lang: Lang): Record<string, string> {

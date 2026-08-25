@@ -1,6 +1,6 @@
 import type { Lang } from "../../i18n/types";
 import type { TopicMeta } from "../topics";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS } from "./exercises";
 
 interface TopicMetaI18n { id: string; icon: string; name: Record<Lang, string>; cardTitle: Record<Lang, string>; explanationHTML: Record<Lang, string>; }
 
@@ -43,6 +43,15 @@ const TOPICS_I18N: TopicMetaI18n[] = [
     explanationHTML: {
       pt: "<p>O passado do dia a dia: <b class='de'>haben</b>/<b class='de'>sein</b> conjugado + Partizip II no final da frase.</p>",
       en: "<p>The everyday past tense: conjugated <b class='de'>haben</b>/<b class='de'>sein</b> + Partizip II at the end of the sentence.</p>",
+    },
+  },
+  {
+    id: CH_MODAIS, icon: "🧠",
+    name: { pt: "Verbos modais", en: "Modal verbs" },
+    cardTitle: { pt: "📖 Die Modalverben", en: "📖 Modal verbs" },
+    explanationHTML: {
+      pt: "<p>können, müssen, wollen/möchten, dürfen, sollen — o infinitivo do verbo principal vai pro final da frase.</p>",
+      en: "<p>können, müssen, wollen/möchten, dürfen, sollen — the main verb's infinitive moves to the end of the sentence.</p>",
     },
   },
 ];

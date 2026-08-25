@@ -126,6 +126,24 @@ export const perfektSein: PerfektVerb[] = [
   { inf: "fliegen", partizip: "geflogen", auxiliary: "sein", meaning: { pt: "voar", en: "to fly" } },
 ];
 
+// ---- Capítulo 5: verbos modais ----
+export const modalVerbs: Verb[] = [
+  { inf: "können", meaning: { pt: "poder / conseguir", en: "can / to be able to" }, forms: { ich: "kann", du: "kannst", er: "kann", wir: "können", ihr: "könnt", sie: "können" } },
+  { inf: "müssen", meaning: { pt: "precisar / ter que", en: "must / to have to" }, forms: { ich: "muss", du: "musst", er: "muss", wir: "müssen", ihr: "müsst", sie: "müssen" } },
+  { inf: "wollen", meaning: { pt: "querer", en: "to want" }, forms: { ich: "will", du: "willst", er: "will", wir: "wollen", ihr: "wollt", sie: "wollen" } },
+  { inf: "möchten", meaning: { pt: "gostaria de", en: "would like" }, forms: { ich: "möchte", du: "möchtest", er: "möchte", wir: "möchten", ihr: "möchtet", sie: "möchten" } },
+  { inf: "dürfen", meaning: { pt: "poder (permissão)", en: "may / to be allowed to" }, forms: { ich: "darf", du: "darfst", er: "darf", wir: "dürfen", ihr: "dürft", sie: "dürfen" } },
+  { inf: "sollen", meaning: { pt: "dever (conselho/ordem de outro)", en: "should / to be supposed to" }, forms: { ich: "soll", du: "sollst", er: "soll", wir: "sollen", ihr: "sollt", sie: "sollen" } },
+];
+
+export const modalSentences: OrderSentence[] = [
+  { chunks: ["schwimmen", "kann", "ich", "gut"], answer: ["ich", "kann", "gut", "schwimmen"], meaning: { pt: "eu sei nadar bem", en: "I can swim well" } },
+  { chunks: ["arbeiten", "muss", "er", "viel"], answer: ["er", "muss", "viel", "arbeiten"], meaning: { pt: "ele precisa trabalhar muito", en: "he has to work a lot" } },
+  { chunks: ["Deutsch", "möchte", "lernen", "ich"], answer: ["ich", "möchte", "Deutsch", "lernen"], meaning: { pt: "eu gostaria de aprender alemão", en: "I would like to learn German" } },
+  { chunks: ["hier", "du", "darfst", "parken"], answer: ["du", "darfst", "hier", "parken"], meaning: { pt: "você pode estacionar aqui", en: "you may park here" } },
+  { chunks: ["früh", "sollen", "aufstehen", "wir"], answer: ["wir", "sollen", "früh", "aufstehen"], meaning: { pt: "nós devemos acordar cedo", en: "we should get up early" } },
+];
+
 export const perfektSentences: OrderSentence[] = [
   { chunks: ["gelernt", "ich", "habe", "Deutsch"], answer: ["ich", "habe", "Deutsch", "gelernt"], meaning: { pt: "eu aprendi alemão", en: "I learned German" } },
   { chunks: ["gegessen", "wir", "haben", "Pizza"], answer: ["wir", "haben", "Pizza", "gegessen"], meaning: { pt: "nós comemos pizza", en: "we ate pizza" } },

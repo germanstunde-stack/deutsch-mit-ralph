@@ -1,7 +1,7 @@
 import type { Lang } from "../../i18n/types";
 import type { Profile } from "../../auth/AuthProvider";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT } from "./exercises";
-import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein } from "./vocab";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS } from "./exercises";
+import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs } from "./vocab";
 
 export interface Flash { de: string; pt: string; emo: string; }
 
@@ -31,6 +31,12 @@ const sentencesPT: Record<string, [string, string][]> = {
     ["Er ist nach Hause gegangen.", "Ele foi pra casa."],
     ["Hast du das Buch gelesen?", "Você leu o livro?"],
   ],
+  [CH_MODAIS]: [
+    ["Ich kann gut schwimmen.", "Eu sei nadar bem."],
+    ["Ich möchte einen Kaffee, bitte.", "Eu gostaria de um café, por favor."],
+    ["Du musst das nicht machen.", "Você não precisa fazer isso."],
+    ["Darf ich hier rauchen?", "Posso fumar aqui?"],
+  ],
 };
 const sentencesEN: Record<string, [string, string][]> = {
   [CH_EU_VOCE_SEIN]: [
@@ -57,6 +63,12 @@ const sentencesEN: Record<string, [string, string][]> = {
     ["Wir haben Pizza gegessen.", "We ate pizza."],
     ["Er ist nach Hause gegangen.", "He went home."],
     ["Hast du das Buch gelesen?", "Did you read the book?"],
+  ],
+  [CH_MODAIS]: [
+    ["Ich kann gut schwimmen.", "I can swim well."],
+    ["Ich möchte einen Kaffee, bitte.", "I would like a coffee, please."],
+    ["Du musst das nicht machen.", "You don't have to do that."],
+    ["Darf ich hier rauchen?", "May I smoke here?"],
   ],
 };
 
@@ -98,6 +110,9 @@ export function deckForTopic(id: string, lang: Lang): Flash[] {
       ...perfektHabenIrregular.map((v) => ({ de: `${v.inf} → ${v.partizip}`, pt: v.meaning[lang], emo: "🔀" })),
       ...perfektSein.map((v) => ({ de: `${v.inf} → ${v.partizip}`, pt: v.meaning[lang], emo: "🚶" })),
     ];
+  }
+  if (id === CH_MODAIS) {
+    return modalVerbs.map((v) => ({ de: `${v.inf} (${v.forms.ich})`, pt: v.meaning[lang], emo: "🧠" }));
   }
   return [];
 }
