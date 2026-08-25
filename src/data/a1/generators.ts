@@ -7,6 +7,7 @@ import {
   imperativeVerbs, separableVerbs, separableSentences,
   perfektHabenRegular, perfektHabenIrregular, perfektSein, perfektSentences,
   modalVerbs, modalSentences,
+  nounsPlural, pluralSentences,
   type Verb, type OrderSentence,
 } from "./vocab";
 
@@ -201,3 +202,44 @@ export const gModalMeaning = (lang: Lang): Question => gVerbMeaningGeneric(lang,
 export const gModalFormMC = (lang: Lang): Question => gVerbFormMCGeneric(lang, modalVerbs);
 export const gTypeModalForm = (lang: Lang): TypedQ => gTypeVerbFormGeneric(lang, modalVerbs);
 export const gOrderModal = (lang: Lang): OrderData => gOrder(lang, modalSentences);
+
+/* ---------- capítulo 6: gênero & plural ---------- */
+export function gGenderMC(lang: Lang): Question {
+  const n = rand(nounsPlural);
+  const prompt = lang === "pt"
+    ? `Qual artigo vai com <span class="big">${n.de}</span> (${n.meaning.pt})?`
+    : `Which article goes with <span class="big">${n.de}</span> (${n.meaning.en})?`;
+  return q({
+    promptHTML: prompt, speak: `${n.art} ${n.de}`, word: n.de, wordpt: n.meaning.pt,
+    options: [{ label: "der", correct: n.art === "der" }, { label: "die", correct: n.art === "die" }, { label: "das", correct: n.art === "das" }],
+  });
+}
+
+export function gNounMeaning(lang: Lang): Question {
+  const n = rand(nounsPlural);
+  const opts = sample(nounsPlural, 3, n).map((o) => ({ label: o.meaning[lang], correct: false }));
+  opts.push({ label: n.meaning[lang], correct: true });
+  const prompt = lang === "pt" ? `O que significa <span class="big">${n.art} ${n.de}</span>?` : `What does <span class="big">${n.art} ${n.de}</span> mean?`;
+  return q({ promptHTML: prompt, speak: `${n.art} ${n.de}`, options: shuffle(opts), word: n.de, wordpt: n.meaning.pt });
+}
+
+export function gPluralMC(lang: Lang): Question {
+  const n = rand(nounsPlural);
+  const wrong = sample(nounsPlural, 3, n).map((o) => o.plural);
+  const opts = wrong.map((f) => ({ label: f, correct: false }));
+  opts.push({ label: n.plural, correct: true });
+  const prompt = lang === "pt"
+    ? `Qual é o plural de <span class="big">${n.art} ${n.de}</span>?`
+    : `What's the plural of <span class="big">${n.art} ${n.de}</span>?`;
+  return q({ promptHTML: prompt, speak: `die ${n.plural}`, options: shuffle(opts), word: n.plural, wordpt: n.de });
+}
+
+export function gTypePlural(lang: Lang): TypedQ {
+  const n = rand(nounsPlural);
+  const prompt = lang === "pt"
+    ? `Escreva o plural de <span class="big">${n.art} ${n.de}</span>:`
+    : `Write the plural of <span class="big">${n.art} ${n.de}</span>:`;
+  return { promptHTML: prompt, answer: n.plural, speak: `die ${n.plural}`, word: n.plural, wordpt: n.de };
+}
+
+export const gOrderPlural = (lang: Lang): OrderData => gOrder(lang, pluralSentences);

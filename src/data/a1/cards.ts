@@ -1,7 +1,7 @@
 import type { Lang } from "../../i18n/types";
 import type { CardItem } from "../../components/Cards";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS } from "./exercises";
-import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, type Verb, type PerfektVerb } from "./vocab";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL } from "./exercises";
+import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural, type Verb, type PerfektVerb } from "./vocab";
 
 export interface CardsData { items: CardItem[]; gridClass: string; legend?: boolean; }
 
@@ -35,6 +35,12 @@ function separableCards(lang: Lang): CardItem[] {
     pt: v.meaning[lang], speak: v.inf,
   }));
 }
+function nounPluralCards(lang: Lang): CardItem[] {
+  return nounsPlural.map((n) => ({
+    deHTML: `<span class="art ${n.art}">${n.art}</span> ${n.de}<br><small>die ${n.plural}</small>`,
+    pt: n.meaning[lang], speak: `${n.art} ${n.de}`,
+  }));
+}
 function perfektCards(pool: PerfektVerb[], lang: Lang): CardItem[] {
   return pool.map((v) => ({
     deHTML: `${v.inf} → <b>${v.partizip}</b><br><small>${v.auxiliary}</small>`,
@@ -57,6 +63,9 @@ export function cardsForTopic(id: string, lang: Lang): CardsData {
   }
   if (id === CH_MODAIS) {
     return { gridClass: "grid", items: verbCards(modalVerbs, lang) };
+  }
+  if (id === CH_GENERO_PLURAL) {
+    return { gridClass: "grid", legend: true, items: nounPluralCards(lang) };
   }
   return { gridClass: "grid", items: [] };
 }

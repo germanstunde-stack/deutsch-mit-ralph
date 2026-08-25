@@ -1,6 +1,6 @@
 import type { Lang } from "../../i18n/types";
 import type { TopicMeta } from "../topics";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL } from "./exercises";
 
 interface TopicMetaI18n { id: string; icon: string; name: Record<Lang, string>; cardTitle: Record<Lang, string>; explanationHTML: Record<Lang, string>; }
 
@@ -52,6 +52,15 @@ const TOPICS_I18N: TopicMetaI18n[] = [
     explanationHTML: {
       pt: "<p>können, müssen, wollen/möchten, dürfen, sollen — o infinitivo do verbo principal vai pro final da frase.</p>",
       en: "<p>können, müssen, wollen/möchten, dürfen, sollen — the main verb's infinitive moves to the end of the sentence.</p>",
+    },
+  },
+  {
+    id: CH_GENERO_PLURAL, icon: "🔢",
+    name: { pt: "Gênero & plural", en: "Gender & plural" },
+    cardTitle: { pt: "📖 Genus & Plural", en: "📖 Gender & plural" },
+    explanationHTML: {
+      pt: "<p>Revisão do der/die/das + os padrões de formação do plural (sempre com artigo die).</p>",
+      en: "<p>Review of der/die/das + the patterns for forming the plural (always with the article die).</p>",
     },
   },
 ];

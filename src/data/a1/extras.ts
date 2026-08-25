@@ -1,7 +1,7 @@
 import type { Lang } from "../../i18n/types";
 import type { Profile } from "../../auth/AuthProvider";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS } from "./exercises";
-import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs } from "./vocab";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL } from "./exercises";
+import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural } from "./vocab";
 
 export interface Flash { de: string; pt: string; emo: string; }
 
@@ -37,6 +37,12 @@ const sentencesPT: Record<string, [string, string][]> = {
     ["Du musst das nicht machen.", "Você não precisa fazer isso."],
     ["Darf ich hier rauchen?", "Posso fumar aqui?"],
   ],
+  [CH_GENERO_PLURAL]: [
+    ["Ich habe zwei Bücher.", "Eu tenho dois livros."],
+    ["Die Äpfel sind frisch.", "As maçãs estão frescas."],
+    ["Sie hat drei Kinder.", "Ela tem três filhos."],
+    ["Die Türen sind offen.", "As portas estão abertas."],
+  ],
 };
 const sentencesEN: Record<string, [string, string][]> = {
   [CH_EU_VOCE_SEIN]: [
@@ -69,6 +75,12 @@ const sentencesEN: Record<string, [string, string][]> = {
     ["Ich möchte einen Kaffee, bitte.", "I would like a coffee, please."],
     ["Du musst das nicht machen.", "You don't have to do that."],
     ["Darf ich hier rauchen?", "May I smoke here?"],
+  ],
+  [CH_GENERO_PLURAL]: [
+    ["Ich habe zwei Bücher.", "I have two books."],
+    ["Die Äpfel sind frisch.", "The apples are fresh."],
+    ["Sie hat drei Kinder.", "She has three children."],
+    ["Die Türen sind offen.", "The doors are open."],
   ],
 };
 
@@ -113,6 +125,9 @@ export function deckForTopic(id: string, lang: Lang): Flash[] {
   }
   if (id === CH_MODAIS) {
     return modalVerbs.map((v) => ({ de: `${v.inf} (${v.forms.ich})`, pt: v.meaning[lang], emo: "🧠" }));
+  }
+  if (id === CH_GENERO_PLURAL) {
+    return nounsPlural.map((n) => ({ de: `${n.art} ${n.de} → die ${n.plural}`, pt: n.meaning[lang], emo: "🔢" }));
   }
   return [];
 }

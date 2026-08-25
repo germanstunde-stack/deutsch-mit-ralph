@@ -4,7 +4,7 @@
 // mesmo estilo do A0 (regra curta + exemplo + erros comuns de quem já fala
 // português/inglês).
 import type { Lang } from "../../i18n/types";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL } from "./exercises";
 
 const explanationsPT: Record<string, string> = {
   [CH_EU_VOCE_SEIN]:
@@ -88,6 +88,18 @@ const explanationsPT: Record<string, string> = {
     '<h3>⚠️ Cuidado com o significado</h3><ul>' +
     '<li><b class="de">müssen</b> (obrigação de verdade) ≠ <b class="de">sollen</b> (conselho ou ordem de outra pessoa).</li>' +
     '<li><b class="de">können</b> (capacidade: sei fazer) ≠ <b class="de">dürfen</b> (permissão: posso fazer).</li></ul>',
+
+  [CH_GENERO_PLURAL]:
+    '<h3>Gênero: der, die, das</h3><p>Revisão do A0: todo substantivo alemão tem um gênero gramatical fixo. <b>Não existe truque geral</b> — decore cada palavra junto com o artigo.</p>' +
+    '<h3>Plural — sem regra única, mas com padrões comuns</h3>' +
+    '<table class="br"><tr><td>+ -e</td><td><span class="de" data-say="der Tisch">der Tisch</span> → <span class="de" data-say="die Tische">die Tische</span></td></tr>' +
+    '<tr><td>+ Umlaut + -e</td><td><span class="de" data-say="der Sohn">der Sohn</span> → <span class="de" data-say="die Söhne">die Söhne</span></td></tr>' +
+    '<tr><td>Umlaut só</td><td><span class="de" data-say="der Apfel">der Apfel</span> → <span class="de" data-say="die Äpfel">die Äpfel</span>, <span class="de" data-say="die Mutter">die Mutter</span> → <span class="de" data-say="die Mütter">die Mütter</span></td></tr>' +
+    '<tr><td>+ -er (+ Umlaut)</td><td><span class="de" data-say="das Buch">das Buch</span> → <span class="de" data-say="die Bücher">die Bücher</span>, <span class="de" data-say="das Kind">das Kind</span> → <span class="de" data-say="die Kinder">die Kinder</span></td></tr>' +
+    '<tr><td>+ -(e)n</td><td><span class="de" data-say="die Frau">die Frau</span> → <span class="de" data-say="die Frauen">die Frauen</span>, <span class="de" data-say="die Tür">die Tür</span> → <span class="de" data-say="die Türen">die Türen</span></td></tr>' +
+    '<tr><td>+ -s (palavras estrangeiras)</td><td><span class="de" data-say="das Auto">das Auto</span> → <span class="de" data-say="die Autos">die Autos</span></td></tr></table>' +
+    '<h3>⚠️ A regra que NUNCA falha</h3><p>Não importa se era der/die/das no singular — <b>no plural o artigo é sempre <span class="de" data-say="die">die</span></b>.</p>' +
+    '<h3>💡 Dica de estudo</h3><p>Sempre que aprender uma palavra nova, aprenda junto: <b>artigo + palavra + plural</b> — ex.: <span class="de" data-say="das Buch, die Bücher">das Buch, die Bücher</span>. Os dicionários bons sempre mostram o plural do lado.</p>',
 };
 
 const explanationsEN: Record<string, string> = {
@@ -172,6 +184,18 @@ const explanationsEN: Record<string, string> = {
     '<h3>⚠️ Watch the meaning</h3><ul>' +
     '<li><b class="de">müssen</b> (a real obligation) ≠ <b class="de">sollen</b> (advice or someone else’s instruction).</li>' +
     '<li><b class="de">können</b> (ability: I know how) ≠ <b class="de">dürfen</b> (permission: I am allowed to).</li></ul>',
+
+  [CH_GENERO_PLURAL]:
+    '<h3>Gender: der, die, das</h3><p>A0 review: every German noun has a fixed grammatical gender. <b>There is no general trick</b> — memorize each word together with its article.</p>' +
+    '<h3>Plural — no single rule, but common patterns</h3>' +
+    '<table class="br"><tr><td>+ -e</td><td><span class="de" data-say="der Tisch">der Tisch</span> → <span class="de" data-say="die Tische">die Tische</span></td></tr>' +
+    '<tr><td>+ umlaut + -e</td><td><span class="de" data-say="der Sohn">der Sohn</span> → <span class="de" data-say="die Söhne">die Söhne</span></td></tr>' +
+    '<tr><td>umlaut only</td><td><span class="de" data-say="der Apfel">der Apfel</span> → <span class="de" data-say="die Äpfel">die Äpfel</span>, <span class="de" data-say="die Mutter">die Mutter</span> → <span class="de" data-say="die Mütter">die Mütter</span></td></tr>' +
+    '<tr><td>+ -er (+ umlaut)</td><td><span class="de" data-say="das Buch">das Buch</span> → <span class="de" data-say="die Bücher">die Bücher</span>, <span class="de" data-say="das Kind">das Kind</span> → <span class="de" data-say="die Kinder">die Kinder</span></td></tr>' +
+    '<tr><td>+ -(e)n</td><td><span class="de" data-say="die Frau">die Frau</span> → <span class="de" data-say="die Frauen">die Frauen</span>, <span class="de" data-say="die Tür">die Tür</span> → <span class="de" data-say="die Türen">die Türen</span></td></tr>' +
+    '<tr><td>+ -s (foreign words)</td><td><span class="de" data-say="das Auto">das Auto</span> → <span class="de" data-say="die Autos">die Autos</span></td></tr></table>' +
+    '<h3>⚠️ The rule that never fails</h3><p>No matter if it was der/die/das in the singular — <b>the plural article is always <span class="de" data-say="die">die</span></b>.</p>' +
+    '<h3>💡 Study tip</h3><p>Whenever you learn a new word, learn it together with: <b>article + word + plural</b> — e.g., <span class="de" data-say="das Buch, die Bücher">das Buch, die Bücher</span>. Good dictionaries always show the plural right next to it.</p>',
 };
 
 export function explanationsFor(lang: Lang): Record<string, string> {

@@ -126,6 +126,28 @@ export const perfektSein: PerfektVerb[] = [
   { inf: "fliegen", partizip: "geflogen", auxiliary: "sein", meaning: { pt: "voar", en: "to fly" } },
 ];
 
+// ---- Capítulo 6: gênero & plural dos substantivos ----
+export interface NounPlural { de: string; art: "der" | "die" | "das"; plural: string; meaning: Record<Lang, string>; }
+export const nounsPlural: NounPlural[] = [
+  { de: "Tisch", art: "der", plural: "Tische", meaning: { pt: "mesa", en: "table" } },
+  { de: "Apfel", art: "der", plural: "Äpfel", meaning: { pt: "maçã", en: "apple" } },
+  { de: "Buch", art: "das", plural: "Bücher", meaning: { pt: "livro", en: "book" } },
+  { de: "Ei", art: "das", plural: "Eier", meaning: { pt: "ovo", en: "egg" } },
+  { de: "Frau", art: "die", plural: "Frauen", meaning: { pt: "mulher", en: "woman" } },
+  { de: "Tür", art: "die", plural: "Türen", meaning: { pt: "porta", en: "door" } },
+  { de: "Auto", art: "das", plural: "Autos", meaning: { pt: "carro", en: "car" } },
+  { de: "Kind", art: "das", plural: "Kinder", meaning: { pt: "criança", en: "child" } },
+  { de: "Sohn", art: "der", plural: "Söhne", meaning: { pt: "filho", en: "son" } },
+  { de: "Mutter", art: "die", plural: "Mütter", meaning: { pt: "mãe", en: "mother" } },
+];
+
+export const pluralSentences: OrderSentence[] = [
+  { chunks: ["zwei", "ich", "habe", "Bücher"], answer: ["ich", "habe", "zwei", "Bücher"], meaning: { pt: "eu tenho dois livros", en: "I have two books" } },
+  { chunks: ["Äpfel", "sind", "die", "frisch"], answer: ["die", "Äpfel", "sind", "frisch"], meaning: { pt: "as maçãs estão frescas", en: "the apples are fresh" } },
+  { chunks: ["drei", "hat", "sie", "Kinder"], answer: ["sie", "hat", "drei", "Kinder"], meaning: { pt: "ela tem três filhos", en: "she has three children" } },
+  { chunks: ["Türen", "die", "sind", "offen"], answer: ["die", "Türen", "sind", "offen"], meaning: { pt: "as portas estão abertas", en: "the doors are open" } },
+];
+
 // ---- Capítulo 5: verbos modais ----
 export const modalVerbs: Verb[] = [
   { inf: "können", meaning: { pt: "poder / conseguir", en: "can / to be able to" }, forms: { ich: "kann", du: "kannst", er: "kann", wir: "können", ihr: "könnt", sie: "können" } },
