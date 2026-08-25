@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { speak } from "../lib/speech";
 import { rand, shuffle, type Question } from "../data/generators";
-import { norm, type ExSpec, type TypedQ, type ConnectData, type WSData, type EnumData } from "../data/exercises";
+import { norm, type ExSpec, type TypedQ, type ConnectData, type WSData, type EnumData, type OrderData } from "../data/exercises";
 import { MultipleChoice } from "./MultipleChoice";
 import { addHard, easeHard } from "../data/caderno";
 import type { ExMode, ExamHandle } from "./examTypes";
@@ -347,6 +347,73 @@ const Enumerate = forwardRef<ExamHandle, { data: EnumData; num: number; onResolv
   }
 );
 
+/* ---------- Order (montar frase) ---------- */
+const Order = forwardRef<ExamHandle, { data: OrderData; num: number; onResolve: Resolve; mode?: ExMode }>(
+  function Order({ data, num, onResolve, mode = "practice" }, ref) {
+    const [poolOrder] = useState(() => shuffle(data.chunks.map((_, i) => i)));
+    const [placed, setPlaced] = useState<number[]>([]);
+    const [corrected, setCorrected] = useState(false);
+    const [autoResolved, setAutoResolved] = useState(false);
+
+    function isCorrect(p: number[]) {
+      return p.length === data.answer.length && p.every((idx, pos) => data.chunks[idx] === data.answer[pos]);
+    }
+
+    useImperativeHandle(ref, () => ({
+      getScore: () => (isCorrect(placed) ? { correct: 1, wrong: 0 } : { correct: 0, wrong: 1 }),
+      reveal: () => setCorrected(true),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }), [placed]);
+
+    // prática: some sozinho assim que a frase montada ficar certa, sem precisar clicar em Corrigir
+    useEffect(() => {
+      if (mode !== "practice" || corrected || autoResolved) return;
+      if (placed.length !== data.answer.length) return;
+      if (isCorrect(placed)) { setAutoResolved(true); setCorrected(true); onResolve(1, 0); }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [placed]);
+
+    function addChunk(idx: number) { if (!corrected && !placed.includes(idx)) setPlaced((p) => [...p, idx]); }
+    function removeChunk(idx: number) { if (!corrected) setPlaced((p) => p.filter((i) => i !== idx)); }
+    function corrigir() {
+      if (corrected) return;
+      const ok = isCorrect(placed);
+      setCorrected(true);
+      onResolve(ok ? 1 : 0, ok ? 0 : 1);
+    }
+
+    const ok = isCorrect(placed);
+    return (
+      <div className="qcard">
+        <p className="q">
+          <span className={"num" + (corrected ? (ok ? " ok" : " no") : "")}>{num}</span>
+          <span className="txt">{data.title}</span>
+        </p>
+        <div className="orderbuilt">
+          {placed.length === 0 && <span className="ph">…</span>}
+          {placed.map((idx, pos) => (
+            <button key={pos} disabled={mode === "exam" && corrected}
+              className={"chunk placed" + (corrected ? (data.chunks[idx] === data.answer[pos] ? " ok" : " no") : "")}
+              onClick={() => removeChunk(idx)}>{data.chunks[idx]}</button>
+          ))}
+        </div>
+        <div className="orderpool">
+          {poolOrder.filter((idx) => !placed.includes(idx)).map((idx) => (
+            <button key={idx} className="chunk" disabled={corrected} onClick={() => addChunk(idx)}>{data.chunks[idx]}</button>
+          ))}
+        </div>
+        {mode !== "exam" && !corrected && (
+          <div className="btnrow">
+            <button className="btn blue" onClick={corrigir}>✅ Corrigir</button>
+            <button className="btn ghost" onClick={() => setPlaced([])}>🔁 Refazer</button>
+          </div>
+        )}
+        {corrected && <p className="fb" style={{ color: ok ? "var(--good)" : "var(--bad)" }}>{ok ? "Richtig! 🎉" : `Resposta certa: ${data.answer.join(" ")}`}</p>}
+      </div>
+    );
+  }
+);
+
 /* ---------- dispatcher ---------- */
 export const Exercise = forwardRef<ExamHandle, { spec: ExSpec; num: number; onResolve: Resolve; mode?: ExMode }>(
   function Exercise({ spec, num, onResolve, mode = "practice" }, ref) {
@@ -358,6 +425,7 @@ export const Exercise = forwardRef<ExamHandle, { spec: ExSpec; num: number; onRe
       case "connect": return <Connect ref={ref} data={data as ConnectData} num={num} onResolve={onResolve} mode={mode} />;
       case "ws": return <WordSearch ref={ref} data={data as WSData} num={num} onResolve={onResolve} mode={mode} />;
       case "enum": return <Enumerate ref={ref} data={data as EnumData} num={num} onResolve={onResolve} mode={mode} />;
+      case "order": return <Order ref={ref} data={data as OrderData} num={num} onResolve={onResolve} mode={mode} />;
     }
   }
 );

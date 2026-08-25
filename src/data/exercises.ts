@@ -13,6 +13,7 @@ export interface ConnectPair { l: string; r: string; key: string; }
 export interface ConnectData { title: string; pairs: ConnectPair[]; single: boolean; }
 export interface WSData { title: string; pairs: { w: string; pt: string }[]; size: number; single: boolean; }
 export interface EnumData { title: string; items: { emo: string; de: string }[]; single: boolean; }
+export interface OrderData { title: string; chunks: string[]; answer: string[]; single: boolean; }
 
 export type ExSpec =
   | { kind: "mc"; gen: () => Question }
@@ -20,7 +21,8 @@ export type ExSpec =
   | { kind: "dict"; gen: () => TypedQ }
   | { kind: "connect"; gen: () => ConnectData }
   | { kind: "ws"; gen: () => WSData }
-  | { kind: "enum"; gen: () => EnumData };
+  | { kind: "enum"; gen: () => EnumData }
+  | { kind: "order"; gen: () => OrderData };
 
 // ---- typed / dict ----
 export const gTypeColor = (): TypedQ => { const c = rand(colors); return { promptHTML: `Escreva <span class="big">${c.pt}</span> em alemão:`, answer: c.de, speak: c.de, word: c.de, wordpt: c.pt }; };
