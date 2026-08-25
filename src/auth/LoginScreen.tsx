@@ -3,19 +3,21 @@ import { usePlayer } from "./AuthProvider";
 import { Mascot } from "../components/Mascot";
 
 export function LoginScreen() {
-  const { sendLink } = usePlayer();
+  const { login } = usePlayer();
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
-  const [sent, setSent] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [pendingConfirm, setPendingConfirm] = useState(false);
 
-  async function send() {
-    if (!email.trim()) return;
+  async function go() {
+    if (!email.trim() || !password) return;
     setBusy(true); setErr(null);
-    const { error } = await sendLink(email.trim());
+    const { error, needsConfirmation } = await login(email, password);
     setBusy(false);
     if (error) setErr(error);
-    else setSent(true);
+    else if (needsConfirmation) setPendingConfirm(true);
+    // sucesso: onAuthStateChange do AuthProvider assume a partir daqui.
   }
 
   return (
@@ -23,17 +25,16 @@ export function LoginScreen() {
       <div className="login">
         <Mascot className="mascot" />
         <h1><span className="hallo plush">Hallo!</span> GermanStunde</h1>
-        {sent ? (
-          <>
-            <p>📬 Enviamos um <b>link de acesso</b> para <b>{email}</b>. Abra o e-mail e clique no link — você só faz isso <b>uma vez</b>.</p>
-            <button className="tbtn" onClick={() => { setSent(false); setEmail(""); }}>usar outro e-mail</button>
-          </>
+        {pendingConfirm ? (
+          <p>📬 Sua conta foi criada, mas o Supabase pediu confirmação por e-mail. Confira sua caixa de entrada, ou peça pra desativar essa confirmação nas configurações do projeto.</p>
         ) : (
           <>
-            <p>Entre com seu e-mail. Na 1ª vez confirmamos por um link; depois é só entrar.</p>
-            <input className="field" type="email" autoComplete="email" placeholder="seu@email.com"
-              value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} />
-            <button className="btn primary" disabled={busy || !email.trim()} onClick={send}>{busy ? "Enviando…" : "Enviar link de acesso →"}</button>
+            <p>Digite seu e-mail e uma senha. Na 1ª vez a conta é criada na hora — sem confirmação, sem complicação. O navegador pode salvar a senha pra você.</p>
+            <input className="field" type="email" autoComplete="username" placeholder="seu@email.com"
+              value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === "Enter" && go()} />
+            <input className="field" type="password" autoComplete="current-password" placeholder="senha"
+              value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === "Enter" && go()} />
+            <button className="btn primary" disabled={busy || !email.trim() || !password} onClick={go}>{busy ? "Entrando…" : "Entrar 🚀"}</button>
           </>
         )}
         {err && <div className="err">{err}</div>}

@@ -3,6 +3,7 @@ import { speak } from "../lib/speech";
 import { numDE, ordDE } from "../lib/numbers";
 import { rand } from "../data/generators";
 import { months, weekdays } from "../data/vocab";
+import { usePlayer } from "../auth/AuthProvider";
 
 /* ---------- Calculadora falante (uma por operação) ---------- */
 function CalcRow({ op, word, ax, bx }: { op: string; word: string; ax: number[]; bx: number[] }) {
@@ -74,17 +75,23 @@ export function Clock() {
 
 /* ---------- Calendário navegável ---------- */
 export function Calendar() {
+  const { profile } = usePlayer();
   const today = new Date();
   const [view, setView] = useState(() => ({ y: today.getFullYear(), m: today.getMonth() }));
   const wd = weekdays[(today.getDay() + 6) % 7], mo0 = months[today.getMonth()];
   const mo = months[view.m];
+  const birth = profile?.birthdate ? new Date(profile.birthdate + "T00:00:00") : null;
   const startCol = (new Date(view.y, view.m, 1).getDay() + 6) % 7;
   const dim = new Date(view.y, view.m + 1, 0).getDate();
   const cells = [];
   for (let i = 0; i < startCol; i++) cells.push(<div className="cd empty" key={"e" + i} />);
   for (let d = 1; d <= dim; d++) {
     const isT = d === today.getDate() && view.m === today.getMonth() && view.y === today.getFullYear();
-    cells.push(<div className={"cd" + (isT ? " today" : "")} key={d} onClick={() => speak(`der ${ordDE(d)} ${mo[0]} ${numDE(view.y)}`)}>{d}</div>);
+    const isBday = !!birth && d === birth.getDate() && view.m === birth.getMonth();
+    cells.push(
+      <div className={"cd" + (isT ? " today" : "") + (isBday ? " bday" : "")} key={d} title={isBday ? "Seu aniversário! 🎂" : undefined}
+        onClick={() => speak(`der ${ordDE(d)} ${mo[0]} ${numDE(view.y)}`)}>{isBday ? "🎂" : d}</div>
+    );
   }
   function shift(dm: number, dy: number) {
     setView((v) => { let m = v.m + dm, y = v.y + dy; if (m < 0) { m = 11; y--; } if (m > 11) { m = 0; y++; } return { y, m }; });
@@ -112,6 +119,11 @@ export function Calendar() {
         <button className="btn ghost" style={{ padding: "8px 14px", fontSize: ".85rem" }} onClick={() => setView({ y: today.getFullYear(), m: today.getMonth() })}>📍 Hoje</button>
       </div>
       <div className="desc" style={{ marginTop: 6, textAlign: "center" }}>Clique num dia pra ouvir a data.</div>
+      {birth && (
+        <div className="desc" style={{ marginTop: 4, textAlign: "center", fontWeight: 800 }}>
+          🎂 Seu aniversário: {birth.getDate()} de {months[birth.getMonth()][1]}
+        </div>
+      )}
     </div>
   );
 }

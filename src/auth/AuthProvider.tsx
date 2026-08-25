@@ -7,7 +7,7 @@ interface Ctx {
   loading: boolean;
   session: Session | null;
   profile: Profile | null;
-  sendLink: (email: string) => Promise<{ error?: string }>;
+  login: (email: string, password: string) => Promise<{ error?: string; needsConfirmation?: boolean }>;
   saveProfile: (name: string, birthdate: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
 }
@@ -38,12 +38,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => sub.subscription.unsubscribe();
   }, []);
 
-  async function sendLink(email: string) {
-    const { error } = await supabase.auth.signInWithOtp({
-      email: email.trim(),
-      options: { shouldCreateUser: true, emailRedirectTo: window.location.origin },
-    });
-    return { error: error?.message };
+  // Sem senha complexa, sem e-mail de confirmação: tenta entrar; se a conta ainda não existe,
+  // cria na hora com a mesma senha (o navegador salva/autopreenche depois). Só falha de verdade
+  // se o e-mail já existir e a senha estiver errada.
+  async function login(email: string, password: string) {
+    email = email.trim();
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+    if (!signInError) return {};
+
+    const { data, error: signUpError } = await supabase.auth.signUp({ email, password });
+    if (signUpError) {
+      if (/already registered|already exists/i.test(signUpError.message)) return { error: "Senha incorreta." };
+      return { error: signUpError.message };
+    }
+    if (!data.session) return { needsConfirmation: true };
+    return {};
   }
   async function saveProfile(name: string, birthdate: string) {
     if (!session) return { error: "sem sessão" };
@@ -54,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function signOut() { await supabase.auth.signOut(); }
 
   return (
-    <C.Provider value={{ loading, session, profile, sendLink, saveProfile, signOut }}>
+    <C.Provider value={{ loading, session, profile, login, saveProfile, signOut }}>
       {children}
     </C.Provider>
   );

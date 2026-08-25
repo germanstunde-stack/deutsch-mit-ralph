@@ -6,8 +6,11 @@ import { Mascot } from "./components/Mascot";
 import { BgArt } from "./components/BgArt";
 import { CadernoPanel } from "./components/CadernoPanel";
 import { Prova } from "./components/Prova";
+import { Ranking } from "./components/Ranking";
+import { AuthProvider, usePlayer } from "./auth/AuthProvider";
+import { LoginScreen } from "./auth/LoginScreen";
+import { Cadastro } from "./components/Cadastro";
 
-// LOGIN DESLIGADO por enquanto (código de auth/cadastro/ranking pronto e desligado).
 const LEVELS: [string, string, boolean][] = [
   ["A0", "do zero", true], ["A1", "frases", false], ["A2", "dia a dia", false],
   ["B1", "independente", false], ["B2", "fluência", false], ["C1", "avançado", false], ["C2", "executivo", false],
@@ -17,7 +20,8 @@ function jump(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 }
 
-export default function App() {
+function AppContent() {
+  const { profile, signOut } = usePlayer();
   const { dark, toggleTheme, slow, toggleSpeed } = useTheme();
   const [stats, setStats] = useState({ correct: 0, wrong: 0 });
   const [frost, setFrost] = useState(false);
@@ -37,13 +41,14 @@ export default function App() {
             <span className="tbtn" title="acertos/erros nesta sessão">✅ {stats.correct} · ❌ {stats.wrong}</span>
             <button className="tbtn" onClick={toggleSpeed}>{slow ? "🐇 Normal" : "🐢 Devagar"}</button>
             <button className="tbtn" onClick={toggleTheme}>{dark ? "☀️ Tema" : "🌙 Tema"}</button>
+            <button className="tbtn" onClick={signOut} title="sair da conta">🚪 Sair</button>
           </div>
         </div>
 
         <section className="hero">
           <Mascot className="mascot" />
           <div>
-            <h1><span className="hallo plush">Hallo!</span> Bem-vindo à GermanStunde.</h1>
+            <h1><span className="hallo plush">Hallo{profile?.display_name ? `, ${profile.display_name}` : ""}!</span> Bem-vindo à GermanStunde.</h1>
             <p>Role a página, ouça e pratique cada tema. No fim, a prova. 🎧</p>
           </div>
         </section>
@@ -62,6 +67,7 @@ export default function App() {
             <button key={t.id} onClick={() => jump("top-" + t.id)}>{t.icon} {t.name}</button>
           ))}
           <button className="exam" onClick={() => jump("prova")}>📝 Prova</button>
+          <button className="note" onClick={() => jump("ranking")}>🏆 Ranking</button>
         </div>
 
         <CadernoPanel />
@@ -75,10 +81,28 @@ export default function App() {
 
         <Prova onFrost={setFrost} />
 
+        <Ranking />
+
         <footer style={{ marginTop: 28, textAlign: "center", color: "var(--ink-soft)", fontWeight: 700, fontSize: ".8rem" }}>
           GermanStunde · Módulo A0 — feito pra crescer até o C2. Viel Erfolg! 🎉
         </footer>
       </div>
     </>
+  );
+}
+
+function Gate() {
+  const { loading, session, profile } = usePlayer();
+  if (loading) return <div className="login-wrap"><div className="login"><p>Carregando…</p></div></div>;
+  if (!session) return <LoginScreen />;
+  if (!profile?.display_name || !profile?.birthdate) return <Cadastro />;
+  return <AppContent />;
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <Gate />
+    </AuthProvider>
   );
 }

@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { examSpecsA0, EXAM_PARTS, EXAM_TOTAL, type ExSpec } from "../data/exercises";
 import { Exercise } from "./Engines";
 import type { ExamHandle } from "./examTypes";
+import { usePlayer } from "../auth/AuthProvider";
+import { supabase } from "../lib/supabase";
 
 type Mode = "com" | "sem";
 const KEY = "gs_prova_v1";
@@ -24,6 +26,7 @@ function fmt(s: number) {
 const noop = () => {};
 
 export function Prova({ onFrost }: { onFrost: (on: boolean) => void }) {
+  const { session } = usePlayer();
   const [phase, setPhase] = useState<"locked" | "pick" | "running" | "done">("locked");
   const [mode, setMode] = useState<Mode>("com");
   const [items, setItems] = useState<ExSpec[]>([]);
@@ -62,6 +65,13 @@ export function Prova({ onFrost }: { onFrost: (on: boolean) => void }) {
     saveResult(r);
     setResults(loadResults());
     setPhase("done");
+    if (session) {
+      supabase.from("exam_results").insert({
+        user_id: session.user.id, module: "A0",
+        mode: mode === "sem" ? "sem_consulta" : "com_consulta",
+        score: earned, total: EXAM_TOTAL, duration_sec: secs,
+      }).then(({ error }) => { if (error) console.warn("ranking (provas):", error.message); });
+    }
   }
 
   const pct = Math.round((100 * nota) / EXAM_TOTAL);

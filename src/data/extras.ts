@@ -1,5 +1,6 @@
 import { alphabet, animals, food, colors, greet, phrases, weekdays, months, opposites, measures, cognates, falseFriends } from "./vocab";
 import { numDE } from "../lib/numbers";
+import type { Profile } from "../auth/AuthProvider";
 
 export interface Flash { de: string; pt: string; emo: string; }
 
@@ -14,6 +15,28 @@ export const sentences: Record<string, [string, string][]> = {
   tamanhos: [["Der Elefant ist groß.", "O elefante é grande."], ["Ich kaufe ein Kilo Tomaten.", "Compro um quilo de tomates."], ["Die Flasche hat einen Liter.", "A garrafa tem um litro."], ["Es sind zehn Kilometer.", "São dez quilômetros."]],
   similar: [["Ich habe ein Problem.", "Tenho um problema."], ["Die Musik ist gut.", "A música é boa."], ["Der Chef ist im Restaurant.", "O chefe está no restaurante."], ["Ich habe einen Termin.", "Tenho um compromisso."]],
 };
+
+function ageFrom(birthdate: string): number {
+  const b = new Date(birthdate), t = new Date();
+  let age = t.getFullYear() - b.getFullYear();
+  if (t.getMonth() < b.getMonth() || (t.getMonth() === b.getMonth() && t.getDate() < b.getDate())) age--;
+  return age;
+}
+
+// Personaliza as 2 primeiras frases (Alfabeto/Números) com apelido e idade do usuário logado;
+// as demais frases de cada tema continuam iguais.
+export function sentencesForTopic(id: string, profile: Profile | null): [string, string][] {
+  const base = sentences[id] ?? [];
+  if (id === "alfabeto" && profile?.display_name) {
+    const nome = profile.display_name;
+    return [[`Ich heiße ${nome}.`, `Meu nome é ${nome}.`], ...base.slice(1)];
+  }
+  if (id === "numeros" && profile?.birthdate) {
+    const idade = ageFrom(profile.birthdate);
+    return [[`Ich bin ${numDE(idade)} Jahre alt.`, `Tenho ${idade} anos.`], ...base.slice(1)];
+  }
+  return base;
+}
 
 export function deckForTopic(id: string): Flash[] {
   switch (id) {

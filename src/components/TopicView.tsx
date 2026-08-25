@@ -1,4 +1,4 @@
-import { useEffect, useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { CardGrid } from "./Cards";
 import { Exercise } from "./Engines";
 import { Flashcards } from "./Flashcards";
@@ -7,24 +7,37 @@ import { ProgressDots } from "./ProgressDots";
 import { exSpecsForTopic } from "../data/exercises";
 import { topics } from "../data/topics";
 import { explanations } from "../data/explanations";
-import { sentences, deckForTopic } from "../data/extras";
+import { sentencesForTopic, deckForTopic } from "../data/extras";
 import { speak } from "../lib/speech";
 import { useScoredRound } from "../lib/scoring";
 import { saveTopicScore } from "../data/topicScores";
+import { usePlayer } from "../auth/AuthProvider";
+import { supabase } from "../lib/supabase";
 
 const TOPIC_SIZE = 20;
 
 export function TopicView({ id, onResult, next }: { id: string; onResult: (correct: number, wrong: number) => void; next: { id: string; label: string } | null }) {
   const meta = topics.find((t) => t.id === id)!;
+  const { session, profile } = usePlayer();
   const [round, setRound] = useState(0);
   const [specs, setSpecs] = useState(() => exSpecsForTopic(id, TOPIC_SIZE));
   const scored = useScoredRound(TOPIC_SIZE);
   const deck = deckForTopic(id);
-  const sents = sentences[id];
+  const sents = sentencesForTopic(id, profile);
+  const submittedRef = useRef(false);
 
   function goNext() {
     // fecha a rodada atual: quem pulou sem responder perde o ponto (mesma regra do "trocar").
-    scored.flushUnresolved(() => 1);
+    // flushUnresolved devolve o que ELE somou agora — soma ao "scored.wrong" atual (o state só
+    // atualiza no próximo render, então não dá pra ler scored.wrong direto aqui e confiar nele).
+    const addedNow = scored.flushUnresolved(() => 1);
+    // manda pro ranking (categoria "Exercícios") só uma vez por rodada.
+    if (session && !submittedRef.current) {
+      submittedRef.current = true;
+      supabase.rpc("add_exercise_result", { p_correct: scored.correct, p_wrong: scored.wrong + addedNow }).then(({ error }) => {
+        if (error) console.warn("ranking (exercícios):", error.message);
+      });
+    }
     const target = next ? "top-" + next.id : "prova";
     document.getElementById(target)?.scrollIntoView({ behavior: "smooth" });
   }
@@ -36,6 +49,7 @@ export function TopicView({ id, onResult, next }: { id: string; onResult: (corre
     const added = scored.flushUnresolved(() => 1);
     if (added > 0) onResult(0, added);
     scored.reset(TOPIC_SIZE);
+    submittedRef.current = false;
     setSpecs(exSpecsForTopic(id, TOPIC_SIZE));
     setRound((r) => r + 1);
   }
@@ -104,7 +118,7 @@ export function TopicView({ id, onResult, next }: { id: string; onResult: (corre
           ))}
           <div className="btnrow"><button className="btn ghost" onClick={trocar}>🔁 Trocar exercícios (20 novos)</button></div>
           <div className="btnrow" style={{ marginTop: 12 }}>
-            <button className="btn primary" onClick={goNext}>{next ? `Próximo: ${next.label} →` : "Ir pra Prova 📝 →"}</button>
+            <button className="btn primary" onClick={goNext}>{next ? `Somar pontos e próximo: ${next.label} →` : "Somar pontos e ir pra Prova 📝 →"}</button>
           </div>
         </div>
       </div>
