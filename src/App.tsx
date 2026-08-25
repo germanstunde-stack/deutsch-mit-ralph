@@ -22,7 +22,7 @@ function jump(id: string) {
 
 function AppContent() {
   const { profile, signOut } = usePlayer();
-  const { dark, toggleTheme, slow, toggleSpeed } = useTheme();
+  const { dark, toggleTheme, slow, toggleSpeed, voicePref, cycleVoice } = useTheme();
   const [stats, setStats] = useState({ correct: 0, wrong: 0 });
   const [frost, setFrost] = useState(false);
 
@@ -39,7 +39,10 @@ function AppContent() {
           <div className="brand"><span className="flag">🇩🇪</span><div><small>German</small><b>Stunde</b></div></div>
           <div className="tbtns">
             <span className="tbtn" title="acertos/erros nesta sessão">✅ {stats.correct} · ❌ {stats.wrong}</span>
-            <button className="tbtn" onClick={toggleSpeed}>{slow ? "🐇 Normal" : "🐢 Devagar"}</button>
+            <button className="tbtn" onClick={toggleSpeed} title="velocidade da voz">{slow ? "🐢 Devagar" : "🐇 Normal"}</button>
+            <button className="tbtn" onClick={cycleVoice} title="voz dos áudios (clique pra trocar)">
+              {voicePref === "female" ? "👩 Voz fem." : voicePref === "male" ? "👨 Voz masc." : "🎲 Voz aleatória"}
+            </button>
             <button className="tbtn" onClick={toggleTheme}>{dark ? "☀️ Tema" : "🌙 Tema"}</button>
             <button className="tbtn" onClick={signOut} title="sair da conta">🚪 Sair</button>
           </div>
