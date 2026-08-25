@@ -103,3 +103,33 @@ export const separableSentences: OrderSentence[] = [
   { chunks: ["fern", "wir", "jeden Abend", "sehen"], answer: ["wir", "sehen", "jeden Abend", "fern"], meaning: { pt: "nós assistimos TV toda noite", en: "we watch TV every evening" } },
   { chunks: ["auf", "früh", "du", "stehst"], answer: ["du", "stehst", "früh", "auf"], meaning: { pt: "você acorda cedo", en: "you get up early" } },
 ];
+
+// ---- Capítulo 4: Perfekt (passado composto) ----
+export interface PerfektVerb { inf: string; partizip: string; auxiliary: "haben" | "sein"; meaning: Record<Lang, string>; }
+export const perfektHabenRegular: PerfektVerb[] = [
+  { inf: "lernen", partizip: "gelernt", auxiliary: "haben", meaning: { pt: "aprender", en: "to learn" } },
+  { inf: "machen", partizip: "gemacht", auxiliary: "haben", meaning: { pt: "fazer", en: "to do / make" } },
+  { inf: "spielen", partizip: "gespielt", auxiliary: "haben", meaning: { pt: "jogar / brincar", en: "to play" } },
+  { inf: "kaufen", partizip: "gekauft", auxiliary: "haben", meaning: { pt: "comprar", en: "to buy" } },
+];
+export const perfektHabenIrregular: PerfektVerb[] = [
+  { inf: "essen", partizip: "gegessen", auxiliary: "haben", meaning: { pt: "comer", en: "to eat" } },
+  { inf: "trinken", partizip: "getrunken", auxiliary: "haben", meaning: { pt: "beber", en: "to drink" } },
+  { inf: "finden", partizip: "gefunden", auxiliary: "haben", meaning: { pt: "achar / encontrar", en: "to find" } },
+  { inf: "lesen", partizip: "gelesen", auxiliary: "haben", meaning: { pt: "ler", en: "to read" } },
+  { inf: "sprechen", partizip: "gesprochen", auxiliary: "haben", meaning: { pt: "falar", en: "to speak" } },
+];
+export const perfektSein: PerfektVerb[] = [
+  { inf: "gehen", partizip: "gegangen", auxiliary: "sein", meaning: { pt: "ir", en: "to go" } },
+  { inf: "fahren", partizip: "gefahren", auxiliary: "sein", meaning: { pt: "viajar / dirigir", en: "to drive / go" } },
+  { inf: "kommen", partizip: "gekommen", auxiliary: "sein", meaning: { pt: "vir", en: "to come" } },
+  { inf: "fliegen", partizip: "geflogen", auxiliary: "sein", meaning: { pt: "voar", en: "to fly" } },
+];
+
+export const perfektSentences: OrderSentence[] = [
+  { chunks: ["gelernt", "ich", "habe", "Deutsch"], answer: ["ich", "habe", "Deutsch", "gelernt"], meaning: { pt: "eu aprendi alemão", en: "I learned German" } },
+  { chunks: ["gegessen", "wir", "haben", "Pizza"], answer: ["wir", "haben", "Pizza", "gegessen"], meaning: { pt: "nós comemos pizza", en: "we ate pizza" } },
+  { chunks: ["ist", "er", "gegangen", "nach Hause"], answer: ["er", "ist", "nach Hause", "gegangen"], meaning: { pt: "ele foi pra casa", en: "he went home" } },
+  { chunks: ["hat", "sie", "ein Buch", "gelesen"], answer: ["sie", "hat", "ein Buch", "gelesen"], meaning: { pt: "ela leu um livro", en: "she read a book" } },
+  { chunks: ["bist", "du", "gefahren", "nach Berlin"], answer: ["du", "bist", "nach Berlin", "gefahren"], meaning: { pt: "você viajou pra Berlim", en: "you went to Berlin" } },
+];

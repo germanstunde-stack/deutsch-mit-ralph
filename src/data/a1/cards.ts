@@ -1,7 +1,7 @@
 import type { Lang } from "../../i18n/types";
 import type { CardItem } from "../../components/Cards";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO } from "./exercises";
-import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, type Verb } from "./vocab";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT } from "./exercises";
+import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, type Verb, type PerfektVerb } from "./vocab";
 
 export interface CardsData { items: CardItem[]; gridClass: string; legend?: boolean; }
 
@@ -35,6 +35,12 @@ function separableCards(lang: Lang): CardItem[] {
     pt: v.meaning[lang], speak: v.inf,
   }));
 }
+function perfektCards(pool: PerfektVerb[], lang: Lang): CardItem[] {
+  return pool.map((v) => ({
+    deHTML: `${v.inf} → <b>${v.partizip}</b><br><small>${v.auxiliary}</small>`,
+    pt: v.meaning[lang], speak: v.partizip,
+  }));
+}
 
 export function cardsForTopic(id: string, lang: Lang): CardsData {
   if (id === CH_EU_VOCE_SEIN) {
@@ -45,6 +51,9 @@ export function cardsForTopic(id: string, lang: Lang): CardsData {
   }
   if (id === CH_IMPERATIVO) {
     return { gridClass: "grid", items: [...imperativeCards(lang), ...separableCards(lang)] };
+  }
+  if (id === CH_PERFEKT) {
+    return { gridClass: "grid", items: [...perfektCards(perfektHabenRegular, lang), ...perfektCards(perfektHabenIrregular, lang), ...perfektCards(perfektSein, lang)] };
   }
   return { gridClass: "grid", items: [] };
 }

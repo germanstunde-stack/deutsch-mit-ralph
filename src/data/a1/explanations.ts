@@ -4,7 +4,7 @@
 // mesmo estilo do A0 (regra curta + exemplo + erros comuns de quem já fala
 // português/inglês).
 import type { Lang } from "../../i18n/types";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT } from "./exercises";
 
 const explanationsPT: Record<string, string> = {
   [CH_EU_VOCE_SEIN]:
@@ -64,6 +64,16 @@ const explanationsPT: Record<string, string> = {
     '<h3>⚠️ Cuidado</h3><ul>' +
     '<li>No infinitivo o prefixo fica junto (<b class="de">aufstehen</b>), mas conjugado ele <b>sempre</b> vai pro fim: <span class="de" data-say="ich stehe auf">ich stehe auf</span>, nunca “ich aufstehe”.</li>' +
     '<li>No imperativo o prefixo também vai pro final: <span class="de" data-say="Steh auf">Steh auf!</span> (levanta!).</li></ul>',
+
+  [CH_PERFEKT]:
+    '<h3>Perfekt = o passado do dia a dia</h3><p>Em vez de conjugar o verbo no passado, o alemão falado usa o <b>Perfekt</b>: <b class="de">haben</b> ou <b class="de">sein</b> conjugado (2ª posição) + <b>Partizip II</b> no fim da frase.</p>' +
+    '<p><span class="de" data-say="Ich habe Deutsch gelernt">Ich habe Deutsch gelernt.</span> (eu aprendi alemão) — <span class="k">habe</span> na 2ª posição, <span class="k">gelernt</span> no fim.</p>' +
+    '<h3>Partizip II regular</h3><p><b>ge-</b> + radical + <b>-t</b>: <span class="de" data-say="lernen">lernen</span> → <span class="de" data-say="gelernt">gelernt</span>, <span class="de" data-say="machen">machen</span> → <span class="de" data-say="gemacht">gemacht</span>.</p>' +
+    '<h3>Partizip II irregular</h3><p><b>ge-</b> + radical (às vezes com vogal diferente) + <b>-en</b>: <span class="de" data-say="essen">essen</span> → <span class="de" data-say="gegessen">gegessen</span>, <span class="de" data-say="trinken">trinken</span> → <span class="de" data-say="getrunken">getrunken</span>, <span class="de" data-say="lesen">lesen</span> → <span class="de" data-say="gelesen">gelesen</span>. Não tem regra fixa — decore junto com o verbo.</p>' +
+    '<h3>⚠️ haben ou sein?</h3><ul>' +
+    '<li>A maioria dos verbos usa <b class="de">haben</b>.</li>' +
+    '<li>Verbos de <b>movimento de A pra B</b> (ou mudança de estado) usam <b class="de">sein</b>: <span class="de" data-say="gehen">gehen</span> → <span class="de" data-say="ich bin gegangen">ich bin gegangen</span>, <span class="de" data-say="fahren">fahren</span> → <span class="de" data-say="du bist gefahren">du bist gefahren</span>, <span class="de" data-say="kommen">kommen</span> → <span class="de" data-say="er ist gekommen">er ist gekommen</span>.</li>' +
+    '<li>O particípio (gelernt, gegessen...) é <b>igual pra todo mundo</b> — só o auxiliar (habe/hast/hat.../bin/bist/ist...) muda de acordo com quem fala.</li></ul>',
 };
 
 const explanationsEN: Record<string, string> = {
@@ -124,6 +134,16 @@ const explanationsEN: Record<string, string> = {
     '<h3>⚠️ Watch out</h3><ul>' +
     '<li>In the infinitive the prefix stays attached (<b class="de">aufstehen</b>), but once conjugated it <b>always</b> moves to the end: <span class="de" data-say="ich stehe auf">ich stehe auf</span>, never "ich aufstehe".</li>' +
     '<li>In the imperative the prefix also moves to the end: <span class="de" data-say="Steh auf">Steh auf!</span> (get up!).</li></ul>',
+
+  [CH_PERFEKT]:
+    '<h3>Perfekt = everyday past tense</h3><p>Instead of conjugating the verb in the past, spoken German uses the <b>Perfekt</b>: <b class="de">haben</b> or <b class="de">sein</b> conjugated (2nd position) + <b>Partizip II</b> (past participle) at the end of the sentence.</p>' +
+    '<p><span class="de" data-say="Ich habe Deutsch gelernt">Ich habe Deutsch gelernt.</span> (I learned German) — <span class="k">habe</span> in 2nd position, <span class="k">gelernt</span> at the end.</p>' +
+    '<h3>Regular Partizip II</h3><p><b>ge-</b> + stem + <b>-t</b>: <span class="de" data-say="lernen">lernen</span> → <span class="de" data-say="gelernt">gelernt</span>, <span class="de" data-say="machen">machen</span> → <span class="de" data-say="gemacht">gemacht</span>.</p>' +
+    '<h3>Irregular Partizip II</h3><p><b>ge-</b> + stem (sometimes with a different vowel) + <b>-en</b>: <span class="de" data-say="essen">essen</span> → <span class="de" data-say="gegessen">gegessen</span>, <span class="de" data-say="trinken">trinken</span> → <span class="de" data-say="getrunken">getrunken</span>, <span class="de" data-say="lesen">lesen</span> → <span class="de" data-say="gelesen">gelesen</span>. There is no fixed rule — memorize it together with the verb.</p>' +
+    '<h3>⚠️ haben or sein?</h3><ul>' +
+    '<li>Most verbs use <b class="de">haben</b>.</li>' +
+    '<li>Verbs of <b>movement from A to B</b> (or a change of state) use <b class="de">sein</b>: <span class="de" data-say="gehen">gehen</span> → <span class="de" data-say="ich bin gegangen">ich bin gegangen</span>, <span class="de" data-say="fahren">fahren</span> → <span class="de" data-say="du bist gefahren">du bist gefahren</span>, <span class="de" data-say="kommen">kommen</span> → <span class="de" data-say="er ist gekommen">er ist gekommen</span>.</li>' +
+    '<li>The participle (gelernt, gegessen...) is <b>the same for everyone</b> — only the auxiliary (habe/hast/hat.../bin/bist/ist...) changes depending on who is speaking.</li></ul>',
 };
 
 export function explanationsFor(lang: Lang): Record<string, string> {

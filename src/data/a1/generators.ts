@@ -5,6 +5,7 @@ import {
   pronouns, seinForms, seinSentences,
   regularVerbs, vowelChangeVerbs, habenForms, verbSentences,
   imperativeVerbs, separableVerbs, separableSentences,
+  perfektHabenRegular, perfektHabenIrregular, perfektSein, perfektSentences,
   type Verb, type OrderSentence,
 } from "./vocab";
 
@@ -44,9 +45,10 @@ function gOrder(lang: Lang, pool: OrderSentence[]): OrderData {
   return { title, chunks: shuffle(s.chunks), answer: s.answer, single: true };
 }
 
-interface ConjugatedVerb { inf: string; meaning: Record<Lang, string>; forms: Record<PronounKey, string>; }
+interface HasMeaning { inf: string; meaning: Record<Lang, string>; }
+interface ConjugatedVerb extends HasMeaning { forms: Record<PronounKey, string>; }
 
-function gVerbMeaningGeneric(lang: Lang, pool: ConjugatedVerb[]): Question {
+function gVerbMeaningGeneric(lang: Lang, pool: HasMeaning[]): Question {
   const v = rand(pool);
   const opts = sample(pool, 3, v).map((o) => ({ label: o.meaning[lang], correct: false }));
   opts.push({ label: v.meaning[lang], correct: true });
@@ -106,13 +108,7 @@ type ImperativeTarget = "du" | "ihr" | "sie";
 const IMPERATIVE_TARGETS: ImperativeTarget[] = ["du", "ihr", "sie"];
 const IMPERATIVE_LABEL: Record<ImperativeTarget, string> = { du: "du", ihr: "ihr", sie: "Sie" };
 
-export function gImperativeMeaning(lang: Lang): Question {
-  const v = rand(imperativeVerbs);
-  const opts = sample(imperativeVerbs, 3, v).map((o) => ({ label: o.meaning[lang], correct: false }));
-  opts.push({ label: v.meaning[lang], correct: true });
-  const prompt = lang === "pt" ? `O que significa <span class="big">${v.inf}</span>?` : `What does <span class="big">${v.inf}</span> mean?`;
-  return q({ promptHTML: prompt, speak: v.inf, options: shuffle(opts), word: v.inf, wordpt: v.meaning.pt });
-}
+export const gImperativeMeaning = (lang: Lang): Question => gVerbMeaningGeneric(lang, imperativeVerbs);
 
 export function gImperativeMC(lang: Lang): Question {
   const v = rand(imperativeVerbs);
@@ -142,3 +138,59 @@ export const gSeparableMeaning = (lang: Lang): Question => gVerbMeaningGeneric(l
 export const gSeparableFormMC = (lang: Lang): Question => gVerbFormMCGeneric(lang, separableVerbs);
 export const gTypeSeparableForm = (lang: Lang): TypedQ => gTypeVerbFormGeneric(lang, separableVerbs);
 export const gOrderSeparable = (lang: Lang): OrderData => gOrder(lang, separableSentences);
+
+/* ---------- capítulo 4: Perfekt (passado composto) ---------- */
+const CH4_PERFEKT = [...perfektHabenRegular, ...perfektHabenIrregular, ...perfektSein];
+
+export const gPerfektMeaning = (lang: Lang): Question => gVerbMeaningGeneric(lang, CH4_PERFEKT);
+
+export function gPerfektPartizipMC(lang: Lang): Question {
+  const v = rand(CH4_PERFEKT);
+  const wrong = sample(CH4_PERFEKT, 3, v).map((o) => o.partizip);
+  const opts = wrong.map((f) => ({ label: f, correct: false }));
+  opts.push({ label: v.partizip, correct: true });
+  const prompt = lang === "pt"
+    ? `Qual é o particípio (Partizip II) de <span class="big">${v.inf}</span>?`
+    : `What's the past participle (Partizip II) of <span class="big">${v.inf}</span>?`;
+  return q({ promptHTML: prompt, speak: v.partizip, options: shuffle(opts), word: v.partizip, wordpt: v.inf });
+}
+
+export function gTypePartizip(lang: Lang): TypedQ {
+  const v = rand(CH4_PERFEKT);
+  const prompt = lang === "pt"
+    ? `Escreva o particípio (Partizip II) de <span class="big">${v.inf}</span>:`
+    : `Write the past participle (Partizip II) of <span class="big">${v.inf}</span>:`;
+  return { promptHTML: prompt, answer: v.partizip, speak: v.partizip, word: v.partizip, wordpt: v.inf };
+}
+
+function pickPerfektAux(v: (typeof CH4_PERFEKT)[number]) {
+  const auxForms = v.auxiliary === "haben" ? habenForms : seinForms;
+  const key = rand(PRONOUN_KEYS);
+  const entry = auxForms.find((f) => f.pron === PRONOUN_LABEL[key])!;
+  return { key, auxForms, entry };
+}
+
+export function gPerfektAuxMC(lang: Lang): Question {
+  const v = rand(CH4_PERFEKT);
+  const { key, auxForms, entry } = pickPerfektAux(v);
+  const otherAux = v.auxiliary === "haben" ? seinForms : habenForms;
+  const wrongPool = [...auxForms.filter((f) => f.pron !== PRONOUN_LABEL[key]).map((f) => f.form), ...otherAux.map((f) => f.form)];
+  const wrong = sample([...new Set(wrongPool)], 3, entry.form);
+  const opts = wrong.map((f) => ({ label: f, correct: false }));
+  opts.push({ label: entry.form, correct: true });
+  const prompt = lang === "pt"
+    ? `Complete: <span class="big">${PRONOUN_LABEL[key]} ___ ${v.partizip}</span> (${v.inf})`
+    : `Complete: <span class="big">${PRONOUN_LABEL[key]} ___ ${v.partizip}</span> (${v.inf})`;
+  return q({ promptHTML: prompt, speak: `${PRONOUN_LABEL[key]} ${entry.form} ${v.partizip}`, options: shuffle(opts), word: entry.form, wordpt: v.auxiliary });
+}
+
+export function gTypePerfektAux(lang: Lang): TypedQ {
+  const v = rand(CH4_PERFEKT);
+  const { key, entry } = pickPerfektAux(v);
+  const prompt = lang === "pt"
+    ? `Complete com o auxiliar certo: <span class="big">${PRONOUN_LABEL[key]} ___ ${v.partizip}</span> (${v.inf})`
+    : `Complete with the right auxiliary: <span class="big">${PRONOUN_LABEL[key]} ___ ${v.partizip}</span> (${v.inf})`;
+  return { promptHTML: prompt, answer: entry.form, speak: `${PRONOUN_LABEL[key]} ${entry.form} ${v.partizip}`, word: entry.form, wordpt: v.auxiliary };
+}
+
+export const gOrderPerfekt = (lang: Lang): OrderData => gOrder(lang, perfektSentences);

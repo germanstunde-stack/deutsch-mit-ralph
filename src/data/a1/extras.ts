@@ -1,7 +1,7 @@
 import type { Lang } from "../../i18n/types";
 import type { Profile } from "../../auth/AuthProvider";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO } from "./exercises";
-import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs } from "./vocab";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT } from "./exercises";
+import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein } from "./vocab";
 
 export interface Flash { de: string; pt: string; emo: string; }
 
@@ -25,6 +25,12 @@ const sentencesPT: Record<string, [string, string][]> = {
     ["Kaufst du bitte Milch ein?", "Você compra leite, por favor?"],
     ["Rufen Sie mich bitte an!", "Me ligue, por favor! (formal)"],
   ],
+  [CH_PERFEKT]: [
+    ["Ich habe Deutsch gelernt.", "Eu aprendi alemão."],
+    ["Wir haben Pizza gegessen.", "Nós comemos pizza."],
+    ["Er ist nach Hause gegangen.", "Ele foi pra casa."],
+    ["Hast du das Buch gelesen?", "Você leu o livro?"],
+  ],
 };
 const sentencesEN: Record<string, [string, string][]> = {
   [CH_EU_VOCE_SEIN]: [
@@ -45,6 +51,12 @@ const sentencesEN: Record<string, [string, string][]> = {
     ["Ich stehe um sieben Uhr auf.", "I get up at seven."],
     ["Kaufst du bitte Milch ein?", "Can you buy milk, please?"],
     ["Rufen Sie mich bitte an!", "Please call me! (formal)"],
+  ],
+  [CH_PERFEKT]: [
+    ["Ich habe Deutsch gelernt.", "I learned German."],
+    ["Wir haben Pizza gegessen.", "We ate pizza."],
+    ["Er ist nach Hause gegangen.", "He went home."],
+    ["Hast du das Buch gelesen?", "Did you read the book?"],
   ],
 };
 
@@ -78,6 +90,13 @@ export function deckForTopic(id: string, lang: Lang): Flash[] {
     return [
       ...imperativeVerbs.map((v) => ({ de: `${v.du}!`, pt: v.meaning[lang], emo: "❗" })),
       ...separableVerbs.map((v) => ({ de: v.inf, pt: v.meaning[lang], emo: "🧩" })),
+    ];
+  }
+  if (id === CH_PERFEKT) {
+    return [
+      ...perfektHabenRegular.map((v) => ({ de: `${v.inf} → ${v.partizip}`, pt: v.meaning[lang], emo: "✅" })),
+      ...perfektHabenIrregular.map((v) => ({ de: `${v.inf} → ${v.partizip}`, pt: v.meaning[lang], emo: "🔀" })),
+      ...perfektSein.map((v) => ({ de: `${v.inf} → ${v.partizip}`, pt: v.meaning[lang], emo: "🚶" })),
     ];
   }
   return [];

@@ -1,6 +1,6 @@
 import type { Lang } from "../../i18n/types";
 import type { TopicMeta } from "../topics";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT } from "./exercises";
 
 interface TopicMetaI18n { id: string; icon: string; name: Record<Lang, string>; cardTitle: Record<Lang, string>; explanationHTML: Record<Lang, string>; }
 
@@ -34,6 +34,15 @@ const TOPICS_I18N: TopicMetaI18n[] = [
     explanationHTML: {
       pt: "<p>Como dar ordens/pedidos (du/ihr/Sie) e verbos com prefixo separável (aufstehen, einkaufen...) que manda o prefixo pro fim da frase.</p>",
       en: "<p>How to give orders/requests (du/ihr/Sie) and separable-prefix verbs (aufstehen, einkaufen...) that send the prefix to the end of the sentence.</p>",
+    },
+  },
+  {
+    id: CH_PERFEKT, icon: "⏪",
+    name: { pt: "Perfekt — o passado", en: "Perfekt — the past" },
+    cardTitle: { pt: "📖 Das Perfekt", en: "📖 The Perfekt tense" },
+    explanationHTML: {
+      pt: "<p>O passado do dia a dia: <b class='de'>haben</b>/<b class='de'>sein</b> conjugado + Partizip II no final da frase.</p>",
+      en: "<p>The everyday past tense: conjugated <b class='de'>haben</b>/<b class='de'>sein</b> + Partizip II at the end of the sentence.</p>",
     },
   },
 ];
