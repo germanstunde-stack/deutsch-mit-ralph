@@ -24,11 +24,12 @@ function buildDrill(hard: HardMap): Question[] {
   });
 }
 
-export function CadernoPanel({ onResult }: { onResult: (correct: number, wrong: number) => void }) {
+export function CadernoPanel() {
   const [hard, setHard] = useState<HardMap>(() => loadHard());
   const [drilling, setDrilling] = useState(false);
   const [drill, setDrill] = useState<Question[]>([]);
   const [round, setRound] = useState(0);
+  const [session, setSession] = useState({ correct: 0, wrong: 0 });
 
   useEffect(() => subscribe(() => setHard(loadHard())), []);
 
@@ -38,7 +39,13 @@ export function CadernoPanel({ onResult }: { onResult: (correct: number, wrong: 
   function treinar() {
     setDrill(buildDrill(hard));
     setDrilling(true);
+    setSession({ correct: 0, wrong: 0 });
     setRound((r) => r + 1);
+  }
+  // treino do Caderno é livre (pode repetir quantas vezes quiser) — por isso tem contador
+  // próprio, separado da prática dos capítulos (que vale ponto fixo pro futuro ranking).
+  function onDrillResult(c: number, w: number) {
+    setSession((s) => ({ correct: s.correct + c, wrong: s.wrong + w }));
   }
 
   return (
@@ -64,9 +71,11 @@ export function CadernoPanel({ onResult }: { onResult: (correct: number, wrong: 
 
           {drilling && (
             <div className="drill" key={round}>
-              <div className="subhead">🎯 Treino das difíceis</div>
+              <div className="subhead">
+                🎯 Treino das difíceis <span style={{ fontWeight: 400, fontSize: ".75rem", color: "var(--ink-soft)" }}>· ✅ {session.correct} · ❌ {session.wrong} neste treino</span>
+              </div>
               {drill.map((q, i) => (
-                <MultipleChoice key={round + "-" + i} q={q} num={i + 1} onResolve={onResult} />
+                <MultipleChoice key={round + "-" + i} q={q} num={i + 1} onResolve={onDrillResult} />
               ))}
               <div className="btnrow" style={{ marginTop: 10 }}>
                 <button className="btn ghost" onClick={() => setDrilling(false)}>Fechar treino</button>

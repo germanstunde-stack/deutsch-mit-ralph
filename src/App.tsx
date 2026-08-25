@@ -64,7 +64,7 @@ export default function App() {
           <button className="exam" onClick={() => jump("prova")}>📝 Prova</button>
         </div>
 
-        <CadernoPanel onResult={reportResult} />
+        <CadernoPanel />
 
         <div className={"topics-wrap" + (frost ? " exam-blur" : "")}>
           {topics.map((t, i) => (

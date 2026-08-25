@@ -1,30 +1,48 @@
-import { useState } from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 import type { Question } from "../data/generators";
 import { speak } from "../lib/speech";
 import { addHard, easeHard } from "../data/caderno";
+import type { ExMode, ExamHandle } from "./examTypes";
 
-export function MultipleChoice({ q, num, onResolve }: { q: Question; num: number; onResolve: (correct: number, wrong: number) => void }) {
+interface Props { q: Question; num: number; onResolve: (correct: number, wrong: number) => void; mode?: ExMode; }
+
+export const MultipleChoice = forwardRef<ExamHandle, Props>(function MultipleChoice({ q, num, onResolve, mode = "practice" }, ref) {
   const [answered, setAnswered] = useState(false);
   const [missed, setMissed] = useState(false);
   const [picked, setPicked] = useState<number | null>(null);
+  const [resultOk, setResultOk] = useState<boolean | null>(null);
+  const [examSel, setExamSel] = useState<number | null>(null);
+  const [revealed, setRevealed] = useState(false);
+  const correctIdx = q.options.findIndex((o) => o.correct);
+
+  useImperativeHandle(ref, () => ({
+    getScore: () => (examSel === correctIdx ? { correct: 1, wrong: 0 } : { correct: 0, wrong: 1 }),
+    reveal: () => setRevealed(true),
+  }), [examSel, correctIdx]);
 
   function click(i: number, correct: boolean) {
+    if (mode === "exam") { if (revealed) return; setExamSel(i); return; }
     if (answered) return;
     if (correct) {
       setAnswered(true); setPicked(i);
-      if (!missed) easeHard(q.word);
+      if (!missed) { easeHard(q.word); setResultOk(true); }
       onResolve(missed ? 0 : 1, missed ? 0 : 0); // se já errou, o erro já foi contado
     } else {
-      if (!missed) { onResolve(0, 1); setMissed(true); addHard(q.word, q.wordpt); }
+      if (!missed) { onResolve(0, 1); setMissed(true); setResultOk(false); addHard(q.word, q.wordpt); }
       setPicked(i);
       setTimeout(() => setPicked((p) => (p === i ? null : p)), 400);
     }
   }
 
+  const showAnswered = mode === "exam" ? revealed : answered;
+  const showPicked = mode === "exam" ? examSel : picked;
+  const numCls = resultOk === true ? " ok" : resultOk === false ? " no"
+    : mode === "exam" && revealed ? (examSel === correctIdx ? " ok" : " no") : "";
+
   return (
     <div className="qcard">
       <p className="q">
-        <span className="num">{num}</span>
+        <span className={"num" + numCls}>{num}</span>
         <span className="txt" dangerouslySetInnerHTML={{ __html: q.promptHTML }} />
         {q.speak && <button className="listen" onClick={() => speak(q.speak!)}>🔊 ouvir</button>}
       </p>
@@ -32,7 +50,8 @@ export function MultipleChoice({ q, num, onResolve }: { q: Question; num: number
       <div className="opts">
         {q.options.map((o, i) => {
           const cls = "opt" + (q.big ? " big" : "") + (o.sw ? " swatch" : "") +
-            (answered && o.correct ? " correct" : "") + (picked === i && !o.correct ? " wrong" : "") + (answered && !o.correct ? " dim" : "");
+            (showAnswered && o.correct ? " correct" : "") + (showPicked === i && !o.correct ? " wrong" : "") +
+            (showAnswered && !o.correct ? " dim" : "") + (mode === "exam" && !revealed && showPicked === i ? " sel" : "");
           return (
             <button key={i} className={cls}
               style={o.sw ? { background: o.sw, boxShadow: o.sw === "#FFFFFF" ? "inset 0 0 0 3px var(--border)" : undefined } : undefined}
@@ -44,4 +63,4 @@ export function MultipleChoice({ q, num, onResolve }: { q: Question; num: number
       </div>
     </div>
   );
-}
+});

@@ -1,14 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { allMcGens, shuffle, type Question } from "../data/generators";
-import { gTypeColor, gTypeWeekday, gTypeCognate, gTypeNumber, type TypedQ } from "../data/exercises";
-import { MultipleChoice } from "./MultipleChoice";
+import { examSpecsA0, EXAM_PARTS, EXAM_TOTAL, type ExSpec } from "../data/exercises";
 import { Exercise } from "./Engines";
+import type { ExamHandle } from "./examTypes";
 
 type Mode = "com" | "sem";
-type Item = { kind: "mc"; q: Question } | { kind: "typed"; q: TypedQ };
 const KEY = "gs_prova_v1";
-const N_MC = 8, N_TYPED = 4;
-const TOTAL = N_MC + N_TYPED;
 
 interface Result { date: string; mode: Mode; secs: number; nota: number; total: number; }
 
@@ -20,28 +16,21 @@ function saveResult(r: Result) {
   try { localStorage.setItem(KEY, JSON.stringify(all.slice(0, 20))); } catch { /* ignore */ }
 }
 
-function buildProva(): Item[] {
-  const mcGens = shuffle(allMcGens()).slice(0, N_MC);
-  const mc: Item[] = mcGens.map((g) => ({ kind: "mc", q: g() }));
-  const typedGens = [gTypeColor, gTypeWeekday, gTypeCognate, gTypeNumber];
-  const typed: Item[] = shuffle(typedGens).slice(0, N_TYPED).map((g) => ({ kind: "typed", q: g() }));
-  return shuffle([...mc, ...typed]);
-}
-
 function fmt(s: number) {
   const m = Math.floor(s / 60), ss = s % 60;
   return `${m}:${String(ss).padStart(2, "0")}`;
 }
 
+const noop = () => {};
+
 export function Prova({ onFrost }: { onFrost: (on: boolean) => void }) {
   const [phase, setPhase] = useState<"locked" | "pick" | "running" | "done">("locked");
   const [mode, setMode] = useState<Mode>("com");
-  const [items, setItems] = useState<Item[]>([]);
+  const [items, setItems] = useState<ExSpec[]>([]);
   const [secs, setSecs] = useState(0);
   const [nota, setNota] = useState(0);
   const [results, setResults] = useState<Result[]>(() => loadResults());
-  const scored = useRef<number>(0);
-  const answered = useRef<Set<number>>(new Set());
+  const itemRefs = useRef<Array<ExamHandle | null>>([]);
   const startAt = useRef<number>(0);
 
   useEffect(() => {
@@ -52,33 +41,34 @@ export function Prova({ onFrost }: { onFrost: (on: boolean) => void }) {
 
   function begin(m: Mode) {
     setMode(m);
-    setItems(buildProva());
-    scored.current = 0; answered.current = new Set(); setNota(0);
+    setItems(examSpecsA0());
+    itemRefs.current = [];
+    setNota(0);
     startAt.current = Date.now(); setSecs(0);
     setPhase("running");
     if (m === "sem") onFrost(true);
   }
 
-  function record(i: number, correct: number) {
-    if (answered.current.has(i)) return;
-    answered.current.add(i);
-    if (correct > 0) scored.current += 1;
-  }
-
   function corrigir() {
     onFrost(false);
-    const n = scored.current;
-    setNota(n);
+    let earned = 0;
+    itemRefs.current.forEach((h) => { if (h) earned += h.getScore().correct; });
+    itemRefs.current.forEach((h) => h?.reveal());
+    setNota(earned);
     const r: Result = {
       date: new Date().toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }),
-      mode, secs, nota: n, total: TOTAL,
+      mode, secs, nota: earned, total: EXAM_TOTAL,
     };
     saveResult(r);
     setResults(loadResults());
     setPhase("done");
   }
 
-  const pct = Math.round((100 * nota) / TOTAL);
+  const pct = Math.round((100 * nota) / EXAM_TOTAL);
+
+  // índice inicial de cada parte, a partir das contagens em EXAM_PARTS (20 / 10 / 4)
+  let cursor = 0;
+  const partStarts = EXAM_PARTS.map((p) => { const start = cursor; cursor += p.count; return start; });
 
   return (
     <section className="panel topic-sec prova" id="prova">
@@ -89,7 +79,7 @@ export function Prova({ onFrost }: { onFrost: (on: boolean) => void }) {
           <div className="frost">
             <div className="lockcard">
               <div className="big-emoji">🎓</div>
-              <p>Prova final do A0 — {TOTAL} questões misturadas (múltipla escolha + escrever). O relógio corre até você clicar em <b>Corrigir</b>.</p>
+              <p>Prova final do A0 — {EXAM_TOTAL} pontos em 3 partes (múltipla escolha, escrever/ditado e interativas). Nada é revelado até você clicar em <b>Corrigir</b> no final — o relógio corre até lá.</p>
               <button className="btn primary big" onClick={() => setPhase("pick")}>Começar a prova →</button>
             </div>
           </div>
@@ -120,14 +110,21 @@ export function Prova({ onFrost }: { onFrost: (on: boolean) => void }) {
           <div className="prova-bar">
             <span className={"tag " + mode}>{mode === "sem" ? "🙈 Sem consulta" : "📖 Com consulta"}</span>
             <span className="clock">⏱️ {fmt(secs)}</span>
-            {phase === "done" && <span className="notatag">Nota: <b>{nota}/{TOTAL}</b> · {pct}%</span>}
+            {phase === "done" && <span className="notatag">Nota: <b>{nota}/{EXAM_TOTAL}</b> · {pct}%</span>}
           </div>
 
           <div className={"prova-items" + (phase === "done" ? " locked" : "")}>
-            {items.map((it, i) => (
-              it.kind === "mc"
-                ? <MultipleChoice key={i} q={it.q} num={i + 1} onResolve={(c) => record(i, c)} />
-                : <Exercise key={i} spec={{ kind: "typed", gen: () => it.q }} num={i + 1} onResolve={(c) => record(i, c)} />
+            {EXAM_PARTS.map((part, pi) => (
+              <div key={pi}>
+                <div className="exam-sec">{part.label}</div>
+                {items.slice(partStarts[pi], partStarts[pi] + part.count).map((it, j) => {
+                  const i = partStarts[pi] + j;
+                  return (
+                    <Exercise key={i} spec={it} num={i + 1} mode="exam" onResolve={noop}
+                      ref={(el) => { itemRefs.current[i] = el; }} />
+                  );
+                })}
+              </div>
             ))}
           </div>
 
@@ -138,7 +135,7 @@ export function Prova({ onFrost }: { onFrost: (on: boolean) => void }) {
           )}
           {phase === "done" && (
             <div className="prova-done">
-              <div className="notabig">{pct}% <span>· {nota} de {TOTAL} · {fmt(secs)}</span></div>
+              <div className="notabig">{pct}% <span>· {nota} de {EXAM_TOTAL} · {fmt(secs)}</span></div>
               <div className="btnrow"><button className="btn primary" onClick={() => setPhase("pick")}>Fazer de novo 🔁</button></div>
             </div>
           )}

@@ -10,9 +10,9 @@ export function norm(s: string): string {
 
 export interface TypedQ { promptHTML: string; answer: string; speak?: string; meaning?: string; dictation?: boolean; hard?: boolean; word?: string; wordpt?: string; }
 export interface ConnectPair { l: string; r: string; key: string; }
-export interface ConnectData { title: string; pairs: ConnectPair[]; }
-export interface WSData { title: string; pairs: { w: string; pt: string }[]; size: number; }
-export interface EnumData { title: string; items: { emo: string; de: string }[]; }
+export interface ConnectData { title: string; pairs: ConnectPair[]; single: boolean; }
+export interface WSData { title: string; pairs: { w: string; pt: string }[]; size: number; single: boolean; }
+export interface EnumData { title: string; items: { emo: string; de: string }[]; single: boolean; }
 
 export type ExSpec =
   | { kind: "mc"; gen: () => Question }
@@ -31,19 +31,21 @@ export const gTypeCognate = (): TypedQ => { const a = rand(cognates); return { p
 export const gDictate = (pairs: [string, string][]) => (): TypedQ => { const p = rand(pairs); return { promptHTML: "📝 <b>Ditado</b> — ouça e escreva a palavra:", dictation: true, answer: p[0], speak: p[0], word: p[0], wordpt: p[1] }; };
 
 // ---- connect ----
-const conNouns = (arr: Noun[], nn = 5) => (): ConnectData => { const pick = sample(arr, nn); return { title: "Ligue o bicho ao nome:", pairs: pick.map((a) => ({ l: `<span style="font-size:1.5rem">${a.emo}</span>`, r: `${a.art} ${a.de}`, key: a.de })) }; };
-const conColors = (nn = 5) => (): ConnectData => { const pick = sample(colors, nn); return { title: "Ligue a cor ao nome:", pairs: pick.map((c) => ({ l: `<span style="width:26px;height:26px;border-radius:50%;background:${c.hex};${c.hex === "#FFFFFF" ? "box-shadow:inset 0 0 0 2px var(--border);" : ""}display:inline-block"></span>`, r: c.de, key: c.de })) }; };
-const conOpp = (nn = 5) => (): ConnectData => { const pick = sample(opposites, nn); return { title: "Ligue cada palavra ao seu oposto:", pairs: pick.map((p) => ({ l: p.a, r: p.b, key: p.a })) }; };
-const conCognate = (nn = 5) => (): ConnectData => { const pick = sample(cognates, nn); return { title: "Ligue o cognato ao português:", pairs: pick.map((c) => ({ l: c.de, r: c.pt, key: c.de })) }; };
+// `single`: true = vale 1 ponto (tudo-ou-nada), usado na prática por capítulo.
+//           false = vale 1 ponto por par certo, usado na Prova A0 (fiel ao protótipo original).
+const conNouns = (arr: Noun[], nn = 5, single = true) => (): ConnectData => { const pick = sample(arr, nn); return { title: "Ligue o bicho ao nome:", pairs: pick.map((a) => ({ l: `<span style="font-size:1.5rem">${a.emo}</span>`, r: `${a.art} ${a.de}`, key: a.de })), single }; };
+const conColors = (nn = 5, single = true) => (): ConnectData => { const pick = sample(colors, nn); return { title: "Ligue a cor ao nome:", pairs: pick.map((c) => ({ l: `<span style="width:26px;height:26px;border-radius:50%;background:${c.hex};${c.hex === "#FFFFFF" ? "box-shadow:inset 0 0 0 2px var(--border);" : ""}display:inline-block"></span>`, r: c.de, key: c.de })), single }; };
+const conOpp = (nn = 5, single = true) => (): ConnectData => { const pick = sample(opposites, nn); return { title: "Ligue cada palavra ao seu oposto:", pairs: pick.map((p) => ({ l: p.a, r: p.b, key: p.a })), single }; };
+const conCognate = (nn = 5, single = true) => (): ConnectData => { const pick = sample(cognates, nn); return { title: "Ligue o cognato ao português:", pairs: pick.map((c) => ({ l: c.de, r: c.pt, key: c.de })), single }; };
 
 // ---- wordsearch ----
-const wsFrom = (arr: Noun[], nn = 5) => (): WSData => { const pick = sample(arr, nn).filter((a) => a.de.length <= 8).map((a) => ({ w: a.de, pt: a.pt })); return { title: "Caça-palavras: clique na 1ª e na última letra. Ao achar, ouça + tradução! 🎁", pairs: pick, size: 9 }; };
+const wsFrom = (arr: Noun[], nn = 5, single = true) => (): WSData => { const pick = sample(arr, nn).filter((a) => a.de.length <= 8).map((a) => ({ w: a.de, pt: a.pt })); return { title: "Caça-palavras: clique na 1ª e na última letra. Ao achar, ouça + tradução! 🎁", pairs: pick, size: 9, single }; };
 
 // ---- enumerate ----
-const enumFrom = (arr: Noun[], nn = 5) => (): EnumData => { const pick = sample(arr, nn); return { title: "Enumere: escreva o número da palavra sob cada figura.", items: pick.map((a) => ({ emo: a.emo, de: `${a.art} ${a.de}` })) }; };
+const enumFrom = (arr: Noun[], nn = 5, single = true) => (): EnumData => { const pick = sample(arr, nn); return { title: "Enumere: escreva o número da palavra sob cada figura.", items: pick.map((a) => ({ emo: a.emo, de: `${a.art} ${a.de}` })), single }; };
 
 // re-export mc generators via generators.ts questionsForTopic style
-import { questionsForTopic } from "./generators";
+import { questionsForTopic, allMcGens } from "./generators";
 function mcGen(id: string): () => Question { return () => questionsForTopic(id, 1)[0]; }
 
 const dictColors = colors.map((c) => [c.de, c.pt] as [string, string]);
@@ -68,5 +70,36 @@ export function exSpecsForTopic(id: string, count = 20): ExSpec[] {
   for (let i = 0; i < count; i++) out.push(base[i % base.length]);
   return shuffle(out);
 }
+
+// ---- Prova A0: 50 pontos em 3 partes, fiel ao protótipo original ----
+// Parte 1 · Múltipla escolha (20 pts) — 20 perguntas únicas sorteadas de todos os 9 temas.
+// Parte 2 · Escreva / Ditado (10 pts) — 7 "escreva" + 3 ditados, 1 ponto cada.
+// Parte 3 · Interativas (20 pts) — 4 exercícios (ligar × 2, enumerar, caça-palavras) valendo 5 pontos cada (single:false).
+const typedGens = [gTypeColor, gTypeNoun(animals), gTypeNoun(food), gTypeNumber, gTypeWeekday, gTypeCognate];
+const dictPools = [dictColors, dictAnimals, dictFood];
+
+export function examSpecsA0(): ExSpec[] {
+  // allMcGens() tem menos de 20 geradores únicos — repete em ciclo (cada um ainda sorteia
+  // uma palavra/pergunta aleatória por chamada), mesma técnica de exSpecsForTopic.
+  const mcPool = shuffle(allMcGens());
+  const part1: ExSpec[] = Array.from({ length: 20 }, (_, i) => ({ kind: "mc" as const, gen: mcPool[i % mcPool.length] }));
+  const part2: ExSpec[] = [
+    ...Array.from({ length: 7 }, () => ({ kind: "typed" as const, gen: rand(typedGens) })),
+    ...Array.from({ length: 3 }, () => ({ kind: "dict" as const, gen: gDictate(rand(dictPools)) })),
+  ];
+  const part3: ExSpec[] = [
+    { kind: "connect", gen: conNouns(animals, 5, false) },
+    { kind: "connect", gen: conColors(5, false) },
+    { kind: "enum", gen: enumFrom(food, 5, false) },
+    { kind: "ws", gen: wsFrom(animals, 5, false) },
+  ];
+  return [...part1, ...part2, ...part3];
+}
+export const EXAM_PARTS = [
+  { label: "Parte 1 · Múltipla escolha (20 pts)", count: 20 },
+  { label: "Parte 2 · Escreva / ditado (10 pts)", count: 10 },
+  { label: "Parte 3 · Interativas (20 pts)", count: 4 },
+];
+export const EXAM_TOTAL = 50;
 
 export { falseFriends };
