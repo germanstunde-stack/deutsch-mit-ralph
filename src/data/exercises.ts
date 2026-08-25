@@ -74,9 +74,20 @@ export function exSpecsForTopic(id: string, count = 20): ExSpec[] {
 // ---- Prova A0: 50 pontos em 3 partes, fiel ao protótipo original ----
 // Parte 1 · Múltipla escolha (20 pts) — 20 perguntas únicas sorteadas de todos os 9 temas.
 // Parte 2 · Escreva / Ditado (10 pts) — 7 "escreva" + 3 ditados, 1 ponto cada.
-// Parte 3 · Interativas (20 pts) — 4 exercícios (ligar × 2, enumerar, caça-palavras) valendo 5 pontos cada (single:false).
+// Parte 3 · Interativas (20 pts) — 20 exercícios (ligar/enumerar/caça-palavras), cada um
+// valendo 1 ponto tudo-ou-nada (single:true), pra fechar 50 perguntas reais = 50 pontos.
 const typedGens = [gTypeColor, gTypeNoun(animals), gTypeNoun(food), gTypeNumber, gTypeWeekday, gTypeCognate];
 const dictPools = [dictColors, dictAnimals, dictFood];
+const interactiveGens: Array<() => ExSpec> = [
+  () => ({ kind: "connect", gen: conNouns(animals, 5) }),
+  () => ({ kind: "connect", gen: conColors(5) }),
+  () => ({ kind: "connect", gen: conOpp(5) }),
+  () => ({ kind: "connect", gen: conCognate(5) }),
+  () => ({ kind: "enum", gen: enumFrom(food, 5) }),
+  () => ({ kind: "enum", gen: enumFrom(animals, 5) }),
+  () => ({ kind: "ws", gen: wsFrom(animals, 4) }),
+  () => ({ kind: "ws", gen: wsFrom(food, 4) }),
+];
 
 export function examSpecsA0(): ExSpec[] {
   // allMcGens() tem menos de 20 geradores únicos — repete em ciclo (cada um ainda sorteia
@@ -87,18 +98,14 @@ export function examSpecsA0(): ExSpec[] {
     ...Array.from({ length: 7 }, () => ({ kind: "typed" as const, gen: rand(typedGens) })),
     ...Array.from({ length: 3 }, () => ({ kind: "dict" as const, gen: gDictate(rand(dictPools)) })),
   ];
-  const part3: ExSpec[] = [
-    { kind: "connect", gen: conNouns(animals, 5, false) },
-    { kind: "connect", gen: conColors(5, false) },
-    { kind: "enum", gen: enumFrom(food, 5, false) },
-    { kind: "ws", gen: wsFrom(animals, 5, false) },
-  ];
+  const part3Pool = shuffle(interactiveGens);
+  const part3: ExSpec[] = Array.from({ length: 20 }, (_, i) => part3Pool[i % part3Pool.length]());
   return [...part1, ...part2, ...part3];
 }
 export const EXAM_PARTS = [
   { label: "Parte 1 · Múltipla escolha (20 pts)", count: 20 },
   { label: "Parte 2 · Escreva / ditado (10 pts)", count: 10 },
-  { label: "Parte 3 · Interativas (20 pts)", count: 4 },
+  { label: "Parte 3 · Interativas (20 pts)", count: 20 },
 ];
 export const EXAM_TOTAL = 50;
 
