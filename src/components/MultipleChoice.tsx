@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Question } from "../data/generators";
 import { speak } from "../lib/speech";
+import { addHard, easeHard } from "../data/caderno";
 
 export function MultipleChoice({ q, num, onResolve }: { q: Question; num: number; onResolve: (correct: number, wrong: number) => void }) {
   const [answered, setAnswered] = useState(false);
@@ -11,9 +12,10 @@ export function MultipleChoice({ q, num, onResolve }: { q: Question; num: number
     if (answered) return;
     if (correct) {
       setAnswered(true); setPicked(i);
+      if (!missed) easeHard(q.word);
       onResolve(missed ? 0 : 1, missed ? 0 : 0); // se já errou, o erro já foi contado
     } else {
-      if (!missed) { onResolve(0, 1); setMissed(true); }
+      if (!missed) { onResolve(0, 1); setMissed(true); addHard(q.word, q.wordpt); }
       setPicked(i);
       setTimeout(() => setPicked((p) => (p === i ? null : p)), 400);
     }

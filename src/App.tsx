@@ -4,6 +4,8 @@ import { topics } from "./data/topics";
 import { TopicView } from "./components/TopicView";
 import { Mascot } from "./components/Mascot";
 import { BgArt } from "./components/BgArt";
+import { CadernoPanel } from "./components/CadernoPanel";
+import { Prova } from "./components/Prova";
 
 // LOGIN DESLIGADO por enquanto (código de auth/cadastro/ranking pronto e desligado).
 const LEVELS: [string, string, boolean][] = [
@@ -18,6 +20,7 @@ function jump(id: string) {
 export default function App() {
   const { dark, toggleTheme, slow, toggleSpeed } = useTheme();
   const [stats, setStats] = useState({ correct: 0, wrong: 0 });
+  const [frost, setFrost] = useState(false);
 
   function reportResult(correct: number, wrong: number) {
     if (correct === 0 && wrong === 0) return;
@@ -54,26 +57,23 @@ export default function App() {
         </div>
 
         <div className="index">
+          <button className="note" onClick={() => jump("caderno")}>📓 Caderno</button>
           {topics.map((t) => (
             <button key={t.id} onClick={() => jump("top-" + t.id)}>{t.icon} {t.name}</button>
           ))}
           <button className="exam" onClick={() => jump("prova")}>📝 Prova</button>
         </div>
 
-        {topics.map((t, i) => (
-          <TopicView key={t.id} id={t.id} onResult={reportResult}
-            next={topics[i + 1] ? { id: topics[i + 1].id, label: topics[i + 1].icon + " " + topics[i + 1].name } : null} />
-        ))}
+        <CadernoPanel onResult={reportResult} />
 
-        <section className="panel topic-sec" id="prova" style={{ borderColor: "color-mix(in srgb, var(--blau) 35%, var(--border))" }}>
-          <h2>📝 Prova A0</h2>
-          <p className="desc">A prova completa (camada fosca, escolha <b>Com Consulta / Sem Consulta</b>, relógio até corrigir e desempenho salvo) chega no próximo push. Por enquanto, seu placar desta sessão:</p>
-          <div className="stat-row">
-            <div className="stat"><div className="v">{stats.correct}</div><div className="k">acertos</div></div>
-            <div className="stat"><div className="v">{stats.wrong}</div><div className="k">erros</div></div>
-            <div className="stat"><div className="v">{stats.correct + stats.wrong > 0 ? Math.round((100 * stats.correct) / (stats.correct + stats.wrong)) : 0}%</div><div className="k">aproveitamento</div></div>
-          </div>
-        </section>
+        <div className={"topics-wrap" + (frost ? " exam-blur" : "")}>
+          {topics.map((t, i) => (
+            <TopicView key={t.id} id={t.id} onResult={reportResult}
+              next={topics[i + 1] ? { id: topics[i + 1].id, label: topics[i + 1].icon + " " + topics[i + 1].name } : null} />
+          ))}
+        </div>
+
+        <Prova onFrost={setFrost} />
 
         <footer style={{ marginTop: 28, textAlign: "center", color: "var(--ink-soft)", fontWeight: 700, fontSize: ".8rem" }}>
           GermanStunde · Módulo A0 — feito pra crescer até o C2. Viel Erfolg! 🎉

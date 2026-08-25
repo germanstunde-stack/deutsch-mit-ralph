@@ -3,6 +3,7 @@ import { speak } from "../lib/speech";
 import { rand, shuffle, type Question } from "../data/generators";
 import { norm, type ExSpec, type TypedQ, type ConnectData, type WSData, type EnumData } from "../data/exercises";
 import { MultipleChoice } from "./MultipleChoice";
+import { addHard, easeHard } from "../data/caderno";
 
 type Resolve = (correct: number, wrong: number) => void;
 
@@ -15,7 +16,7 @@ function Typed({ q, num, onResolve }: { q: TypedQ; num: number; onResolve: Resol
     const ok = norm(val) === norm(q.answer);
     setState(ok ? "ok" : "no");
     if (ok) speak(q.speak || q.answer);
-    if (!scored) { setScored(true); onResolve(ok ? 1 : 0, ok ? 0 : 1); }
+    if (!scored) { setScored(true); onResolve(ok ? 1 : 0, ok ? 0 : 1); if (ok) easeHard(q.word); else addHard(q.word, q.wordpt); }
   }
   return (
     <div className={"qcard" + (q.hard ? " hardq" : "")}>

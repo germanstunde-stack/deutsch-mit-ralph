@@ -1,7 +1,7 @@
 import { animals, food, colors, greet, phrases, weekdays, months, opposites, measures, cognates, falseFriends, type Noun, type Word } from "./vocab";
 
 export interface Option { label: string; correct: boolean; sw?: string; }
-export interface Question { key: string; promptHTML: string; speak?: string; meaning?: string; big?: boolean; options: Option[]; }
+export interface Question { key: string; promptHTML: string; speak?: string; meaning?: string; big?: boolean; options: Option[]; word?: string; wordpt?: string; }
 
 let uid = 0;
 export function shuffle<T>(a: T[]): T[] { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
@@ -27,47 +27,47 @@ function gMissing(): Question {
   const shown = w.slice(0, i) + '<span style="color:var(--brand);border-bottom:3px solid var(--brand)">_</span>' + w.slice(i + 1);
   const opts = sample(LETTERS.filter((l) => l !== orig), 3).map((l) => ({ label: l, correct: false }));
   opts.push({ label: orig, correct: true });
-  return q({ promptHTML: '🔊 Ouça e ache a letra que falta: <span class="big" style="letter-spacing:2px">' + shown + "</span>", meaning: "significa: <b>" + pt + "</b>", speak: w, options: opts });
+  return q({ promptHTML: '🔊 Ouça e ache a letra que falta: <span class="big" style="letter-spacing:2px">' + shown + "</span>", meaning: "significa: <b>" + pt + "</b>", speak: w, options: opts, word: w, wordpt: pt });
 }
 function gMeaningNoun(arr: Noun[]): Question {
   const a = rand(arr);
   const opts = sample(arr, 3, a).map((o) => ({ label: o.pt, correct: false }));
   opts.push({ label: a.pt, correct: true });
-  return q({ promptHTML: 'O que significa <span class="big">' + a.art + " " + a.de + "</span>?", speak: a.art + " " + a.de, options: opts });
+  return q({ promptHTML: 'O que significa <span class="big">' + a.art + " " + a.de + "</span>?", speak: a.art + " " + a.de, options: opts, word: a.de, wordpt: a.pt });
 }
 function gArticle(arr: Noun[]): Question {
   const a = rand(arr);
-  return q({ promptHTML: 'Qual artigo vai com <span class="big">' + a.de + "</span> (" + a.pt + ")?", speak: a.art + " " + a.de, options: [{ label: "der", correct: a.art === "der" }, { label: "die", correct: a.art === "die" }, { label: "das", correct: a.art === "das" }] });
+  return q({ promptHTML: 'Qual artigo vai com <span class="big">' + a.de + "</span> (" + a.pt + ")?", speak: a.art + " " + a.de, word: a.de, wordpt: a.pt, options: [{ label: "der", correct: a.art === "der" }, { label: "die", correct: a.art === "die" }, { label: "das", correct: a.art === "das" }] });
 }
 function gPickName(arr: Noun[]): Question {
   const a = rand(arr);
   const opts = sample(arr, 3, a).map((o) => ({ label: o.art + " " + o.de, correct: false }));
   opts.push({ label: a.art + " " + a.de, correct: true });
-  return q({ promptHTML: 'Ligue ao nome certo: <span class="big">' + a.emo + " " + a.pt + "</span>", big: true, options: opts });
+  return q({ promptHTML: 'Ligue ao nome certo: <span class="big">' + a.emo + " " + a.pt + "</span>", big: true, options: opts, word: a.de, wordpt: a.pt });
 }
 function gColorSwatch(): Question {
   const c = rand(colors);
   const opts = sample(colors, 3, c).map((o) => ({ label: o.pt, sw: o.hex, correct: false }));
   opts.push({ label: c.pt, sw: c.hex, correct: true });
-  return q({ promptHTML: 'Clique na cor <span class="big">' + c.de + "</span>", speak: c.de, options: opts });
+  return q({ promptHTML: 'Clique na cor <span class="big">' + c.de + "</span>", speak: c.de, options: opts, word: c.de, wordpt: c.pt });
 }
 function gColorMeaning(): Question {
   const c = rand(colors);
   const opts = sample(colors, 3, c).map((o) => ({ label: o.pt, correct: false }));
   opts.push({ label: c.pt, correct: true });
-  return q({ promptHTML: 'O que quer dizer <span class="big">' + c.de + "</span>?", speak: c.de, options: opts });
+  return q({ promptHTML: 'O que quer dizer <span class="big">' + c.de + "</span>?", speak: c.de, options: opts, word: c.de, wordpt: c.pt });
 }
 function gWord(arr: Word[]): Question {
   const a = rand(arr);
   const opts = sample(arr, 3, a).map((o) => ({ label: o.pt, correct: false }));
   opts.push({ label: a.pt, correct: true });
-  return q({ promptHTML: 'O que quer dizer <span class="big">' + a.de + "</span>?", speak: a.de.replace("…", ""), options: opts });
+  return q({ promptHTML: 'O que quer dizer <span class="big">' + a.de + "</span>?", speak: a.de.replace("…", ""), options: opts, word: a.de, wordpt: a.pt });
 }
 function gMonth(): Question {
   const m = rand(months);
   const opts = sample(months, 3, m).map((o) => ({ label: o[1], correct: false }));
   opts.push({ label: m[1], correct: true });
-  return q({ promptHTML: 'Que mês é <span class="big">' + m[0] + "</span>?", speak: m[0], options: opts });
+  return q({ promptHTML: 'Que mês é <span class="big">' + m[0] + "</span>?", speak: m[0], options: opts, word: m[0], wordpt: m[1] });
 }
 function gOpposite(): Question {
   const p = rand(opposites);
@@ -75,31 +75,31 @@ function gOpposite(): Question {
   const word = flip ? p.b : p.a, ans = flip ? p.a : p.b;
   const others = sample(opposites, 3, p).map((o) => ({ label: Math.random() < 0.5 ? o.a : o.b, correct: false }));
   others.push({ label: ans, correct: true });
-  return q({ promptHTML: 'Qual é o oposto de <span class="big">' + word + "</span>?", speak: word + ", " + ans, big: true, options: others });
+  return q({ promptHTML: 'Qual é o oposto de <span class="big">' + word + "</span>?", speak: word + ", " + ans, big: true, options: others, word, wordpt: "oposto" });
 }
 function gCognate(): Question {
   const a = rand(cognates);
   const opts = sample(cognates, 3, a).map((o) => ({ label: o.pt, correct: false }));
   opts.push({ label: a.pt, correct: true });
-  return q({ promptHTML: 'O que significa <span class="big">' + a.de + "</span>?", speak: a.de, options: opts });
+  return q({ promptHTML: 'O que significa <span class="big">' + a.de + "</span>?", speak: a.de, options: opts, word: a.de, wordpt: a.pt });
 }
 function gFalse(): Question {
   const f = rand(falseFriends);
   const others = sample(falseFriends, 2, f).map((o) => ({ label: o.real, correct: false }));
   const opts = [{ label: f.real, correct: true }, { label: f.trap, correct: false }, ...others];
-  return q({ promptHTML: '⚠️ Falso amigo — <span class="big">' + f.de + "</span> significa?", meaning: 'parece “' + f.trap + "”, mas cuidado…", speak: f.de, options: opts });
+  return q({ promptHTML: '⚠️ Falso amigo — <span class="big">' + f.de + "</span> significa?", meaning: 'parece “' + f.trap + "”, mas cuidado…", speak: f.de, options: opts, word: f.de, wordpt: f.real });
 }
 function gMeasure(): Question {
   const a = rand(measures);
   const opts = sample(measures, 3, a).map((o) => ({ label: o.pt, correct: false }));
   opts.push({ label: a.pt, correct: true });
-  return q({ promptHTML: 'O que significa <span class="big">' + a.de + "</span>?", speak: a.art + " " + a.de, options: opts });
+  return q({ promptHTML: 'O que significa <span class="big">' + a.de + "</span>?", speak: a.art + " " + a.de, options: opts, word: a.de, wordpt: a.pt });
 }
 
 type Gen = () => Question;
 const BANK: Record<string, Gen[]> = {
   alfabeto: [gMissing, gMissing, () => gPickName(animals)],
-  numeros: [() => gMeaningNoun(animals)], // números completos vêm na Fase 2 (contas/relógio)
+  numeros: [() => gMeaningNoun(animals)],
   dias: [gMonth, () => gWord(weekdays)],
   cores: [gColorSwatch, gColorMeaning],
   animais: [() => gPickName(animals), () => gArticle(animals), () => gMeaningNoun(animals)],
@@ -114,4 +114,14 @@ export function questionsForTopic(id: string, count = 8): Question[] {
   const out: Question[] = [];
   for (let i = 0; i < count; i++) out.push(gens[i % gens.length]());
   return shuffle(out);
+}
+
+// para a prova (todos os MC)
+export function allMcGens(): Gen[] {
+  return [
+    gMissing, () => gPickName(animals), () => gArticle(animals), () => gMeaningNoun(animals),
+    () => gPickName(food), () => gArticle(food), () => gMeaningNoun(food),
+    gColorSwatch, gColorMeaning, () => gWord(greet), () => gWord(phrases),
+    gMonth, () => gWord(weekdays), gOpposite, gMeasure, gCognate, gFalse,
+  ];
 }

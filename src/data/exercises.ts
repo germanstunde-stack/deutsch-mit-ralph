@@ -8,7 +8,7 @@ export function norm(s: string): string {
     .replace(/^(der|die|das)\s+/, "").replace(/\s+/g, " ");
 }
 
-export interface TypedQ { promptHTML: string; answer: string; speak?: string; meaning?: string; dictation?: boolean; hard?: boolean; }
+export interface TypedQ { promptHTML: string; answer: string; speak?: string; meaning?: string; dictation?: boolean; hard?: boolean; word?: string; wordpt?: string; }
 export interface ConnectPair { l: string; r: string; key: string; }
 export interface ConnectData { title: string; pairs: ConnectPair[]; }
 export interface WSData { title: string; pairs: { w: string; pt: string }[]; size: number; }
@@ -23,12 +23,12 @@ export type ExSpec =
   | { kind: "enum"; gen: () => EnumData };
 
 // ---- typed / dict ----
-export const gTypeColor = (): TypedQ => { const c = rand(colors); return { promptHTML: `Escreva <span class="big">${c.pt}</span> em alemão:`, answer: c.de, speak: c.de }; };
-export const gTypeNoun = (arr: Noun[]) => (): TypedQ => { const a = rand(arr); return { promptHTML: `Escreva <span class="big">${a.emo} ${a.pt}</span> em alemão (sem artigo):`, answer: a.de, speak: `${a.art} ${a.de}` }; };
+export const gTypeColor = (): TypedQ => { const c = rand(colors); return { promptHTML: `Escreva <span class="big">${c.pt}</span> em alemão:`, answer: c.de, speak: c.de, word: c.de, wordpt: c.pt }; };
+export const gTypeNoun = (arr: Noun[]) => (): TypedQ => { const a = rand(arr); return { promptHTML: `Escreva <span class="big">${a.emo} ${a.pt}</span> em alemão (sem artigo):`, answer: a.de, speak: `${a.art} ${a.de}`, word: a.de, wordpt: a.pt }; };
 export const gTypeNumber = (): TypedQ => { const n = rand([1,2,3,4,5,6,7,8,9,10,11,12,15,20]); return { promptHTML: `Escreva o número <span class="big">${n}</span> em alemão:`, answer: numDE(n), speak: numDE(n) }; };
-export const gTypeWeekday = (): TypedQ => { const d = rand(weekdays); return { promptHTML: `Escreva <span class="big">${d.pt}-feira</span> em alemão:`, answer: d.de, speak: d.de }; };
-export const gTypeCognate = (): TypedQ => { const a = rand(cognates); return { promptHTML: `Escreva <span class="big">${a.pt}</span> em alemão:`, answer: a.de, speak: a.de }; };
-export const gDictate = (pairs: [string, string][]) => (): TypedQ => { const p = rand(pairs); return { promptHTML: "📝 <b>Ditado</b> — ouça e escreva a palavra:", dictation: true, answer: p[0], speak: p[0] }; };
+export const gTypeWeekday = (): TypedQ => { const d = rand(weekdays); return { promptHTML: `Escreva <span class="big">${d.pt}-feira</span> em alemão:`, answer: d.de, speak: d.de, word: d.de, wordpt: d.pt }; };
+export const gTypeCognate = (): TypedQ => { const a = rand(cognates); return { promptHTML: `Escreva <span class="big">${a.pt}</span> em alemão:`, answer: a.de, speak: a.de, word: a.de, wordpt: a.pt }; };
+export const gDictate = (pairs: [string, string][]) => (): TypedQ => { const p = rand(pairs); return { promptHTML: "📝 <b>Ditado</b> — ouça e escreva a palavra:", dictation: true, answer: p[0], speak: p[0], word: p[0], wordpt: p[1] }; };
 
 // ---- connect ----
 const conNouns = (arr: Noun[], nn = 5) => (): ConnectData => { const pick = sample(arr, nn); return { title: "Ligue o bicho ao nome:", pairs: pick.map((a) => ({ l: `<span style="font-size:1.5rem">${a.emo}</span>`, r: `${a.art} ${a.de}`, key: a.de })) }; };

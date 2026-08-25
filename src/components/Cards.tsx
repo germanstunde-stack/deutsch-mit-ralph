@@ -2,7 +2,7 @@ import { speak } from "../lib/speech";
 import { numDE } from "../lib/numbers";
 import { alphabet, animals, food, colors, greet, phrases, weekdays, daywords, months, opposites, measures, cognates, falseFriends, type Noun } from "../data/vocab";
 
-export interface CardItem { emo?: string; deHTML: string; pt?: string; ptBad?: string; speak: string; swatch?: string; }
+export interface CardItem { emo?: string; deHTML: string; pt?: string; ptBad?: string; speak: string; swatch?: string; say?: string; }
 
 function nounCard(a: Noun): CardItem {
   return { emo: a.emo, deHTML: `<span class="art ${a.art}">${a.art}</span> ${a.de}`, pt: a.pt, speak: `${a.art} ${a.de}` };
@@ -11,7 +11,7 @@ function nounCard(a: Noun): CardItem {
 export function cardsForTopic(id: string): { items: CardItem[]; gridClass: string; legend?: boolean } {
   switch (id) {
     case "alfabeto":
-      return { gridClass: "grid tiny", items: alphabet.map(([l, name]) => ({ deHTML: l, pt: "🔊 " + name, speak: l })) };
+      return { gridClass: "grid tiny", items: alphabet.map(([l, name]) => ({ deHTML: l, say: "🔊 " + name, speak: l })) };
     case "numeros": {
       const list = [...Array(21).keys(), 30, 40, 50, 60, 70, 80, 90, 100, 200, 1000, 21, 47, 99, 345];
       return { gridClass: "grid", items: list.map((n) => ({ emo: String(n), deHTML: numDE(n), speak: numDE(n) })) };
@@ -67,7 +67,7 @@ export function CardGrid({ id }: { id: string }) {
             <span className="de" dangerouslySetInnerHTML={{ __html: it.deHTML }} />
             {it.pt && <span className="pt" style={it.ptBad ? { color: "var(--good)", fontWeight: 800 } : undefined}>{it.pt}</span>}
             {it.ptBad && <span className="pt" style={{ color: "var(--bad)" }}>{it.ptBad}</span>}
-            <span className="say">🔊</span>
+            <span className="say">{it.say ?? "🔊"}</span>
           </button>
         ))}
       </div>
