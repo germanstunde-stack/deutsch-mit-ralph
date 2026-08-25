@@ -56,9 +56,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
   async function saveProfile(name: string, birthdate: string) {
     if (!session) return { error: "sem sessão" };
-    const { error } = await supabase.from("profiles").update({ display_name: name.trim(), birthdate }).eq("id", session.user.id);
-    if (!error) await load(session.user.id);
-    return { error: error?.message };
+    // upsert (não update): se o trigger que cria o profile na hora do cadastro não rodou
+    // por algum motivo, isso cria a linha na hora em vez de silenciosamente não fazer nada.
+    const { error } = await supabase.from("profiles").upsert({
+      id: session.user.id, email: session.user.email, display_name: name.trim(), birthdate,
+    });
+    if (error) return { error: error.message };
+    await load(session.user.id);
+    return {};
   }
   async function signOut() { await supabase.auth.signOut(); }
 
