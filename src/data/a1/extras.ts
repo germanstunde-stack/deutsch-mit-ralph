@@ -1,7 +1,7 @@
 import type { Lang } from "../../i18n/types";
 import type { Profile } from "../../auth/AuthProvider";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS } from "./exercises";
-import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural, caseNouns } from "./vocab";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES } from "./exercises";
+import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural, caseNouns, personalPronouns, indefPronouns } from "./vocab";
 
 export interface Flash { de: string; pt: string; emo: string; }
 
@@ -49,6 +49,12 @@ const sentencesPT: Record<string, [string, string][]> = {
     ["Das Buch gehört der Frau.", "O livro pertence à mulher."],
     ["Ich nehme die Tasche.", "Eu pego a bolsa."],
   ],
+  [CH_PRONOMES]: [
+    ["Ich liebe dich.", "Eu te amo."],
+    ["Kannst du mir helfen?", "Você pode me ajudar?"],
+    ["Das gefällt mir sehr.", "Eu gosto muito disso."],
+    ["Man spricht hier Deutsch.", "Fala-se alemão aqui."],
+  ],
 };
 const sentencesEN: Record<string, [string, string][]> = {
   [CH_EU_VOCE_SEIN]: [
@@ -93,6 +99,12 @@ const sentencesEN: Record<string, [string, string][]> = {
     ["Ich helfe dem Mann.", "I help the man."],
     ["Das Buch gehört der Frau.", "The book belongs to the woman."],
     ["Ich nehme die Tasche.", "I take the bag."],
+  ],
+  [CH_PRONOMES]: [
+    ["Ich liebe dich.", "I love you."],
+    ["Kannst du mir helfen?", "Can you help me?"],
+    ["Das gefällt mir sehr.", "I like that a lot."],
+    ["Man spricht hier Deutsch.", "German is spoken here."],
   ],
 };
 
@@ -143,6 +155,12 @@ export function deckForTopic(id: string, lang: Lang): Flash[] {
   }
   if (id === CH_CASOS) {
     return caseNouns.map((n) => ({ de: `${n.nom} / ${n.akk} / ${n.dat}`, pt: n.meaning[lang], emo: "📐" }));
+  }
+  if (id === CH_PRONOMES) {
+    return [
+      ...personalPronouns.map((p) => ({ de: `${p.nom} → ${p.akk} / ${p.dat}`, pt: p.meaning[lang], emo: "👤" })),
+      ...indefPronouns.map((w) => ({ de: w.de, pt: w.meaning[lang], emo: "❓" })),
+    ];
   }
   return [];
 }

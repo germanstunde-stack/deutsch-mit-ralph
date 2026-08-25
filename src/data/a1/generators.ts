@@ -9,6 +9,7 @@ import {
   modalVerbs, modalSentences,
   nounsPlural, pluralSentences,
   caseNouns, caseSentences,
+  personalPronouns, indefPronouns, pronounSentences,
   type Verb, type OrderSentence,
 } from "./vocab";
 
@@ -290,3 +291,39 @@ export function gTypeCaseForm(lang: Lang): TypedQ {
 }
 
 export const gOrderCase = (lang: Lang): OrderData => gOrder(lang, caseSentences);
+
+/* ---------- capítulo 8: pronomes pessoais (Akk/Dativ) & indefinidos ---------- */
+const OBJ_CASE_KEYS: CaseKey[] = ["akk", "dat"];
+
+export function gPronCaseMC(lang: Lang): Question {
+  const p = rand(personalPronouns);
+  const c = rand(OBJ_CASE_KEYS);
+  const correct = p[c];
+  const wrongPool = personalPronouns.filter((o) => o !== p).map((o) => o[c]);
+  const wrong = sample([...new Set(wrongPool)], 3, correct);
+  const opts = wrong.map((f) => ({ label: f, correct: false }));
+  opts.push({ label: correct, correct: true });
+  const prompt = lang === "pt"
+    ? `Qual é o pronome (${CASE_LABEL.pt[c]}) de <span class="big">${p.nom}</span> (${p.meaning.pt})?`
+    : `What's the (${CASE_LABEL.en[c]}) pronoun for <span class="big">${p.nom}</span> (${p.meaning.en})?`;
+  return q({ promptHTML: prompt, speak: correct, options: shuffle(opts), word: correct, wordpt: p.nom });
+}
+
+export function gTypePronCase(lang: Lang): TypedQ {
+  const p = rand(personalPronouns);
+  const c = rand(OBJ_CASE_KEYS);
+  const prompt = lang === "pt"
+    ? `Escreva o pronome (${CASE_LABEL.pt[c]}) de <span class="big">${p.nom}</span> (${p.meaning.pt}):`
+    : `Write the (${CASE_LABEL.en[c]}) pronoun for <span class="big">${p.nom}</span> (${p.meaning.en}):`;
+  return { promptHTML: prompt, answer: p[c], speak: p[c], word: p[c], wordpt: p.nom };
+}
+
+export function gIndefMeaning(lang: Lang): Question {
+  const w = rand(indefPronouns);
+  const opts = sample(indefPronouns, 3, w).map((o) => ({ label: o.meaning[lang], correct: false }));
+  opts.push({ label: w.meaning[lang], correct: true });
+  const prompt = lang === "pt" ? `O que significa <span class="big">${w.de}</span>?` : `What does <span class="big">${w.de}</span> mean?`;
+  return q({ promptHTML: prompt, speak: w.de, options: shuffle(opts), word: w.de, wordpt: w.meaning.pt });
+}
+
+export const gOrderPronoun = (lang: Lang): OrderData => gOrder(lang, pronounSentences);

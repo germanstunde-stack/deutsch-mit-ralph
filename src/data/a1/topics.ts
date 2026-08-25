@@ -1,6 +1,6 @@
 import type { Lang } from "../../i18n/types";
 import type { TopicMeta } from "../topics";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES } from "./exercises";
 
 interface TopicMetaI18n { id: string; icon: string; name: Record<Lang, string>; cardTitle: Record<Lang, string>; explanationHTML: Record<Lang, string>; }
 
@@ -70,6 +70,15 @@ const TOPICS_I18N: TopicMetaI18n[] = [
     explanationHTML: {
       pt: "<p>Como o artigo muda conforme a função do substantivo na frase: sujeito, objeto direto e objeto indireto.</p>",
       en: "<p>How the article changes depending on the noun's role in the sentence: subject, direct object, and indirect object.</p>",
+    },
+  },
+  {
+    id: CH_PRONOMES, icon: "👤",
+    name: { pt: "Pronomes & indefinidos", en: "Pronouns & indefinites" },
+    cardTitle: { pt: "📖 Personalpronomen & Indefinitpronomen", en: "📖 Personal & indefinite pronouns" },
+    explanationHTML: {
+      pt: "<p>Pronomes pessoais no Akkusativ/Dativ (er → ihn/ihm...) e os indefinidos alles/etwas/nichts/man.</p>",
+      en: "<p>Personal pronouns in the Accusative/Dative (er → ihn/ihm...) and the indefinites alles/etwas/nichts/man.</p>",
     },
   },
 ];

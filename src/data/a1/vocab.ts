@@ -166,6 +166,35 @@ export const caseSentences: OrderSentence[] = [
   { chunks: ["nehme", "ich", "die", "Tasche"], answer: ["ich", "nehme", "die", "Tasche"], meaning: { pt: "eu pego a bolsa", en: "I take the bag" } },
 ];
 
+// ---- Capítulo 8: pronomes pessoais (Akk/Dativ) & indefinidos ----
+export interface PersonalPronoun { nom: string; akk: string; dat: string; meaning: Record<Lang, string>; }
+export const personalPronouns: PersonalPronoun[] = [
+  { nom: "ich", akk: "mich", dat: "mir", meaning: { pt: "eu", en: "I" } },
+  { nom: "du", akk: "dich", dat: "dir", meaning: { pt: "você", en: "you" } },
+  { nom: "er", akk: "ihn", dat: "ihm", meaning: { pt: "ele", en: "he" } },
+  { nom: "es", akk: "es", dat: "ihm", meaning: { pt: "isso", en: "it" } },
+  { nom: "sie", akk: "sie", dat: "ihr", meaning: { pt: "ela", en: "she" } },
+  { nom: "wir", akk: "uns", dat: "uns", meaning: { pt: "nós", en: "we" } },
+  { nom: "ihr", akk: "euch", dat: "euch", meaning: { pt: "vocês", en: "you all" } },
+  { nom: "sie", akk: "sie", dat: "ihnen", meaning: { pt: "eles / elas", en: "they" } },
+  { nom: "Sie", akk: "Sie", dat: "Ihnen", meaning: { pt: "o(a) senhor(a) (formal)", en: "you (formal)" } },
+];
+
+export interface IndefPronoun { de: string; meaning: Record<Lang, string>; }
+export const indefPronouns: IndefPronoun[] = [
+  { de: "alles", meaning: { pt: "tudo", en: "everything" } },
+  { de: "etwas", meaning: { pt: "algo", en: "something" } },
+  { de: "nichts", meaning: { pt: "nada", en: "nothing" } },
+  { de: "man", meaning: { pt: "a gente / se (impessoal)", en: "one / people (impersonal)" } },
+];
+
+export const pronounSentences: OrderSentence[] = [
+  { chunks: ["dich", "ich", "liebe"], answer: ["ich", "liebe", "dich"], meaning: { pt: "eu te amo", en: "I love you" } },
+  { chunks: ["gefällt", "mir", "das"], answer: ["das", "gefällt", "mir"], meaning: { pt: "eu gosto disso", en: "I like that" } },
+  { chunks: ["ihm", "ich", "helfe"], answer: ["ich", "helfe", "ihm"], meaning: { pt: "eu ajudo ele", en: "I help him" } },
+  { chunks: ["nichts", "weiß", "ich"], answer: ["ich", "weiß", "nichts"], meaning: { pt: "eu não sei nada", en: "I know nothing" } },
+];
+
 // ---- Capítulo 5: verbos modais ----
 export const modalVerbs: Verb[] = [
   { inf: "können", meaning: { pt: "poder / conseguir", en: "can / to be able to" }, forms: { ich: "kann", du: "kannst", er: "kann", wir: "können", ihr: "könnt", sie: "können" } },

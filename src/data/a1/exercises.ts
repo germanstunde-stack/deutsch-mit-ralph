@@ -9,6 +9,7 @@ import {
   gModalMeaning, gModalFormMC, gTypeModalForm, gOrderModal,
   gGenderMC, gNounMeaning, gPluralMC, gTypePlural, gOrderPlural,
   gCaseNounMeaning, gCaseMC, gTypeCaseForm, gOrderCase,
+  gPronCaseMC, gTypePronCase, gIndefMeaning, gOrderPronoun,
 } from "./generators";
 
 export const CH_EU_VOCE_SEIN = "eu-voce-sein";
@@ -18,11 +19,12 @@ export const CH_PERFEKT = "perfekt";
 export const CH_MODAIS = "verbos-modais";
 export const CH_GENERO_PLURAL = "genero-plural";
 export const CH_CASOS = "nominativ-akkusativ-dativ";
+export const CH_PRONOMES = "pronomes-indefinidos";
 
 // Ordem oficial das unidades do "Grammatik leicht A1": cada id aqui vira um
 // capítulo (20 pts na prática, igual ao A0). Os outros entram nas próximas
 // entregas.
-export const CHAPTER_IDS = [CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS];
+export const CHAPTER_IDS = [CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES];
 
 function specsForChapter(id: string, lang: Lang): ExSpec[] {
   switch (id) {
@@ -82,6 +84,13 @@ function specsForChapter(id: string, lang: Lang): ExSpec[] {
         { kind: "mc", gen: () => gCaseMC(lang) },
         { kind: "typed", gen: () => gTypeCaseForm(lang) },
         { kind: "order", gen: () => gOrderCase(lang) },
+      ];
+    case CH_PRONOMES:
+      return [
+        { kind: "mc", gen: () => gPronCaseMC(lang) },
+        { kind: "typed", gen: () => gTypePronCase(lang) },
+        { kind: "mc", gen: () => gIndefMeaning(lang) },
+        { kind: "order", gen: () => gOrderPronoun(lang) },
       ];
     default:
       return [{ kind: "mc", gen: () => gPronounMeaning(lang) }];

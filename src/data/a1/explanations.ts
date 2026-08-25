@@ -4,7 +4,7 @@
 // mesmo estilo do A0 (regra curta + exemplo + erros comuns de quem já fala
 // português/inglês).
 import type { Lang } from "../../i18n/types";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES } from "./exercises";
 
 const explanationsPT: Record<string, string> = {
   [CH_EU_VOCE_SEIN]:
@@ -113,6 +113,22 @@ const explanationsPT: Record<string, string> = {
     '<li><b>Akkusativ</b>: o objeto direto — verbos como <span class="de" data-say="haben">haben</span>, <span class="de" data-say="nehmen">nehmen</span> (pegar), <span class="de" data-say="möchten">möchten</span>: <span class="de" data-say="Ich habe einen Hund">Ich habe einen Hund.</span></li>' +
     '<li><b>Dativ</b>: o objeto indireto — verbos como <span class="de" data-say="helfen">helfen</span> (ajudar), <span class="de" data-say="gehören">gehören</span> (pertencer), <span class="de" data-say="gefallen">gefallen</span> (agradar): <span class="de" data-say="Ich helfe dem Mann">Ich helfe dem Mann.</span></li></ul>' +
     '<h3>💡 Dica</h3><p>O Dativ do feminino (<b class="de">der</b> Frau) parece com o Nominativ masculino (<b class="de">der</b> Mann) — mas são coisas diferentes! Preste atenção no substantivo pra saber qual é.</p>',
+
+  [CH_PRONOMES]:
+    '<h3>Pronomes pessoais também têm caso</h3><p>Assim como os substantivos, os pronomes (eu, você, ele...) mudam de forma no Akkusativ e no Dativ:</p>' +
+    '<table class="br"><tr><td>Nom</td><td>Akk</td><td>Dat</td></tr>' +
+    '<tr><td><span class="de" data-say="ich">ich</span></td><td><span class="de" data-say="mich">mich</span></td><td><span class="de" data-say="mir">mir</span></td></tr>' +
+    '<tr><td><span class="de" data-say="du">du</span></td><td><span class="de" data-say="dich">dich</span></td><td><span class="de" data-say="dir">dir</span></td></tr>' +
+    '<tr><td><span class="de" data-say="er">er</span></td><td><span class="de" data-say="ihn">ihn</span></td><td><span class="de" data-say="ihm">ihm</span></td></tr>' +
+    '<tr><td><span class="de" data-say="wir">wir</span></td><td><span class="de" data-say="uns">uns</span></td><td><span class="de" data-say="uns">uns</span></td></tr></table>' +
+    '<p>Usados depois de verbos como <span class="de" data-say="lieben">lieben</span> (amar, Akk), <span class="de" data-say="helfen">helfen</span> (ajudar, Dat), <span class="de" data-say="gefallen">gefallen</span> (agradar, Dat): <span class="de" data-say="Ich liebe dich">Ich liebe dich.</span> (eu te amo)</p>' +
+    '<h3>⚠️ Cuidado com "er" → "ihn"</h3><p>É a mudança mais surpreendente pra quem fala português: <span class="de" data-say="er">er</span> (ele) vira <span class="de" data-say="ihn">ihn</span> no Akkusativ — não existe uma palavra parecida com “ele” no objeto.</p>' +
+    '<h3>Pronomes indefinidos</h3><table class="br">' +
+    '<tr><td><span class="de" data-say="alles">alles</span></td><td>tudo</td></tr>' +
+    '<tr><td><span class="de" data-say="etwas">etwas</span></td><td>algo</td></tr>' +
+    '<tr><td><span class="de" data-say="nichts">nichts</span></td><td>nada</td></tr>' +
+    '<tr><td><span class="de" data-say="man">man</span></td><td>a gente / se (impessoal)</td></tr></table>' +
+    '<p><span class="de" data-say="man">man</span> é usado quando não se especifica quem faz a ação: <span class="de" data-say="Man spricht hier Deutsch">Man spricht hier Deutsch.</span> (fala-se alemão aqui / aqui a gente fala alemão)</p>',
 };
 
 const explanationsEN: Record<string, string> = {
@@ -222,6 +238,22 @@ const explanationsEN: Record<string, string> = {
     '<li><b>Accusative</b>: the direct object — verbs like <span class="de" data-say="haben">haben</span>, <span class="de" data-say="nehmen">nehmen</span> (to take), <span class="de" data-say="möchten">möchten</span>: <span class="de" data-say="Ich habe einen Hund">Ich habe einen Hund.</span></li>' +
     '<li><b>Dative</b>: the indirect object — verbs like <span class="de" data-say="helfen">helfen</span> (to help), <span class="de" data-say="gehören">gehören</span> (to belong to), <span class="de" data-say="gefallen">gefallen</span> (to please): <span class="de" data-say="Ich helfe dem Mann">Ich helfe dem Mann.</span></li></ul>' +
     '<h3>💡 Tip</h3><p>The feminine Dative (<b class="de">der</b> Frau) looks like the masculine Nominative (<b class="de">der</b> Mann) — but they are different things! Pay attention to the noun itself to know which one it is.</p>',
+
+  [CH_PRONOMES]:
+    '<h3>Personal pronouns have cases too</h3><p>Just like nouns, pronouns (I, you, he...) change form in the Accusative and Dative:</p>' +
+    '<table class="br"><tr><td>Nom</td><td>Akk</td><td>Dat</td></tr>' +
+    '<tr><td><span class="de" data-say="ich">ich</span></td><td><span class="de" data-say="mich">mich</span></td><td><span class="de" data-say="mir">mir</span></td></tr>' +
+    '<tr><td><span class="de" data-say="du">du</span></td><td><span class="de" data-say="dich">dich</span></td><td><span class="de" data-say="dir">dir</span></td></tr>' +
+    '<tr><td><span class="de" data-say="er">er</span></td><td><span class="de" data-say="ihn">ihn</span></td><td><span class="de" data-say="ihm">ihm</span></td></tr>' +
+    '<tr><td><span class="de" data-say="wir">wir</span></td><td><span class="de" data-say="uns">uns</span></td><td><span class="de" data-say="uns">uns</span></td></tr></table>' +
+    '<p>Used after verbs like <span class="de" data-say="lieben">lieben</span> (to love, Akk), <span class="de" data-say="helfen">helfen</span> (to help, Dat), <span class="de" data-say="gefallen">gefallen</span> (to please, Dat): <span class="de" data-say="Ich liebe dich">Ich liebe dich.</span> (I love you)</p>' +
+    '<h3>⚠️ Watch out: "er" → "ihn"</h3><p>This is the most surprising change for English speakers: <span class="de" data-say="er">er</span> (he) becomes <span class="de" data-say="ihn">ihn</span> in the Accusative — nothing like "he" survives in the object form.</p>' +
+    '<h3>Indefinite pronouns</h3><table class="br">' +
+    '<tr><td><span class="de" data-say="alles">alles</span></td><td>everything</td></tr>' +
+    '<tr><td><span class="de" data-say="etwas">etwas</span></td><td>something</td></tr>' +
+    '<tr><td><span class="de" data-say="nichts">nichts</span></td><td>nothing</td></tr>' +
+    '<tr><td><span class="de" data-say="man">man</span></td><td>one / people (impersonal)</td></tr></table>' +
+    '<p><span class="de" data-say="man">man</span> is used when you don’t specify who does the action: <span class="de" data-say="Man spricht hier Deutsch">Man spricht hier Deutsch.</span> (German is spoken here / people speak German here)</p>',
 };
 
 export function explanationsFor(lang: Lang): Record<string, string> {
