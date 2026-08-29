@@ -2,13 +2,13 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
 
-export interface Profile { id: string; email: string | null; display_name: string | null; birthdate: string | null; }
+export interface Profile { id: string; email: string | null; display_name: string | null; birthdate: string | null; starting_level: string | null; }
 interface Ctx {
   loading: boolean;
   session: Session | null;
   profile: Profile | null;
   login: (email: string, password: string) => Promise<{ error?: string; needsConfirmation?: boolean }>;
-  saveProfile: (name: string, birthdate: string) => Promise<{ error?: string }>;
+  saveProfile: (name: string, birthdate: string, startingLevel: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
 }
 const C = createContext<Ctx>(null!);
@@ -20,7 +20,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
 
   async function load(uid: string) {
-    const { data } = await supabase.from("profiles").select("id,email,display_name,birthdate").eq("id", uid).maybeSingle();
+    const { data } = await supabase.from("profiles").select("id,email,display_name,birthdate,starting_level").eq("id", uid).maybeSingle();
     setProfile((data as Profile) ?? null);
   }
 
@@ -54,12 +54,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!data.session) return { needsConfirmation: true };
     return {};
   }
-  async function saveProfile(name: string, birthdate: string) {
+  async function saveProfile(name: string, birthdate: string, startingLevel: string) {
     if (!session) return { error: "sem sessão" };
     // upsert (não update): se o trigger que cria o profile na hora do cadastro não rodou
     // por algum motivo, isso cria a linha na hora em vez de silenciosamente não fazer nada.
     const { error } = await supabase.from("profiles").upsert({
-      id: session.user.id, email: session.user.email, display_name: name.trim(), birthdate,
+      id: session.user.id, email: session.user.email, display_name: name.trim(), birthdate, starting_level: startingLevel,
     });
     if (error) return { error: error.message };
     await load(session.user.id);

@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "./theme";
 import { MODULES } from "./data/modules";
+import { LEVELS } from "./data/levels";
+import { fetchMastery, computeUnlockedMax } from "./lib/progression";
 import { TopicView } from "./components/TopicView";
 import { Mascot } from "./components/Mascot";
 import { BgArt } from "./components/BgArt";
@@ -10,24 +12,28 @@ import { Ranking } from "./components/Ranking";
 import { AuthProvider, usePlayer } from "./auth/AuthProvider";
 import { LoginScreen } from "./auth/LoginScreen";
 import { Cadastro } from "./components/Cadastro";
+import { Welcome } from "./components/Welcome";
 import { I18nProvider, useI18n } from "./i18n/I18nProvider";
-
-const LEVELS: { id: string; sub: string; open: boolean }[] = [
-  { id: "A0", sub: "do zero", open: true }, { id: "A1", sub: "frases", open: true }, { id: "A2", sub: "dia a dia", open: false },
-  { id: "B1", sub: "independente", open: false }, { id: "B2", sub: "fluência", open: false }, { id: "C1", sub: "avançado", open: false }, { id: "C2", sub: "executivo", open: false },
-];
 
 function jump(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 }
 
 function AppContent() {
-  const { profile, signOut } = usePlayer();
+  const { profile, session, signOut } = usePlayer();
   const { dark, toggleTheme, slow, toggleSpeed } = useTheme();
   const { lang, setLang, t } = useI18n();
   const [activeModule, setActiveModule] = useState("A0");
   const [stats, setStats] = useState({ correct: 0, wrong: 0 });
   const [frost, setFrost] = useState(false);
+  const [mastery, setMastery] = useState<Record<string, boolean>>({});
+
+  function refreshMastery() {
+    if (session) fetchMastery(session.user.id).then(setMastery);
+  }
+  useEffect(refreshMastery, [session]);
+
+  const unlockedMax = computeUnlockedMax(profile?.starting_level ?? null, mastery);
 
   const mod = MODULES[activeModule];
   const topics = mod.topicsFor(lang);
@@ -61,12 +67,17 @@ function AppContent() {
         </section>
 
         <div className="levels">
-          {LEVELS.map((lv) => (
-            <button key={lv.id} className={"lvl" + (lv.id === activeModule ? " active" : "") + (lv.open ? "" : " locked")}
-              title={lv.open ? "" : "em breve"} onClick={() => lv.open && setActiveModule(lv.id)}>
-              <div className="bub">{lv.id}</div><span className="lab">{lv.id}</span><span className="sub">{lv.sub}</span>
-            </button>
-          ))}
+          {LEVELS.map((lv, i) => {
+            const unlocked = i <= unlockedMax;
+            const clickable = lv.builtYet && unlocked;
+            const title = !lv.builtYet ? "em breve" : !unlocked ? "complete a Prova do módulo anterior com 96% pra desbloquear" : "";
+            return (
+              <button key={lv.id} className={"lvl" + (lv.id === activeModule ? " active" : "") + (clickable ? "" : " locked")}
+                title={title} onClick={() => clickable && setActiveModule(lv.id)}>
+                <div className="bub">{lv.id}</div><span className="lab">{lv.id}</span><span className="sub">{lv.sub}</span>
+              </button>
+            );
+          })}
         </div>
 
         <div className="index">
@@ -87,7 +98,7 @@ function AppContent() {
           ))}
         </div>
 
-        <Prova key={mod.id} mod={mod} onFrost={setFrost} />
+        <Prova key={mod.id} mod={mod} onFrost={setFrost} onSaved={refreshMastery} />
 
         <Ranking />
 
@@ -101,9 +112,11 @@ function AppContent() {
 
 function Gate() {
   const { loading, session, profile } = usePlayer();
+  const [justRegistered, setJustRegistered] = useState(false);
   if (loading) return <div className="login-wrap"><div className="login"><p>Carregando…</p></div></div>;
   if (!session) return <LoginScreen />;
-  if (!profile?.display_name || !profile?.birthdate) return <Cadastro />;
+  if (!profile?.display_name || !profile?.birthdate) return <Cadastro onDone={() => setJustRegistered(true)} />;
+  if (justRegistered) return <Welcome onContinue={() => setJustRegistered(false)} />;
   return <AppContent />;
 }
 

@@ -26,7 +26,7 @@ function fmt(s: number) {
 
 const noop = () => {};
 
-export function Prova({ mod, onFrost }: { mod: ModuleDef; onFrost: (on: boolean) => void }) {
+export function Prova({ mod, onFrost, onSaved }: { mod: ModuleDef; onFrost: (on: boolean) => void; onSaved?: () => void }) {
   const { session } = usePlayer();
   const { lang, t } = useI18n();
   const storageKey = `gs_prova_v1:${mod.id}`;
@@ -81,7 +81,10 @@ export function Prova({ mod, onFrost }: { mod: ModuleDef; onFrost: (on: boolean)
         user_id: session.user.id, module: mod.id,
         mode: mode === "sem" ? "sem_consulta" : "com_consulta",
         score: earned, total: mod.examTotal, duration_sec: secs,
-      }).then(({ error }) => { if (error) console.warn("ranking (provas):", error.message); });
+      }).then(({ error }) => {
+        if (error) console.warn("ranking (provas):", error.message);
+        else onSaved?.();
+      });
     }
   }
 

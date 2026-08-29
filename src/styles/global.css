@@ -110,8 +110,21 @@ a{color:var(--brand-ink)}
 .field{width:100%;font:inherit;font-weight:800;padding:12px 14px;border-radius:14px;border:2.5px solid var(--border);background:var(--surface2);color:var(--ink);margin-bottom:10px;text-align:center}
 .field:focus{outline:3px solid color-mix(in srgb,var(--brand) 45%, transparent);border-color:var(--brand)}
 .login .btn{width:100%}
+.btn:disabled{opacity:.5;cursor:not-allowed;filter:grayscale(.3)}
 .err{color:var(--bad);font-weight:800;font-size:.85rem;margin-top:8px}
 .ok{color:var(--good);font-weight:800;font-size:.85rem;margin-top:8px}
+
+.login.cadastro{max-width:560px}
+.level-summary{margin-top:10px;padding:12px;border:2.5px solid var(--border);border-radius:16px;background:var(--surface2);text-align:left}
+.level-summary-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.level-summary-item{font-weight:700;font-size:.8rem;padding:4px 10px;border-radius:999px;border:2px solid var(--border);background:var(--surface)}
+
+.login.welcome{max-width:560px;max-height:92vh;overflow-y:auto;text-align:left}
+.login.welcome h1,.login.welcome .mascot{text-align:center;display:block;margin-left:auto;margin-right:auto}
+.login.welcome > p{text-align:center}
+.welcome-section{margin:14px 0}
+.welcome-rules{margin:6px 0 0;padding-left:20px;color:var(--ink-soft);font-weight:700;font-size:.88rem;display:flex;flex-direction:column;gap:6px}
+.welcome-rules li{list-style:disc}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}}
 
