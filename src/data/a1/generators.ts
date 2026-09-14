@@ -15,6 +15,7 @@ import {
   questionWords, yesNoCases, negationCases, connectors, questionSentences,
   type Verb, type OrderSentence,
 } from "./vocab";
+import { allVerbs } from "./verbDictionary";
 
 let uid = 0;
 function q(x: Omit<Question, "key">): Question { return { key: "a1q" + uid++, ...x }; }
@@ -480,3 +481,24 @@ export function gConnectorMeaning(lang: Lang): Question {
 }
 
 export const gOrderQuestion = (lang: Lang): OrderData => gOrder(lang, questionSentences);
+
+/* ---------- capítulo 12: dicionário de verbos ---------- */
+export const gDictVerbMeaning = (lang: Lang): Question => gVerbMeaningGeneric(lang, allVerbs);
+
+export function gDictReverseMC(lang: Lang): Question {
+  const v = rand(allVerbs);
+  const opts = sample(allVerbs, 3, v).map((o) => ({ label: o.inf, correct: false }));
+  opts.push({ label: v.inf, correct: true });
+  const prompt = lang === "pt"
+    ? `Qual é o verbo alemão para <span class="big">${v.meaning.pt}</span>?`
+    : `What's the German verb for <span class="big">${v.meaning.en}</span>?`;
+  return q({ promptHTML: prompt, speak: v.inf, options: shuffle(opts), word: v.inf, wordpt: v.meaning.pt });
+}
+
+export function gDictTypeVerb(lang: Lang): TypedQ {
+  const v = rand(allVerbs);
+  const prompt = lang === "pt"
+    ? `Escreva em alemão o verbo: <span class="big">${v.meaning.pt}</span>`
+    : `Write the German verb for: <span class="big">${v.meaning.en}</span>`;
+  return { promptHTML: prompt, answer: v.inf, speak: v.inf, word: v.inf, wordpt: v.meaning.pt };
+}

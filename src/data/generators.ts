@@ -43,7 +43,7 @@ function gPickName(arr: Noun[]): Question {
   const a = rand(arr);
   const opts = sample(arr, 3, a).map((o) => ({ label: o.art + " " + o.de, correct: false }));
   opts.push({ label: a.art + " " + a.de, correct: true });
-  return q({ promptHTML: 'Ligue ao nome certo: <span class="big">' + a.emo + " " + a.pt + "</span>", big: true, options: opts, word: a.de, wordpt: a.pt });
+  return q({ promptHTML: 'Ligue ao nome certo: <span class="big">' + a.emo + " " + a.pt + "</span>", big: true, speak: a.art + " " + a.de, options: opts, word: a.de, wordpt: a.pt });
 }
 function gColorSwatch(): Question {
   const c = rand(colors);

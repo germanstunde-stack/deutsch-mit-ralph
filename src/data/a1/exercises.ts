@@ -13,6 +13,7 @@ import {
   gPossMeaning, gPossMC, gTypePoss, gArticleUsage, gOrderArticle,
   gPrepMeaning, gPrepCategoryMC, gPrepFillMC, gTypePrep, gOrderPrep,
   gQWMeaning, gQWFillMC, gTypeQW, gYesNoMC, gNegationMC, gConnectorMeaning, gOrderQuestion,
+  gDictVerbMeaning, gDictReverseMC, gDictTypeVerb,
 } from "./generators";
 
 export const CH_EU_VOCE_SEIN = "eu-voce-sein";
@@ -26,10 +27,12 @@ export const CH_PRONOMES = "pronomes-indefinidos";
 export const CH_ARTIGOS = "artigos-possessivos";
 export const CH_PREPOSICOES = "preposicoes";
 export const CH_PERGUNTAS = "perguntas-ordem-frase";
+export const CH_DICIONARIO_VERBOS = "dicionario-verbos";
 
-// Ordem oficial das unidades do "Grammatik leicht A1": os 11 capítulos do
-// módulo A1 completo.
-export const CHAPTER_IDS = [CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES, CH_PERGUNTAS];
+// Os 11 capítulos de gramática do A1 (ordem oficial do "Grammatik leicht A1")
+// + o dicionário de verbos, um catálogo de vocabulário à parte (não ensina
+// gramática nova, só reúne e treina a memorização de todos os verbos vistos).
+export const CHAPTER_IDS = [CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES, CH_PERGUNTAS, CH_DICIONARIO_VERBOS];
 
 function specsForChapter(id: string, lang: Lang): ExSpec[] {
   switch (id) {
@@ -122,6 +125,12 @@ function specsForChapter(id: string, lang: Lang): ExSpec[] {
         { kind: "mc", gen: () => gNegationMC(lang) },
         { kind: "mc", gen: () => gConnectorMeaning(lang) },
         { kind: "order", gen: () => gOrderQuestion(lang) },
+      ];
+    case CH_DICIONARIO_VERBOS:
+      return [
+        { kind: "mc", gen: () => gDictVerbMeaning(lang) },
+        { kind: "mc", gen: () => gDictReverseMC(lang) },
+        { kind: "typed", gen: () => gDictTypeVerb(lang) },
       ];
     default:
       return [{ kind: "mc", gen: () => gPronounMeaning(lang) }];

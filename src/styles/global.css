@@ -137,6 +137,7 @@ table.br{width:100%;border-collapse:collapse;font-size:.86rem;font-weight:700;ma
 table.br td{border:2px solid var(--border);padding:6px 8px} table.br td:first-child{font-family:"Baloo 2",sans-serif;color:var(--brand-ink);white-space:nowrap}
 .qcard.hardq{border-color:color-mix(in srgb,var(--gelb) 60%, var(--border));background:color-mix(in srgb,var(--gelb) 8%, var(--surface2))}
 .listen.big2{font-size:.95rem;padding:7px 16px;background:var(--brand);color:#fff;border-color:transparent}
+.listen:disabled{opacity:.4;cursor:not-allowed}
 
 .typed{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
 .typed input{flex:1 1 160px;font:inherit;font-weight:800;padding:10px 12px;border-radius:12px;border:2.5px solid var(--border);background:var(--surface);color:var(--ink)}

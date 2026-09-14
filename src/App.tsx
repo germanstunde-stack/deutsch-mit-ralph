@@ -23,7 +23,11 @@ function AppContent() {
   const { profile, session, signOut } = usePlayer();
   const { dark, toggleTheme, slow, toggleSpeed } = useTheme();
   const { lang, setLang, t } = useI18n();
-  const [activeModule, setActiveModule] = useState("A0");
+  // abre no nível que a pessoa escolheu no cadastro (quem entrou antes dessa
+  // funcionalidade não tem escolha salva e continua começando no A0).
+  const [activeModule, setActiveModule] = useState(
+    () => (profile?.starting_level && MODULES[profile.starting_level] ? profile.starting_level : "A0"),
+  );
   const [stats, setStats] = useState({ correct: 0, wrong: 0 });
   const [frost, setFrost] = useState(false);
   const [mastery, setMastery] = useState<Record<string, boolean>>({});

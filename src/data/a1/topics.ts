@@ -1,6 +1,6 @@
 import type { Lang } from "../../i18n/types";
 import type { TopicMeta } from "../topics";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES, CH_PERGUNTAS } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES, CH_PERGUNTAS, CH_DICIONARIO_VERBOS } from "./exercises";
 
 interface TopicMetaI18n { id: string; icon: string; name: Record<Lang, string>; cardTitle: Record<Lang, string>; explanationHTML: Record<Lang, string>; }
 
@@ -106,6 +106,15 @@ const TOPICS_I18N: TopicMetaI18n[] = [
     explanationHTML: {
       pt: "<p>W-Fragen, perguntas sim/não (verbo no início), negação com nicht, e os conectores und/oder/aber/denn. Fecha o A1!</p>",
       en: "<p>W-questions, yes/no questions (verb at the start), negation with nicht, and the connectors und/oder/aber/denn. Wraps up A1!</p>",
+    },
+  },
+  {
+    id: CH_DICIONARIO_VERBOS, icon: "📚",
+    name: { pt: "Dicionário de verbos", en: "Verb dictionary" },
+    cardTitle: { pt: "📖 Alle Verben", en: "📖 All verbs" },
+    explanationHTML: {
+      pt: "<p>Catálogo com todos os verbos do A1 e suas traduções — bônus de memorização, sem gramática nova.</p>",
+      en: "<p>A catalog of every A1 verb and its translation — a memorization bonus, no new grammar.</p>",
     },
   },
 ];

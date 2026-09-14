@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
-import { speak } from "../lib/speech";
+import { speak, speakAll } from "../lib/speech";
 import { rand, shuffle, type Question } from "../data/generators";
 import { norm, type ExSpec, type TypedQ, type ConnectData, type WSData, type EnumData, type OrderData } from "../data/exercises";
 import { MultipleChoice } from "./MultipleChoice";
@@ -138,6 +138,7 @@ const Connect = forwardRef<ExamHandle, { data: ConnectData; num: number; onResol
         <p className="q">
           <span className={"num" + (corrected ? (allCorrect ? " ok" : " no") : "")}>{num}</span>
           <span className="txt">{data.title}</span>
+          <button className="listen" onClick={() => speakAll(keys)}>🔊 ouvir palavras</button>
         </p>
         <div className="connect" ref={boxRef}>
           <div className="colc">
@@ -259,6 +260,7 @@ const WordSearch = forwardRef<ExamHandle, { data: WSData; num: number; onResolve
         <p className="q">
           <span className={"num" + (done ? (foundCount === used.length ? " ok" : " no") : "")}>{num}</span>
           <span className="txt">{data.title}</span>
+          <button className="listen" onClick={() => speakAll(used.map((w) => trans[w]?.orig ?? w))}>🔊 ouvir palavras</button>
         </p>
         <div className="ws">
           {grid.map((row, r) => (
@@ -325,6 +327,7 @@ const Enumerate = forwardRef<ExamHandle, { data: EnumData; num: number; onResolv
         <p className="q">
           <span className={"num" + (checked ? (countCorrect(vals) === n ? " ok" : " no") : "")}>{num}</span>
           <span className="txt">{data.title}</span>
+          <button className="listen" onClick={() => speakAll(data.items.map((it) => it.de))}>🔊 ouvir palavras</button>
         </p>
         <div className="enumlist">
           {listOrder.map((idx, pos) => <div key={idx}><span className="n">{pos + 1}</span> {data.items[idx].de}</div>)}
@@ -388,6 +391,13 @@ const Order = forwardRef<ExamHandle, { data: OrderData; num: number; onResolve: 
         <p className="q">
           <span className={"num" + (corrected ? (ok ? " ok" : " no") : "")}>{num}</span>
           <span className="txt">{data.title}</span>
+          {/* na prática, ouvir a frase certa é o apoio de pronúncia/ritmo — é assim
+              que se aprende ordem de frase de ouvido. Na prova, que vale nota e
+              libera o próximo módulo, só toca o que o aluno montou. */}
+          <button className="listen" disabled={mode === "exam" && placed.length === 0}
+            onClick={() => speak(mode === "exam" ? placed.map((idx) => data.chunks[idx]).join(" ") : data.answer.join(" "))}>
+            🔊 ouvir frase
+          </button>
         </p>
         <div className="orderbuilt">
           {placed.length === 0 && <span className="ph">…</span>}

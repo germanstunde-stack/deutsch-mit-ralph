@@ -4,7 +4,8 @@
 // mesmo estilo do A0 (regra curta + exemplo + erros comuns de quem já fala
 // português/inglês).
 import type { Lang } from "../../i18n/types";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES, CH_PERGUNTAS } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES, CH_PERGUNTAS, CH_DICIONARIO_VERBOS } from "./exercises";
+import { allVerbs } from "./verbDictionary";
 
 const explanationsPT: Record<string, string> = {
   [CH_EU_VOCE_SEIN]:
@@ -181,6 +182,14 @@ const explanationsPT: Record<string, string> = {
     '<h3>Negação com <span class="de">nicht</span></h3><p><b class="de">nicht</b> nega o verbo/a frase toda; <b class="de">kein</b> nega um substantivo com <b class="de">ein</b> (visto no capítulo de artigos). <span class="de" data-say="Ich komme nicht">Ich komme nicht.</span> (eu não venho) × <span class="de" data-say="Das ist kein Auto">Das ist kein Auto.</span> (não é um carro).</p>' +
     '<h3>Conectores: und, oder, aber, denn</h3><p>Ligam duas frases <b>sem mudar a ordem</b> de nenhuma delas (o verbo continua na posição 2 em cada uma):</p>' +
     '<p><span class="de" data-say="und">und</span> (e), <span class="de" data-say="oder">oder</span> (ou), <span class="de" data-say="aber">aber</span> (mas), <span class="de" data-say="denn">denn</span> (porque/pois): <span class="de" data-say="Ich bin müde, aber ich arbeite">Ich bin müde, aber ich arbeite.</span></p>',
+
+  [CH_DICIONARIO_VERBOS]:
+    `<h3>📚 O catálogo completo</h3><p>Aqui estão reunidos <b>${allVerbs.length} verbos</b> — todos os que você já viu nos capítulos de gramática (sein, haben, os regulares, os com mudança de vogal, os separáveis, os modais, os do Perfekt) mais alguns outros comuns em A1 que ainda não tinham aparecido em nenhuma regra específica.</p>` +
+    '<p>Este capítulo <b>não ensina gramática nova</b> — a conjugação de cada verbo já foi ensinada no capítulo certo. Aqui o objetivo é só <b>memorizar o significado</b>: alemão ↔ português, nos dois sentidos.</p>' +
+    '<h3>💡 Como estudar um dicionário de verdade</h3><ul>' +
+    '<li>Use os cards à esquerda como flashcards: clique pra ouvir a pronúncia, cubra a tradução e tente lembrar antes de olhar.</li>' +
+    '<li>Repita este capítulo várias vezes — é o tipo de conteúdo que se fixa com repetição espaçada, não numa sentada só.</li>' +
+    '<li>Quando bater a dúvida sobre um verbo específico em outro capítulo, volte aqui pra conferir — é seu dicionário de referência dentro do A1.</li></ul>',
 };
 
 const explanationsEN: Record<string, string> = {
@@ -358,6 +367,14 @@ const explanationsEN: Record<string, string> = {
     '<h3>Negation with <span class="de">nicht</span></h3><p><b class="de">nicht</b> negates the verb/the whole sentence; <b class="de">kein</b> negates a noun that has <b class="de">ein</b> (seen in the articles chapter). <span class="de" data-say="Ich komme nicht">Ich komme nicht.</span> (I am not coming) vs <span class="de" data-say="Das ist kein Auto">Das ist kein Auto.</span> (it is not a car).</p>' +
     '<h3>Connectors: und, oder, aber, denn</h3><p>They join two sentences <b>without changing the word order</b> of either one (the verb stays in position 2 in each):</p>' +
     '<p><span class="de" data-say="und">und</span> (and), <span class="de" data-say="oder">oder</span> (or), <span class="de" data-say="aber">aber</span> (but), <span class="de" data-say="denn">denn</span> (because/for): <span class="de" data-say="Ich bin müde, aber ich arbeite">Ich bin müde, aber ich arbeite.</span></p>',
+
+  [CH_DICIONARIO_VERBOS]:
+    `<h3>📚 The full catalog</h3><p>Here are ${allVerbs.length} verbs — every one you have already seen in the grammar chapters (sein, haben, the regulars, the vowel-changing ones, the separable ones, the modals, the Perfekt ones) plus a few other common A1 verbs that had not shown up under any specific rule yet.</p>` +
+    '<p>This chapter <b>does not teach new grammar</b> — each verb\'s conjugation was already taught in its own chapter. The goal here is just to <b>memorize the meaning</b>: German ↔ English/Portuguese, both directions.</p>' +
+    '<h3>💡 How to study a real dictionary</h3><ul>' +
+    '<li>Use the cards on the left as flashcards: click to hear the pronunciation, cover the translation, and try to recall it before checking.</li>' +
+    '<li>Repeat this chapter several times — this kind of content sticks with spaced repetition, not one long session.</li>' +
+    '<li>Whenever you are unsure about a specific verb in another chapter, come back here to check — it is your reference dictionary inside A1.</li></ul>',
 };
 
 export function explanationsFor(lang: Lang): Record<string, string> {

@@ -1,7 +1,8 @@
 import type { Lang } from "../../i18n/types";
 import type { Profile } from "../../auth/AuthProvider";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES, CH_PERGUNTAS } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES, CH_PERGUNTAS, CH_DICIONARIO_VERBOS } from "./exercises";
 import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural, caseNouns, personalPronouns, indefPronouns, possessives, prepositions, questionWords, connectors } from "./vocab";
+import { allVerbs } from "./verbDictionary";
 
 export interface Flash { de: string; pt: string; emo: string; }
 
@@ -209,6 +210,9 @@ export function deckForTopic(id: string, lang: Lang): Flash[] {
       ...questionWords.map((w) => ({ de: w.de, pt: w.meaning[lang], emo: "❓" })),
       ...connectors.map((c) => ({ de: c.de, pt: c.meaning[lang], emo: "🔗" })),
     ];
+  }
+  if (id === CH_DICIONARIO_VERBOS) {
+    return allVerbs.map((v) => ({ de: v.inf, pt: v.meaning[lang], emo: "📚" }));
   }
   return [];
 }

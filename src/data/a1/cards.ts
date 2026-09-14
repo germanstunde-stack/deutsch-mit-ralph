@@ -1,7 +1,8 @@
 import type { Lang } from "../../i18n/types";
 import type { CardItem } from "../../components/Cards";
-import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES, CH_PERGUNTAS } from "./exercises";
+import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES, CH_PERGUNTAS, CH_DICIONARIO_VERBOS } from "./exercises";
 import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural, caseNouns, personalPronouns, indefPronouns, possessives, possessiveNouns, prepositions, questionWords, connectors, type Verb, type PerfektVerb } from "./vocab";
+import { allVerbs } from "./verbDictionary";
 
 export interface CardsData { items: CardItem[]; gridClass: string; legend?: boolean; }
 
@@ -119,6 +120,9 @@ export function cardsForTopic(id: string, lang: Lang): CardsData {
   }
   if (id === CH_PERGUNTAS) {
     return { gridClass: "grid", items: questionCards(lang) };
+  }
+  if (id === CH_DICIONARIO_VERBOS) {
+    return { gridClass: "grid", items: allVerbs.map((v) => ({ deHTML: `<b>${v.inf}</b>`, pt: v.meaning[lang], speak: v.inf })) };
   }
   return { gridClass: "grid", items: [] };
 }
