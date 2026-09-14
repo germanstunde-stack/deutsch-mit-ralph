@@ -3,6 +3,7 @@ import type { CardItem } from "../../components/Cards";
 import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES, CH_PERGUNTAS, CH_DICIONARIO_VERBOS } from "./exercises";
 import { pronouns, seinForms, seinPredicates, ptForm, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural, caseNouns, personalPronouns, indefPronouns, possessives, possessiveNouns, prepositions, questionWords, connectors, type Verb, type PerfektVerb } from "./vocab";
 import { allVerbs } from "./verbDictionary";
+import { nounCards, wordCards, nounsCap1, nounsCap2, nounsCap3, tempoCap3, nounsCap4, nounsCap10, verbsCap5, verbsCap7, verbsCap8, verbsCap11, adjsCap6, adjsCap9 } from "./chapterVocab";
 
 export interface CardsData { items: CardItem[]; gridClass: string; legend?: boolean; }
 
@@ -41,7 +42,9 @@ function imperativeCards(lang: Lang): CardItem[] {
 }
 function separableCards(lang: Lang): CardItem[] {
   return separableVerbs.map((v) => ({
-    deHTML: `<b>${v.inf}</b><br><small>ich ${v.forms.ich} · er ${v.forms.er}</small>`,
+    // as quatro pessoas que as frases do capítulo usam — antes o card mostrava
+    // só ich/er e o exercício cobrava "du stehst auf" / "wir kaufen ein"
+    deHTML: `<b>${v.inf}</b><br><small>ich ${v.forms.ich} · du ${v.forms.du} · er ${v.forms.er} · wir ${v.forms.wir}</small>`,
     pt: v.meaning[lang], speak: v.inf,
   }));
 }
@@ -98,37 +101,37 @@ function perfektCards(pool: PerfektVerb[], lang: Lang): CardItem[] {
 
 export function cardsForTopic(id: string, lang: Lang): CardsData {
   if (id === CH_EU_VOCE_SEIN) {
-    return { gridClass: "grid", items: [...pronounCards(lang), ...seinCards(lang), ...adjCards(lang)] };
+    return { gridClass: "grid", items: [...pronounCards(lang), ...seinCards(lang), ...adjCards(lang), ...nounCards(nounsCap1, lang)] };
   }
   if (id === CH_VERBOS_HABEN) {
-    return { gridClass: "grid", items: [...verbCards(regularVerbs, lang), ...habenCards(lang), ...verbCards(vowelChangeVerbs, lang)] };
+    return { gridClass: "grid", items: [...verbCards(regularVerbs, lang), ...habenCards(lang), ...verbCards(vowelChangeVerbs, lang), ...nounCards(nounsCap2, lang)] };
   }
   if (id === CH_IMPERATIVO) {
-    return { gridClass: "grid", items: [...imperativeCards(lang), ...separableCards(lang)] };
+    return { gridClass: "grid", items: [...imperativeCards(lang), ...separableCards(lang), ...nounCards(nounsCap3, lang), ...wordCards(tempoCap3, lang)] };
   }
   if (id === CH_PERFEKT) {
-    return { gridClass: "grid", items: [...perfektCards(perfektHabenRegular, lang), ...perfektCards(perfektHabenIrregular, lang), ...perfektCards(perfektSein, lang)] };
+    return { gridClass: "grid", items: [...perfektCards(perfektHabenRegular, lang), ...perfektCards(perfektHabenIrregular, lang), ...perfektCards(perfektSein, lang), ...nounCards(nounsCap4, lang)] };
   }
   if (id === CH_MODAIS) {
-    return { gridClass: "grid", items: verbCards(modalVerbs, lang) };
+    return { gridClass: "grid", items: [...verbCards(modalVerbs, lang), ...wordCards(verbsCap5, lang)] };
   }
   if (id === CH_GENERO_PLURAL) {
-    return { gridClass: "grid", legend: true, items: nounPluralCards(lang) };
+    return { gridClass: "grid", legend: true, items: [...nounPluralCards(lang), ...wordCards(adjsCap6, lang)] };
   }
   if (id === CH_CASOS) {
-    return { gridClass: "grid", items: caseCards(lang) };
+    return { gridClass: "grid", items: [...caseCards(lang), ...wordCards(verbsCap7, lang)] };
   }
   if (id === CH_PRONOMES) {
-    return { gridClass: "grid", items: pronCards(lang) };
+    return { gridClass: "grid", items: [...pronCards(lang), ...wordCards(verbsCap8, lang)] };
   }
   if (id === CH_ARTIGOS) {
-    return { gridClass: "grid", items: possCards(lang) };
+    return { gridClass: "grid", items: [...possCards(lang), ...wordCards(adjsCap9, lang)] };
   }
   if (id === CH_PREPOSICOES) {
-    return { gridClass: "grid", items: prepCards(lang) };
+    return { gridClass: "grid", items: [...prepCards(lang), ...nounCards(nounsCap10, lang)] };
   }
   if (id === CH_PERGUNTAS) {
-    return { gridClass: "grid", items: questionCards(lang) };
+    return { gridClass: "grid", items: [...questionCards(lang), ...wordCards(verbsCap11, lang)] };
   }
   if (id === CH_DICIONARIO_VERBOS) {
     return { gridClass: "grid", items: allVerbs.map((v) => ({ deHTML: `<b>${v.inf}</b>`, pt: v.meaning[lang], speak: v.inf })) };

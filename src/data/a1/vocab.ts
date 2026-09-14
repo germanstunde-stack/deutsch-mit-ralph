@@ -1,6 +1,7 @@
 // Vocabulário/gramática do A1. Baseado na sequência oficial do Goethe-Zertifikat
 // A1 (Start Deutsch 1), conforme "Grammatik leicht A1" (Hueber Verlag).
 import type { Lang } from "../../i18n/types";
+import { buildFrames, mergeSentences, verbFrames, separableFrames, perfektFrames, modalFrames, pluralFrames, caseFrames, pronounFrames, articleFrames, prepFrames, questionFrames } from "./sentenceFactory";
 
 export interface Pronoun { de: string; meaning: Record<Lang, string>; }
 export const pronouns: Pronoun[] = [
@@ -116,7 +117,7 @@ const seinSentencesHand: OrderSentence[] = [
   { chunks: ["ist", "das", "mein Bruder"], answer: ["das", "ist", "mein Bruder"], meaning: { pt: "este é meu irmão", en: "this is my brother" } },
 ];
 
-export const seinSentences: OrderSentence[] = [...seinSentencesHand, ...buildSeinSentences()];
+export const seinSentences: OrderSentence[] = mergeSentences(seinSentencesHand, buildSeinSentences());
 
 // ---- Capítulo 2: verbos regulares, haben, verbos com mudança de vogal ----
 export interface Verb { inf: string; meaning: Record<Lang, string>; forms: Record<"ich" | "du" | "er" | "wir" | "ihr" | "sie", string>; }
@@ -128,6 +129,12 @@ export const regularVerbs: Verb[] = [
   { inf: "lieben", meaning: { pt: "amar", en: "to love" }, forms: { ich: "liebe", du: "liebst", er: "liebt", wir: "lieben", ihr: "liebt", sie: "lieben" } },
   { inf: "arbeiten", meaning: { pt: "trabalhar", en: "to work" }, forms: { ich: "arbeite", du: "arbeitest", er: "arbeitet", wir: "arbeiten", ihr: "arbeitet", sie: "arbeiten" } },
   { inf: "heißen", meaning: { pt: "chamar-se", en: "to be called" }, forms: { ich: "heiße", du: "heißt", er: "heißt", wir: "heißen", ihr: "heißt", sie: "heißen" } },
+  // estes três aparecem nas frases dos capítulos seguintes ("warum lernst du
+  // Deutsch", "was trinkt ihr", "wie oft geht ihr ins Kino"), então precisam ser
+  // ensinados aqui, onde a conjugação regular é explicada.
+  { inf: "lernen", meaning: { pt: "aprender", en: "to learn" }, forms: { ich: "lerne", du: "lernst", er: "lernt", wir: "lernen", ihr: "lernt", sie: "lernen" } },
+  { inf: "trinken", meaning: { pt: "beber", en: "to drink" }, forms: { ich: "trinke", du: "trinkst", er: "trinkt", wir: "trinken", ihr: "trinkt", sie: "trinken" } },
+  { inf: "gehen", meaning: { pt: "ir / andar", en: "to go" }, forms: { ich: "gehe", du: "gehst", er: "geht", wir: "gehen", ihr: "geht", sie: "gehen" } },
 ];
 
 export const vowelChangeVerbs: Verb[] = [
@@ -149,7 +156,7 @@ export const habenForms: HabenForm[] = [
   { pron: "sie / Sie", form: "haben", speak: "sie haben", meaning: { pt: "eles têm / o(a) sr(a) tem (formal)", en: "they have / you have (formal)" } },
 ];
 
-export const verbSentences: OrderSentence[] = [
+const verbSentencesHand: OrderSentence[] = [
   { chunks: ["komme", "ich", "aus", "Brasilien"], answer: ["ich", "komme", "aus", "Brasilien"], meaning: { pt: "eu venho do Brasil", en: "I come from Brazil" } },
   { chunks: ["einen", "er", "hat", "Hund"], answer: ["er", "hat", "einen", "Hund"], meaning: { pt: "ele tem um cachorro", en: "he has a dog" } },
   { chunks: ["gut", "sprichst", "du", "Deutsch"], answer: ["du", "sprichst", "gut", "Deutsch"], meaning: { pt: "você fala bem alemão", en: "you speak German well" } },
@@ -157,6 +164,7 @@ export const verbSentences: OrderSentence[] = [
   { chunks: ["isst", "sie", "gern", "Pizza"], answer: ["sie", "isst", "gern", "Pizza"], meaning: { pt: "ela come pizza com gosto", en: "she likes eating pizza" } },
   { chunks: ["viel", "arbeitet", "er"], answer: ["er", "arbeitet", "viel"], meaning: { pt: "ele trabalha muito", en: "he works a lot" } },
 ];
+export const verbSentences: OrderSentence[] = mergeSentences(verbSentencesHand, buildFrames(verbFrames));
 
 // ---- Capítulo 3: imperativo & verbos separáveis ----
 // du/ihr/sie SEM "!" (pra exercício de escrever não exigir pontuação) — quem
@@ -179,12 +187,13 @@ export const separableVerbs: Verb6[] = [
   { inf: "anrufen", prefix: "an", meaning: { pt: "telefonar / ligar", en: "to call (phone)" }, forms: { ich: "rufe an", du: "rufst an", er: "ruft an", wir: "rufen an", ihr: "ruft an", sie: "rufen an" } },
 ];
 
-export const separableSentences: OrderSentence[] = [
+const separableSentencesHand: OrderSentence[] = [
   { chunks: ["ein", "ich", "kaufe", "Brot"], answer: ["ich", "kaufe", "Brot", "ein"], meaning: { pt: "eu compro pão", en: "I buy bread" } },
   { chunks: ["an", "seine", "er", "ruft", "Mutter"], answer: ["er", "ruft", "seine", "Mutter", "an"], meaning: { pt: "ele liga pra mãe dele", en: "he calls his mother" } },
   { chunks: ["fern", "wir", "jeden Abend", "sehen"], answer: ["wir", "sehen", "jeden Abend", "fern"], meaning: { pt: "nós assistimos TV toda noite", en: "we watch TV every evening" } },
   { chunks: ["auf", "früh", "du", "stehst"], answer: ["du", "stehst", "früh", "auf"], meaning: { pt: "você acorda cedo", en: "you get up early" } },
 ];
+export const separableSentences: OrderSentence[] = mergeSentences(separableSentencesHand, buildFrames(separableFrames));
 
 // ---- Capítulo 4: Perfekt (passado composto) ----
 export interface PerfektVerb { inf: string; partizip: string; auxiliary: "haben" | "sein"; meaning: Record<Lang, string>; }
@@ -223,12 +232,13 @@ export const nounsPlural: NounPlural[] = [
   { de: "Mutter", art: "die", plural: "Mütter", meaning: { pt: "mãe", en: "mother" } },
 ];
 
-export const pluralSentences: OrderSentence[] = [
+const pluralSentencesHand: OrderSentence[] = [
   { chunks: ["zwei", "ich", "habe", "Bücher"], answer: ["ich", "habe", "zwei", "Bücher"], meaning: { pt: "eu tenho dois livros", en: "I have two books" } },
   { chunks: ["Äpfel", "sind", "die", "frisch"], answer: ["die", "Äpfel", "sind", "frisch"], meaning: { pt: "as maçãs estão frescas", en: "the apples are fresh" } },
   { chunks: ["drei", "hat", "sie", "Kinder"], answer: ["sie", "hat", "drei", "Kinder"], meaning: { pt: "ela tem três filhos", en: "she has three children" } },
   { chunks: ["Türen", "die", "sind", "offen"], answer: ["die", "Türen", "sind", "offen"], meaning: { pt: "as portas estão abertas", en: "the doors are open" } },
 ];
+export const pluralSentences: OrderSentence[] = mergeSentences(pluralSentencesHand, buildFrames(pluralFrames));
 
 // ---- Capítulo 7: Nominativ, Akkusativ & Dativ ----
 export interface CaseNoun { de: string; meaning: Record<Lang, string>; nom: string; akk: string; dat: string; }
@@ -239,14 +249,22 @@ export const caseNouns: CaseNoun[] = [
   { de: "Hund", meaning: { pt: "cachorro", en: "dog" }, nom: "der Hund", akk: "den Hund", dat: "dem Hund" },
   { de: "Tasche", meaning: { pt: "bolsa", en: "bag" }, nom: "die Tasche", akk: "die Tasche", dat: "der Tasche" },
   { de: "Buch", meaning: { pt: "livro", en: "book" }, nom: "das Buch", akk: "das Buch", dat: "dem Buch" },
+  // estes quatro entraram junto com as frases novas da fábrica: as frases de
+  // "montar frase" do capítulo usam eles, então têm que aparecer nos cards antes
+  // de serem cobrados.
+  { de: "Bruder", meaning: { pt: "irmão", en: "brother" }, nom: "der Bruder", akk: "den Bruder", dat: "dem Bruder" },
+  { de: "Apfel", meaning: { pt: "maçã", en: "apple" }, nom: "der Apfel", akk: "den Apfel", dat: "dem Apfel" },
+  { de: "Lehrer", meaning: { pt: "professor", en: "teacher" }, nom: "der Lehrer", akk: "den Lehrer", dat: "dem Lehrer" },
+  { de: "Auto", meaning: { pt: "carro", en: "car" }, nom: "das Auto", akk: "das Auto", dat: "dem Auto" },
 ];
 
-export const caseSentences: OrderSentence[] = [
+const caseSentencesHand: OrderSentence[] = [
   { chunks: ["einen", "ich", "habe", "Hund"], answer: ["ich", "habe", "einen", "Hund"], meaning: { pt: "eu tenho um cachorro", en: "I have a dog" } },
   { chunks: ["dem", "ich", "helfe", "Mann"], answer: ["ich", "helfe", "dem", "Mann"], meaning: { pt: "eu ajudo o homem", en: "I help the man" } },
   { chunks: ["der", "gehört", "Frau", "das Buch"], answer: ["das Buch", "gehört", "der", "Frau"], meaning: { pt: "o livro pertence à mulher", en: "the book belongs to the woman" } },
   { chunks: ["nehme", "ich", "die", "Tasche"], answer: ["ich", "nehme", "die", "Tasche"], meaning: { pt: "eu pego a bolsa", en: "I take the bag" } },
 ];
+export const caseSentences: OrderSentence[] = mergeSentences(caseSentencesHand, buildFrames(caseFrames));
 
 // ---- Capítulo 8: pronomes pessoais (Akk/Dativ) & indefinidos ----
 export interface PersonalPronoun { nom: string; akk: string; dat: string; meaning: Record<Lang, string>; }
@@ -270,12 +288,13 @@ export const indefPronouns: IndefPronoun[] = [
   { de: "man", meaning: { pt: "a gente / se (impessoal)", en: "one / people (impersonal)" } },
 ];
 
-export const pronounSentences: OrderSentence[] = [
+const pronounSentencesHand: OrderSentence[] = [
   { chunks: ["dich", "ich", "liebe"], answer: ["ich", "liebe", "dich"], meaning: { pt: "eu te amo", en: "I love you" } },
   { chunks: ["gefällt", "mir", "das"], answer: ["das", "gefällt", "mir"], meaning: { pt: "eu gosto disso", en: "I like that" } },
   { chunks: ["ihm", "ich", "helfe"], answer: ["ich", "helfe", "ihm"], meaning: { pt: "eu ajudo ele", en: "I help him" } },
   { chunks: ["nichts", "weiß", "ich"], answer: ["ich", "weiß", "nichts"], meaning: { pt: "eu não sei nada", en: "I know nothing" } },
 ];
+export const pronounSentences: OrderSentence[] = mergeSentences(pronounSentencesHand, buildFrames(pronounFrames));
 
 // ---- Capítulo 9: artigos & possessivos ----
 export interface PossessivePerson { pronoun: string; stem: string; meaning: Record<Lang, string>; }
@@ -308,11 +327,12 @@ export const articleCases: ArticleCase[] = [
   { promptHTML: { pt: 'Complete: <span class="big">Das ist ___ Baum.</span> (negando "ein Baum")', en: 'Complete: <span class="big">Das ist ___ Baum.</span> (negating "ein Baum")' }, speak: "Das ist kein Baum", options: ["kein", "nicht", "keine"], correct: "kein", word: "Baum" },
 ];
 
-export const articleSentences: OrderSentence[] = [
+const articleSentencesHand: OrderSentence[] = [
   { chunks: ["Vater", "ist", "mein", "Lehrer"], answer: ["mein", "Vater", "ist", "Lehrer"], meaning: { pt: "meu pai é professor", en: "my father is a teacher" } },
   { chunks: ["Auto", "ist", "sein", "neu"], answer: ["sein", "Auto", "ist", "neu"], meaning: { pt: "o carro dele é novo", en: "his car is new" } },
   { chunks: ["Schwester", "ist", "unsere", "nett"], answer: ["unsere", "Schwester", "ist", "nett"], meaning: { pt: "nossa irmã é legal", en: "our sister is nice" } },
 ];
+export const articleSentences: OrderSentence[] = mergeSentences(articleSentencesHand, buildFrames(articleFrames));
 
 // ---- Capítulo 10: preposições (lugar, tempo, modo) ----
 export interface Preposition { de: string; meaning: Record<Lang, string>; example: string; template: string; exampleMeaning: Record<Lang, string>; category: "lugar" | "tempo" | "modo"; }
@@ -332,12 +352,13 @@ export const prepositions: Preposition[] = [
   { de: "mit", meaning: { pt: "de (transporte) / com", en: "by (transport) / with" }, example: "Ich fahre mit dem Bus.", template: "Ich fahre ___ dem Bus.", exampleMeaning: { pt: "eu vou de ônibus", en: "I go by bus" }, category: "modo" },
 ];
 
-export const prepSentences: OrderSentence[] = [
+const prepSentencesHand: OrderSentence[] = [
   { chunks: ["Deutschland", "ich", "komme", "aus"], answer: ["ich", "komme", "aus", "Deutschland"], meaning: { pt: "eu venho da Alemanha", en: "I come from Germany" } },
   { chunks: ["Bus", "ich", "fahre", "mit", "dem"], answer: ["ich", "fahre", "mit", "dem", "Bus"], meaning: { pt: "eu vou de ônibus", en: "I go by bus" } },
   { chunks: ["Montag", "arbeite", "am", "ich"], answer: ["ich", "arbeite", "am", "Montag"], meaning: { pt: "eu trabalho na segunda", en: "I work on Monday" } },
   { chunks: ["Tisch", "Buch", "ist", "das", "auf", "dem"], answer: ["das", "Buch", "ist", "auf", "dem", "Tisch"], meaning: { pt: "o livro está em cima da mesa", en: "the book is on the table" } },
 ];
+export const prepSentences: OrderSentence[] = mergeSentences(prepSentencesHand, buildFrames(prepFrames));
 
 // ---- Capítulo 11: perguntas & ordem da frase ----
 export interface QuestionWord { de: string; meaning: Record<Lang, string>; example: string; exampleMeaning: Record<Lang, string>; }
@@ -372,12 +393,13 @@ export const connectors: Connector[] = [
   { de: "denn", meaning: { pt: "porque / pois", en: "because / for" }, example: "Ich bleibe zu Hause, denn ich bin krank.", exampleMeaning: { pt: "eu fico em casa, porque estou doente", en: "I stay home, because I am sick" } },
 ];
 
-export const questionSentences: OrderSentence[] = [
+const questionSentencesHand: OrderSentence[] = [
   { chunks: ["heißt", "du", "wie"], answer: ["wie", "heißt", "du"], meaning: { pt: "como você se chama", en: "what is your name" } },
   { chunks: ["kommst", "du", "woher"], answer: ["woher", "kommst", "du"], meaning: { pt: "de onde você vem", en: "where do you come from" } },
   { chunks: ["kommt", "morgen", "er"], answer: ["morgen", "kommt", "er"], meaning: { pt: "amanhã ele vem", en: "tomorrow he is coming" } },
   { chunks: ["nicht", "ich", "komme"], answer: ["ich", "komme", "nicht"], meaning: { pt: "eu não venho", en: "I am not coming" } },
 ];
+export const questionSentences: OrderSentence[] = mergeSentences(questionSentencesHand, buildFrames(questionFrames));
 
 // ---- Capítulo 5: verbos modais ----
 export const modalVerbs: Verb[] = [
@@ -389,18 +411,20 @@ export const modalVerbs: Verb[] = [
   { inf: "sollen", meaning: { pt: "dever (conselho/ordem de outro)", en: "should / to be supposed to" }, forms: { ich: "soll", du: "sollst", er: "soll", wir: "sollen", ihr: "sollt", sie: "sollen" } },
 ];
 
-export const modalSentences: OrderSentence[] = [
+const modalSentencesHand: OrderSentence[] = [
   { chunks: ["schwimmen", "kann", "ich", "gut"], answer: ["ich", "kann", "gut", "schwimmen"], meaning: { pt: "eu sei nadar bem", en: "I can swim well" } },
   { chunks: ["arbeiten", "muss", "er", "viel"], answer: ["er", "muss", "viel", "arbeiten"], meaning: { pt: "ele precisa trabalhar muito", en: "he has to work a lot" } },
   { chunks: ["Deutsch", "möchte", "lernen", "ich"], answer: ["ich", "möchte", "Deutsch", "lernen"], meaning: { pt: "eu gostaria de aprender alemão", en: "I would like to learn German" } },
   { chunks: ["hier", "du", "darfst", "parken"], answer: ["du", "darfst", "hier", "parken"], meaning: { pt: "você pode estacionar aqui", en: "you may park here" } },
   { chunks: ["früh", "sollen", "aufstehen", "wir"], answer: ["wir", "sollen", "früh", "aufstehen"], meaning: { pt: "nós devemos acordar cedo", en: "we should get up early" } },
 ];
+export const modalSentences: OrderSentence[] = mergeSentences(modalSentencesHand, buildFrames(modalFrames));
 
-export const perfektSentences: OrderSentence[] = [
+const perfektSentencesHand: OrderSentence[] = [
   { chunks: ["gelernt", "ich", "habe", "Deutsch"], answer: ["ich", "habe", "Deutsch", "gelernt"], meaning: { pt: "eu aprendi alemão", en: "I learned German" } },
   { chunks: ["gegessen", "wir", "haben", "Pizza"], answer: ["wir", "haben", "Pizza", "gegessen"], meaning: { pt: "nós comemos pizza", en: "we ate pizza" } },
   { chunks: ["ist", "er", "gegangen", "nach Hause"], answer: ["er", "ist", "nach Hause", "gegangen"], meaning: { pt: "ele foi pra casa", en: "he went home" } },
   { chunks: ["hat", "sie", "ein Buch", "gelesen"], answer: ["sie", "hat", "ein Buch", "gelesen"], meaning: { pt: "ela leu um livro", en: "she read a book" } },
   { chunks: ["bist", "du", "gefahren", "nach Berlin"], answer: ["du", "bist", "nach Berlin", "gefahren"], meaning: { pt: "você viajou pra Berlim", en: "you went to Berlin" } },
 ];
+export const perfektSentences: OrderSentence[] = mergeSentences(perfektSentencesHand, buildFrames(perfektFrames));
