@@ -26,8 +26,88 @@ export const seinForms: SeinForm[] = [
 
 // Frases embaralhadas pro engine "montar frase" (ordem da frase / Satzklammer).
 // Formato genérico, reaproveitado por qualquer capítulo.
-export interface OrderSentence { chunks: string[]; answer: string[]; meaning: Record<Lang, string>; }
-export const seinSentences: OrderSentence[] = [
+// `chunks` é opcional: quando não vem, o gOrder embaralha o próprio `answer`
+// (é o que as frases geradas pela fábrica fazem — evita manter à mão uma cópia
+// embaralhada que pode sair inconsistente com a resposta).
+export interface OrderSentence { chunks?: string[]; answer: string[]; meaning: Record<Lang, string>; }
+
+/* ---------- Fábrica de frases (cap. 1: sujeito + sein + adjetivo) ----------
+   Em alemão o adjetivo predicativo depois de `sein` NÃO declina, então toda
+   combinação é gramatical. O trabalho fino é a tradução: o português precisa
+   escolher ser × estar e concordar em gênero/número. Por isso o sujeito carrega
+   suas duas formas de cópula e o adjetivo diz de qual ele precisa. */
+export type Agr = "ms" | "fs" | "mp" | "fp";
+
+export interface FactorySubject {
+  de: string; seinForm: string; agr: Agr; kind: "person" | "thing";
+  ptSubj: string; ser: string; estar: string;
+  enSubj: string; enBe: string;
+}
+
+export interface FactoryPredicate {
+  de: string; en: string; link: "ser" | "estar";
+  // string = invariável; tupla = [masc.sing, fem.sing, masc.pl, fem.pl]
+  pt: string | [string, string, string, string];
+  allow: ("person" | "thing")[];
+}
+
+// ich/du não têm gênero determinável em português — ficam no masculino. O
+// feminino aparece via sujeitos nomeados (Anna) e via "sie" (ela).
+export const seinSubjects: FactorySubject[] = [
+  { de: "ich", seinForm: "bin", agr: "ms", kind: "person", ptSubj: "eu", ser: "sou", estar: "estou", enSubj: "I", enBe: "am" },
+  { de: "du", seinForm: "bist", agr: "ms", kind: "person", ptSubj: "você", ser: "é", estar: "está", enSubj: "you", enBe: "are" },
+  { de: "er", seinForm: "ist", agr: "ms", kind: "person", ptSubj: "ele", ser: "é", estar: "está", enSubj: "he", enBe: "is" },
+  { de: "sie", seinForm: "ist", agr: "fs", kind: "person", ptSubj: "ela", ser: "é", estar: "está", enSubj: "she", enBe: "is" },
+  { de: "wir", seinForm: "sind", agr: "mp", kind: "person", ptSubj: "nós", ser: "somos", estar: "estamos", enSubj: "we", enBe: "are" },
+  { de: "ihr", seinForm: "seid", agr: "mp", kind: "person", ptSubj: "vocês", ser: "são", estar: "estão", enSubj: "you all", enBe: "are" },
+  { de: "sie", seinForm: "sind", agr: "mp", kind: "person", ptSubj: "eles", ser: "são", estar: "estão", enSubj: "they", enBe: "are" },
+  { de: "Anna", seinForm: "ist", agr: "fs", kind: "person", ptSubj: "a Anna", ser: "é", estar: "está", enSubj: "Anna", enBe: "is" },
+  { de: "Max", seinForm: "ist", agr: "ms", kind: "person", ptSubj: "o Max", ser: "é", estar: "está", enSubj: "Max", enBe: "is" },
+];
+
+// Adjetivos ensinados neste capítulo (aparecem nos cards — ver cards.ts).
+export const seinPredicates: FactoryPredicate[] = [
+  { de: "müde", en: "tired", link: "estar", pt: ["cansado", "cansada", "cansados", "cansadas"], allow: ["person"] },
+  { de: "glücklich", en: "happy", link: "estar", pt: ["feliz", "feliz", "felizes", "felizes"], allow: ["person"] },
+  { de: "traurig", en: "sad", link: "estar", pt: ["triste", "triste", "tristes", "tristes"], allow: ["person"] },
+  { de: "krank", en: "sick", link: "estar", pt: ["doente", "doente", "doentes", "doentes"], allow: ["person"] },
+  { de: "hungrig", en: "hungry", link: "estar", pt: "com fome", allow: ["person"] },
+  { de: "durstig", en: "thirsty", link: "estar", pt: "com sede", allow: ["person"] },
+  { de: "fertig", en: "ready", link: "estar", pt: ["pronto", "pronta", "prontos", "prontas"], allow: ["person"] },
+  { de: "zu Hause", en: "at home", link: "estar", pt: "em casa", allow: ["person"] },
+  { de: "groß", en: "tall", link: "ser", pt: ["alto", "alta", "altos", "altas"], allow: ["person"] },
+  { de: "klein", en: "short", link: "ser", pt: ["baixo", "baixa", "baixos", "baixas"], allow: ["person"] },
+  { de: "jung", en: "young", link: "ser", pt: ["jovem", "jovem", "jovens", "jovens"], allow: ["person"] },
+  { de: "alt", en: "old", link: "ser", pt: ["velho", "velha", "velhos", "velhas"], allow: ["person"] },
+  { de: "nett", en: "nice", link: "ser", pt: ["legal", "legal", "legais", "legais"], allow: ["person"] },
+  { de: "lustig", en: "funny", link: "ser", pt: ["engraçado", "engraçada", "engraçados", "engraçadas"], allow: ["person"] },
+  { de: "intelligent", en: "intelligent", link: "ser", pt: ["inteligente", "inteligente", "inteligentes", "inteligentes"], allow: ["person"] },
+];
+
+const AGR_IDX: Record<Agr, number> = { ms: 0, fs: 1, mp: 2, fp: 3 };
+export function ptForm(p: FactoryPredicate, agr: Agr): string {
+  return typeof p.pt === "string" ? p.pt : p.pt[AGR_IDX[agr]];
+}
+
+function buildSeinSentences(): OrderSentence[] {
+  const out: OrderSentence[] = [];
+  seinSubjects.forEach((s) => {
+    seinPredicates.forEach((p) => {
+      if (!p.allow.includes(s.kind)) return;
+      out.push({
+        answer: [s.de, s.seinForm, p.de],
+        meaning: {
+          pt: `${s.ptSubj} ${s[p.link]} ${ptForm(p, s.agr)}`,
+          en: `${s.enSubj} ${s.enBe} ${p.en}`,
+        },
+      });
+    });
+  });
+  return out;
+}
+
+// escritas à mão (padrões que a fábrica não cobre) + as combinadas
+const seinSentencesHand: OrderSentence[] = [
   { chunks: ["ist", "er", "aus", "Berlin"], answer: ["er", "ist", "aus", "Berlin"], meaning: { pt: "ele é de Berlim", en: "he is from Berlin" } },
   { chunks: ["bin", "ich", "glücklich"], answer: ["ich", "bin", "glücklich"], meaning: { pt: "eu estou feliz", en: "I am happy" } },
   { chunks: ["sind", "wir", "Freunde"], answer: ["wir", "sind", "Freunde"], meaning: { pt: "nós somos amigos", en: "we are friends" } },
@@ -35,6 +115,8 @@ export const seinSentences: OrderSentence[] = [
   { chunks: ["seid", "glücklich", "ihr"], answer: ["ihr", "seid", "glücklich"], meaning: { pt: "vocês estão felizes", en: "you all are happy" } },
   { chunks: ["ist", "das", "mein Bruder"], answer: ["das", "ist", "mein Bruder"], meaning: { pt: "este é meu irmão", en: "this is my brother" } },
 ];
+
+export const seinSentences: OrderSentence[] = [...seinSentencesHand, ...buildSeinSentences()];
 
 // ---- Capítulo 2: verbos regulares, haben, verbos com mudança de vogal ----
 export interface Verb { inf: string; meaning: Record<Lang, string>; forms: Record<"ich" | "du" | "er" | "wir" | "ihr" | "sie", string>; }

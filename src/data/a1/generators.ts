@@ -2,7 +2,7 @@ import { rand, sample, shuffle, type Question } from "../generators";
 import type { TypedQ, OrderData } from "../exercises";
 import type { Lang } from "../../i18n/types";
 import {
-  pronouns, seinForms, seinSentences,
+  pronouns, seinForms, seinSentences, seinPredicates, ptForm,
   regularVerbs, vowelChangeVerbs, habenForms, verbSentences,
   imperativeVerbs, separableVerbs, separableSentences,
   perfektHabenRegular, perfektHabenIrregular, perfektSein, perfektSentences,
@@ -50,7 +50,9 @@ function gTypeForm(lang: Lang, label: string, forms: FormEntry[]): TypedQ {
 function gOrder(lang: Lang, pool: OrderSentence[]): OrderData {
   const s = rand(pool);
   const title = lang === "pt" ? `Monte a frase: “${s.meaning.pt}”` : `Build the sentence: “${s.meaning.en}”`;
-  return { title, chunks: shuffle(s.chunks), answer: s.answer, single: true };
+  // sem `chunks` na frase (caso das geradas pela fábrica), embaralha a própria
+  // resposta — o motor compara por valor, então qualquer permutação serve
+  return { title, chunks: shuffle(s.chunks ?? s.answer), answer: s.answer, single: true };
 }
 
 interface HasMeaning { inf: string; meaning: Record<Lang, string>; }
@@ -95,6 +97,17 @@ export function gPronounMeaning(lang: Lang): Question {
   opts.push({ label: p.meaning[lang], correct: true });
   const prompt = lang === "pt" ? `O que significa <span class="big">${p.de}</span>?` : `What does <span class="big">${p.de}</span> mean?`;
   return q({ promptHTML: prompt, speak: p.de, options: shuffle(opts), word: p.de, wordpt: p.meaning.pt });
+}
+
+// significado dos adjetivos que a fábrica usa nas frases — eles aparecem nos
+// cards do capítulo, então podem ser cobrados
+export function gAdjMeaning(lang: Lang): Question {
+  const a = rand(seinPredicates);
+  const label = (p: typeof a) => (lang === "pt" ? ptForm(p, "ms") : p.en);
+  const opts = sample(seinPredicates, 3, a).map((o) => ({ label: label(o), correct: false }));
+  opts.push({ label: label(a), correct: true });
+  const prompt = lang === "pt" ? `O que significa <span class="big">${a.de}</span>?` : `What does <span class="big">${a.de}</span> mean?`;
+  return q({ promptHTML: prompt, speak: a.de, options: shuffle(opts), word: a.de, wordpt: ptForm(a, "ms") });
 }
 
 export const gSeinForm = (lang: Lang): Question => gFormMC(lang, "sein", seinForms);

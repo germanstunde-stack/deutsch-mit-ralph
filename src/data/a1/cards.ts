@@ -1,7 +1,7 @@
 import type { Lang } from "../../i18n/types";
 import type { CardItem } from "../../components/Cards";
 import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES, CH_PERGUNTAS, CH_DICIONARIO_VERBOS } from "./exercises";
-import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural, caseNouns, personalPronouns, indefPronouns, possessives, possessiveNouns, prepositions, questionWords, connectors, type Verb, type PerfektVerb } from "./vocab";
+import { pronouns, seinForms, seinPredicates, ptForm, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural, caseNouns, personalPronouns, indefPronouns, possessives, possessiveNouns, prepositions, questionWords, connectors, type Verb, type PerfektVerb } from "./vocab";
 import { allVerbs } from "./verbDictionary";
 
 export interface CardsData { items: CardItem[]; gridClass: string; legend?: boolean; }
@@ -11,6 +11,15 @@ function pronounCards(lang: Lang): CardItem[] {
 }
 function seinCards(lang: Lang): CardItem[] {
   return seinForms.map((s) => ({ deHTML: `${s.pron} <b>${s.form}</b>`, pt: s.meaning[lang], speak: s.speak }));
+}
+// adjetivos usados nas frases do capítulo — ficam nos cards pra serem
+// ensinados antes de caírem em exercício
+function adjCards(lang: Lang): CardItem[] {
+  return seinPredicates.map((p) => ({
+    deHTML: `<b>${p.de}</b>`,
+    pt: lang === "pt" ? `${p.link === "ser" ? "ser" : "estar"} ${ptForm(p, "ms")}` : p.en,
+    speak: p.de,
+  }));
 }
 function habenCards(lang: Lang): CardItem[] {
   return habenForms.map((h) => ({ deHTML: `${h.pron} <b>${h.form}</b>`, pt: h.meaning[lang], speak: h.speak }));
@@ -89,7 +98,7 @@ function perfektCards(pool: PerfektVerb[], lang: Lang): CardItem[] {
 
 export function cardsForTopic(id: string, lang: Lang): CardsData {
   if (id === CH_EU_VOCE_SEIN) {
-    return { gridClass: "grid", items: [...pronounCards(lang), ...seinCards(lang)] };
+    return { gridClass: "grid", items: [...pronounCards(lang), ...seinCards(lang), ...adjCards(lang)] };
   }
   if (id === CH_VERBOS_HABEN) {
     return { gridClass: "grid", items: [...verbCards(regularVerbs, lang), ...habenCards(lang), ...verbCards(vowelChangeVerbs, lang)] };

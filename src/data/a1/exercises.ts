@@ -3,7 +3,7 @@ import { buildRound } from "../exSampler";
 import type { ExSpec } from "../exercises";
 import type { Lang } from "../../i18n/types";
 import {
-  gPronounMeaning, gSeinForm, gTypeSein, gOrderSein,
+  gPronounMeaning, gSeinForm, gTypeSein, gOrderSein, gAdjMeaning,
   gVerbMeaning, gVerbFormMC, gTypeVerbForm, gHabenForm, gTypeHaben, gOrderVerb,
   gImperativeMeaning, gImperativeMC, gTypeImperative, gSeparableMeaning, gSeparableFormMC, gTypeSeparableForm, gOrderSeparable,
   gPerfektMeaning, gPerfektPartizipMC, gTypePartizip, gPerfektAuxMC, gTypePerfektAux, gOrderPerfekt,
@@ -41,6 +41,7 @@ function specsForChapter(id: string, lang: Lang): ExSpec[] {
       return [
         { kind: "mc", gen: () => gPronounMeaning(lang) },
         { kind: "mc", gen: () => gSeinForm(lang) },
+        { kind: "mc", gen: () => gAdjMeaning(lang) },
         { kind: "typed", gen: () => gTypeSein(lang) },
         { kind: "order", gen: () => gOrderSein(lang) },
       ];

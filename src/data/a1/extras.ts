@@ -1,7 +1,7 @@
 import type { Lang } from "../../i18n/types";
 import type { Profile } from "../../auth/AuthProvider";
 import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES, CH_PERGUNTAS, CH_DICIONARIO_VERBOS } from "./exercises";
-import { pronouns, seinForms, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural, caseNouns, personalPronouns, indefPronouns, possessives, prepositions, questionWords, connectors } from "./vocab";
+import { pronouns, seinForms, seinPredicates, ptForm, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural, caseNouns, personalPronouns, indefPronouns, possessives, prepositions, questionWords, connectors } from "./vocab";
 import { allVerbs } from "./verbDictionary";
 
 export interface Flash { de: string; pt: string; emo: string; }
@@ -162,6 +162,11 @@ export function deckForTopic(id: string, lang: Lang): Flash[] {
     return [
       ...pronouns.map((p) => ({ de: p.de, pt: p.meaning[lang], emo: "🙋" })),
       ...seinForms.map((s) => ({ de: `${s.pron} ${s.form}`, pt: s.meaning[lang], emo: "🧑‍🤝‍🧑" })),
+      ...seinPredicates.map((p) => ({
+        de: p.de,
+        pt: lang === "pt" ? `${p.link} ${ptForm(p, "ms")}` : p.en,
+        emo: "💬",
+      })),
     ];
   }
   if (id === CH_VERBOS_HABEN) {
