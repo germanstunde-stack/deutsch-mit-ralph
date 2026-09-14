@@ -51,13 +51,18 @@ const enumFrom = (arr: Noun[], nn = 5, single = true) => (): EnumData => { const
 import { questionsForTopic, allMcGens } from "./generators";
 function mcGen(id: string): () => Question { return () => questionsForTopic(id, 1)[0]; }
 
+// o ditado de números era uma lista de quatro (3, 7, 10, 20), então repetia
+// direto; numDE() escreve qualquer número, dá pra cobrir a faixa inteira
+const dictNumbers: [string, string][] = [];
+for (let n = 0; n <= 100; n++) dictNumbers.push([numDE(n), String(n)]);
+
 const dictColors = colors.map((c) => [c.de, c.pt] as [string, string]);
 const dictAnimals = animals.map((a) => [a.de, a.pt] as [string, string]);
 const dictFood = food.map((a) => [a.de, a.pt] as [string, string]);
 
 const SPECS: Record<string, ExSpec[]> = {
   alfabeto: [{ kind: "mc", gen: mcGen("alfabeto") }, { kind: "dict", gen: gDictate(dictAnimals) }, { kind: "mc", gen: mcGen("alfabeto") }, { kind: "ws", gen: wsFrom(animals, 4) }],
-  numeros: [{ kind: "mc", gen: mcGen("numeros") }, { kind: "typed", gen: gTypeNumber }, { kind: "dict", gen: gDictate([[numDE(3),"3"],[numDE(7),"7"],[numDE(10),"10"],[numDE(20),"20"]]) }],
+  numeros: [{ kind: "mc", gen: mcGen("numeros") }, { kind: "typed", gen: gTypeNumber }, { kind: "dict", gen: gDictate(dictNumbers) }, { kind: "mc", gen: mcGen("numeros") }],
   dias: [{ kind: "mc", gen: mcGen("dias") }, { kind: "typed", gen: gTypeWeekday }, { kind: "dict", gen: gDictate(weekdays.map((d) => [d.de, d.pt] as [string, string])) }],
   cores: [{ kind: "mc", gen: mcGen("cores") }, { kind: "connect", gen: conColors(5) }, { kind: "typed", gen: gTypeColor }, { kind: "dict", gen: gDictate(dictColors) }],
   animais: [{ kind: "connect", gen: conNouns(animals, 5) }, { kind: "mc", gen: mcGen("animais") }, { kind: "enum", gen: enumFrom(animals, 5) }, { kind: "dict", gen: gDictate(dictAnimals) }],

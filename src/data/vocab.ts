@@ -44,6 +44,9 @@ export const food: Noun[] = [
 export const measures: Noun[] = [
   n("das","Kilogramm","quilograma (kg)","⚖️"), n("das","Gramm","grama (g)","🪶"), n("der","Meter","metro (m)","📏"),
   n("der","Kilometer","quilômetro (km)","🛣️"), n("der","Liter","litro (l)","🧴"), n("der","Milliliter","mililitro (ml)","💧"), n("der","Zentimeter","centímetro (cm)","📐"),
+  n("das","Pfund","meio quilo (500 g)","🥩"), n("die","Tonne","tonelada (t)","🚛"), n("der","Millimeter","milímetro (mm)","📎"),
+  n("die","Stunde","hora","🕐"), n("die","Minute","minuto","⏱️"), n("die","Sekunde","segundo","⏲️"),
+  n("der","Grad","grau (°)","🌡️"), n("das","Prozent","por cento (%)","💯"),
 ];
 
 export const greet: Word[] = [

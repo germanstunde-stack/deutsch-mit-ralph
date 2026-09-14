@@ -1,4 +1,5 @@
 import { animals, food, colors, greet, phrases, weekdays, months, opposites, measures, cognates, falseFriends, type Noun, type Word } from "./vocab";
+import { numDE } from "../lib/numbers";
 
 export interface Option { label: string; correct: boolean; sw?: string; }
 export interface Question { key: string; promptHTML: string; speak?: string; meaning?: string; big?: boolean; options: Option[]; word?: string; wordpt?: string; }
@@ -96,10 +97,49 @@ function gMeasure(): Question {
   return q({ promptHTML: 'O que significa <span class="big">' + a.de + "</span>?", speak: a.art + " " + a.de, options: opts, word: a.de, wordpt: a.pt });
 }
 
+// O capítulo de números não tinha gerador de número nenhum: a única pergunta de
+// múltipla escolha dele era o significado de um ANIMAL. Estes três cobram o que
+// o capítulo ensina — e como saem de numDE(), o pool é o intervalo inteiro em
+// vez de uma lista escrita à mão.
+function numeroSorteado(): number {
+  // mistura as faixas: 0-20 (formas próprias), 21-99 (a inversão "einundzwanzig")
+  // e centenas, que é onde o aluno mais erra
+  const r = Math.random();
+  if (r < 0.4) return Math.floor(Math.random() * 21);
+  if (r < 0.85) return 21 + Math.floor(Math.random() * 79);
+  return (1 + Math.floor(Math.random() * 9)) * 100 + Math.floor(Math.random() * 100);
+}
+function outrosNumeros(n: number, qtd: number): number[] {
+  const out = new Set<number>();
+  while (out.size < qtd) {
+    const c = numeroSorteado();
+    if (c !== n) out.add(c);
+  }
+  return [...out];
+}
+function gNumberMeaning(): Question {
+  const n = numeroSorteado();
+  const opts = outrosNumeros(n, 3).map((o) => ({ label: String(o), correct: false }));
+  opts.push({ label: String(n), correct: true });
+  return q({ promptHTML: 'Que número é <span class="big">' + numDE(n) + "</span>?", speak: numDE(n), options: opts, word: numDE(n), wordpt: String(n) });
+}
+function gNumberWrite(): Question {
+  const n = numeroSorteado();
+  const opts = outrosNumeros(n, 3).map((o) => ({ label: numDE(o), correct: false }));
+  opts.push({ label: numDE(n), correct: true });
+  return q({ promptHTML: 'Como se escreve <span class="big">' + n + "</span> em alemão?", speak: numDE(n), options: opts, word: numDE(n), wordpt: String(n) });
+}
+function gNumberNext(): Question {
+  const n = 1 + Math.floor(Math.random() * 98);
+  const opts = outrosNumeros(n + 1, 3).map((o) => ({ label: numDE(o), correct: false }));
+  opts.push({ label: numDE(n + 1), correct: true });
+  return q({ promptHTML: 'Qual vem depois de <span class="big">' + numDE(n) + "</span>?", meaning: String(n) + " → ?", speak: numDE(n), options: opts, word: numDE(n + 1), wordpt: String(n + 1) });
+}
+
 type Gen = () => Question;
 const BANK: Record<string, Gen[]> = {
   alfabeto: [gMissing, gMissing, () => gPickName(animals)],
-  numeros: [() => gMeaningNoun(animals)],
+  numeros: [gNumberMeaning, gNumberWrite, gNumberNext],
   dias: [gMonth, () => gWord(weekdays)],
   cores: [gColorSwatch, gColorMeaning],
   animais: [() => gPickName(animals), () => gArticle(animals), () => gMeaningNoun(animals)],
@@ -127,5 +167,8 @@ export function allMcGens(): Gen[] {
     () => gPickName(food), () => gArticle(food), () => gMeaningNoun(food),
     gColorSwatch, gColorMeaning, () => gWord(greet), () => gWord(phrases),
     gMonth, () => gWord(weekdays), gOpposite, gMeasure, gCognate, gFalse,
+    // a prova do A0 nao tinha nenhuma pergunta de numero, embora o modulo tenha
+    // um capitulo so pra isso
+    gNumberMeaning, gNumberWrite, gNumberNext,
   ];
 }
