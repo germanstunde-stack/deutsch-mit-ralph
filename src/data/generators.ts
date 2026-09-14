@@ -111,8 +111,12 @@ const BANK: Record<string, Gen[]> = {
 
 export function questionsForTopic(id: string, count = 8): Question[] {
   const gens = BANK[id] ?? [gCognate];
+  // ordem sorteada dos tipos de pergunta: com count=1 (como o mcGen chama) a
+  // versão antiga pegava sempre gens[0], então gArticle/gMeaningNoun/gFalse etc.
+  // nunca apareciam na prática — só na Prova, que usa allMcGens().
+  const order = shuffle(gens.map((_, i) => i));
   const out: Question[] = [];
-  for (let i = 0; i < count; i++) out.push(gens[i % gens.length]());
+  for (let i = 0; i < count; i++) out.push(gens[order[i % order.length]]());
   return shuffle(out);
 }
 

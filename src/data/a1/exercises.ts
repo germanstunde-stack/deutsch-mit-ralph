@@ -1,4 +1,5 @@
 import { shuffle } from "../generators";
+import { buildRound } from "../exSampler";
 import type { ExSpec } from "../exercises";
 import type { Lang } from "../../i18n/types";
 import {
@@ -138,24 +139,21 @@ function specsForChapter(id: string, lang: Lang): ExSpec[] {
 }
 
 export function exSpecsForTopic(id: string, lang: Lang, count = 20): ExSpec[] {
-  const base = specsForChapter(id, lang);
-  const out: ExSpec[] = [];
-  for (let i = 0; i < count; i++) out.push(base[i % base.length]);
-  return shuffle(out);
+  return shuffle(buildRound(specsForChapter(id, lang), count));
 }
 
 // ---- Prova A1: mesmo formato 50 pts / 3 partes do A0 ----
 export function examSpecsFor(lang: Lang): ExSpec[] {
   const all = CHAPTER_IDS.flatMap((id) => specsForChapter(id, lang));
-  const mc = all.filter((s) => s.kind === "mc");
-  const typedDict = all.filter((s) => s.kind === "typed" || s.kind === "dict");
-  const interactive = all.filter((s) => s.kind === "connect" || s.kind === "ws" || s.kind === "enum" || s.kind === "order");
+  const mc: ExSpec[] = all.filter((s) => s.kind === "mc");
+  const typedDict: ExSpec[] = all.filter((s) => s.kind === "typed" || s.kind === "dict");
+  const interactive: ExSpec[] = all.filter((s) => s.kind === "connect" || s.kind === "ws" || s.kind === "enum" || s.kind === "order");
 
-  const part1: ExSpec[] = shuffle(Array.from({ length: 20 }, (_, i) => mc[i % mc.length]));
-  const pool2 = typedDict.length ? typedDict : mc;
-  const part2: ExSpec[] = Array.from({ length: 10 }, (_, i) => pool2[i % pool2.length]);
-  const pool3 = interactive.length ? interactive : mc;
-  const part3: ExSpec[] = shuffle(Array.from({ length: 20 }, (_, i) => pool3[i % pool3.length]));
+  const part1: ExSpec[] = shuffle(buildRound(shuffle(mc), 20));
+  const pool2: ExSpec[] = typedDict.length ? typedDict : mc;
+  const part2: ExSpec[] = buildRound(shuffle(pool2), 10);
+  const pool3: ExSpec[] = interactive.length ? interactive : mc;
+  const part3: ExSpec[] = shuffle(buildRound(shuffle(pool3), 20));
   return [...part1, ...part2, ...part3];
 }
 

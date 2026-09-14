@@ -1,6 +1,7 @@
 import { animals, food, colors, weekdays, opposites, measures, cognates, falseFriends, type Noun } from "./vocab";
 import { numDE } from "../lib/numbers";
 import { rand, sample, shuffle, type Question } from "./generators";
+import { buildRound } from "./exSampler";
 
 export function norm(s: string): string {
   return (s || "").toString().toLowerCase().trim()
@@ -67,10 +68,7 @@ const SPECS: Record<string, ExSpec[]> = {
 };
 
 export function exSpecsForTopic(id: string, count = 20): ExSpec[] {
-  const base = SPECS[id] ?? SPECS.similar;
-  const out: ExSpec[] = [];
-  for (let i = 0; i < count; i++) out.push(base[i % base.length]);
-  return shuffle(out);
+  return shuffle(buildRound(SPECS[id] ?? SPECS.similar, count));
 }
 
 // ---- Prova A0: 50 pontos em 3 partes, fiel ao protótipo original ----
@@ -93,15 +91,18 @@ const interactiveGens: Array<() => ExSpec> = [
 
 export function examSpecsA0(): ExSpec[] {
   // allMcGens() tem menos de 20 geradores únicos — repete em ciclo (cada um ainda sorteia
-  // uma palavra/pergunta aleatória por chamada), mesma técnica de exSpecsForTopic.
-  const mcPool = shuffle(allMcGens());
-  const part1: ExSpec[] = Array.from({ length: 20 }, (_, i) => ({ kind: "mc" as const, gen: mcPool[i % mcPool.length] }));
+  // uma palavra/pergunta aleatória por chamada). O buildRound evita que a mesma
+  // pergunta caia duas vezes na mesma prova.
+  const mcPool = shuffle(allMcGens()).map((gen) => ({ kind: "mc" as const, gen }));
+  const part1: ExSpec[] = buildRound(mcPool, 20);
   const part2: ExSpec[] = [
-    ...Array.from({ length: 7 }, () => ({ kind: "typed" as const, gen: rand(typedGens) })),
-    ...Array.from({ length: 3 }, () => ({ kind: "dict" as const, gen: gDictate(rand(dictPools)) })),
+    ...buildRound(shuffle(typedGens).map((gen) => ({ kind: "typed" as const, gen })), 7),
+    ...buildRound(shuffle(dictPools).map((pool) => ({ kind: "dict" as const, gen: gDictate(pool) })), 3),
   ];
-  const part3Pool = shuffle(interactiveGens);
-  const part3: ExSpec[] = Array.from({ length: 20 }, (_, i) => part3Pool[i % part3Pool.length]());
+  // materializa os specs uma vez só (cada fábrica devolve um spec equivalente a
+  // cada chamada) pra que o buildRound consiga agrupar a memória por vaga
+  const part3Pool = shuffle(interactiveGens).map((make) => make());
+  const part3: ExSpec[] = buildRound(part3Pool, 20);
   return [...part1, ...part2, ...part3];
 }
 export const EXAM_PARTS = [

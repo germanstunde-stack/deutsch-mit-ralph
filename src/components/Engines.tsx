@@ -427,7 +427,10 @@ const Order = forwardRef<ExamHandle, { data: OrderData; num: number; onResolve: 
 /* ---------- dispatcher ---------- */
 export const Exercise = forwardRef<ExamHandle, { spec: ExSpec; num: number; onResolve: Resolve; mode?: ExMode }>(
   function Exercise({ spec, num, onResolve, mode = "practice" }, ref) {
-    const data = useMemo(() => spec.gen(), []); // gera uma vez por instância
+    // gera uma vez por spec — as vagas da rodada agora são objetos distintos
+    // (ver buildRound), então trocar o spec troca o conteúdo mesmo que o React
+    // reaproveite a instância.
+    const data = useMemo(() => spec.gen(), [spec]);
     switch (spec.kind) {
       case "mc": return <MultipleChoice ref={ref} q={data as Question} num={num} onResolve={onResolve} mode={mode} />;
       case "typed":
