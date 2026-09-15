@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { speak, speakAll } from "../lib/speech";
 import { rand, shuffle, type Question } from "../data/generators";
-import { norm, type ExSpec, type TypedQ, type ConnectData, type WSData, type EnumData, type OrderData, type TFData, type ClozeData } from "../data/exercises";
+import { norm, type ExSpec, type TypedQ, type ConnectData, type WSData, type EnumData, type OrderData, type TFData, type ClozeData, type ChronoData } from "../data/exercises";
 import { MultipleChoice } from "./MultipleChoice";
 import { addHard, easeHard } from "../data/caderno";
 import type { ExMode, ExamHandle } from "./examTypes";
@@ -620,6 +620,129 @@ const Cloze = forwardRef<ExamHandle, { data: ClozeData; num: number; onResolve: 
   }
 );
 
+/* ---------- Chrono (linha do tempo) ---------- */
+// Crédito parcial por PARES ADJACENTES, testados pela chave de ordenação.
+// Posição exata seria
+// cruel: inserir um evento no topo desloca todos os outros e zeraria quem sabia
+// a sequência inteira. Par adjacente se explica numa linha e — o que decide — é
+// RENDERIZÁVEL: o conector entre duas linhas é o ponto, verde ou vermelho.
+// O teste é `<=`, então dois eventos do mesmo ano saem de graça, não viram
+// armadilha.
+const Chrono = forwardRef<ExamHandle, { data: ChronoData; num: number; onResolve: Resolve; mode?: ExMode }>(
+  function Chrono({ data, num, onResolve, mode = "practice" }, ref) {
+    const n = data.events.length;
+    const [poolOrder] = useState(() => shuffle(data.events.map((_, i) => i)));
+    const [slots, setSlots] = useState<(number | null)[]>(() => Array(n).fill(null));
+    const [checked, setChecked] = useState(false);
+
+    // um par só conta quando as duas vagas estão preenchidas
+    function pairOk(p: number) {
+      const a = slots[p], b = slots[p + 1];
+      if (a === null || b === null) return false;
+      return data.events[a].at <= data.events[b].at;
+    }
+    function countPairs() { let c = 0; for (let p = 0; p < n - 1; p++) if (pairOk(p)) c++; return c; }
+
+    useImperativeHandle(ref, () => ({
+      getScore: () => {
+        const ok = countPairs();
+        const cheio = slots.every((s) => s !== null);
+        return data.single
+          ? (cheio && ok === n - 1 ? { correct: 1, wrong: 0 } : { correct: 0, wrong: 1 })
+          : { correct: ok, wrong: n - 1 - ok };
+      },
+      reveal: () => {
+        setSlots((s) => {
+          const novo = s.slice();
+          const usados = new Set(novo.filter((x): x is number => x !== null));
+          // preenche o que ficou vazio na ordem canônica (padrão do Connect)
+          let proximo = 0;
+          novo.forEach((v, i) => {
+            if (v !== null) return;
+            while (usados.has(proximo)) proximo++;
+            novo[i] = proximo; usados.add(proximo);
+          });
+          return novo;
+        });
+        setChecked(true);
+      },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }), [slots, data.single, n]);
+
+    useEffect(() => {
+      if (mode !== "practice" || checked) return;
+      if (slots.some((s) => s === null)) return;
+      if (countPairs() === n - 1) { setChecked(true); onResolve(data.single ? 1 : n - 1, 0); }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [slots]);
+
+    function colocar(ev: number) {
+      if (checked) return;
+      const vaga = slots.indexOf(null);
+      if (vaga < 0) return;
+      setSlots((s) => { const x = s.slice(); x[vaga] = ev; return x; });
+    }
+    function tirar(vaga: number) {
+      if (checked) return;
+      setSlots((s) => { const x = s.slice(); x[vaga] = null; return x; });
+    }
+    function verify() {
+      if (checked) return;
+      const ok = countPairs();
+      const cheio = slots.every((s) => s !== null);
+      setChecked(true);
+      onResolve(
+        data.single ? (cheio && ok === n - 1 ? 1 : 0) : ok,
+        data.single ? (cheio && ok === n - 1 ? 0 : 1) : n - 1 - ok,
+      );
+    }
+
+    const acertos = countPairs();
+    const naPool = poolOrder.filter((i) => !slots.includes(i));
+    return (
+      <div className="qcard">
+        <p className="q">
+          <span className={"num" + (checked ? (acertos === n - 1 ? " ok" : " no") : "")}>{num}</span>
+          <span className="txt">{data.title}</span>
+        </p>
+        <div className="chrono">
+          {slots.map((ev, i) => (
+            <div key={i}>
+              {/* a vaga em si não fica verde nem vermelha: a nota é por LIGAÇÃO,
+                  e pintar a vaga sugeriria que a posição isolada é que conta */}
+              <button className={"slot" + (ev !== null ? " filled" : "")}
+                disabled={checked} onClick={() => ev !== null && tirar(i)}>
+                <span className="n">{i + 1}</span>
+                <span className="ev">{ev === null ? "…" : data.events[ev].label}</span>
+                {checked && ev !== null && <span className="yr">{data.events[ev].show ?? data.events[ev].at}</span>}
+              </button>
+              {i < n - 1 && <div className={"link" + (checked ? (pairOk(i) ? " ok" : " no") : "")} />}
+            </div>
+          ))}
+        </div>
+        {naPool.length > 0 && (
+          <div className="chronopool">
+            {naPool.map((i) => (
+              <button key={i} className="chunk" disabled={checked} onClick={() => colocar(i)}>{data.events[i].label}</button>
+            ))}
+          </div>
+        )}
+        {mode !== "exam" && !checked && (
+          <div className="btnrow">
+            <button className="btn blue" onClick={verify}>✅ Corrigir</button>
+            <button className="btn ghost" onClick={() => setSlots(Array(n).fill(null))}>🔁 Refazer</button>
+          </div>
+        )}
+        {mode !== "exam" && checked && (
+          <p className="fb" style={{ color: acertos === n - 1 ? "var(--good)" : "var(--bad)" }}>
+            {acertos} / {n - 1} ligações na ordem certa {acertos === n - 1 ? "🎉" : "— o traço verde liga dois eventos na ordem certa."}
+          </p>
+        )}
+      </div>
+    );
+  }
+);
+
 /* ---------- dispatcher ---------- */
 export const Exercise = forwardRef<ExamHandle, { spec: ExSpec; num: number; onResolve: Resolve; mode?: ExMode }>(
   function Exercise({ spec, num, onResolve, mode = "practice" }, ref) {
@@ -637,6 +760,7 @@ export const Exercise = forwardRef<ExamHandle, { spec: ExSpec; num: number; onRe
       case "order": return <Order ref={ref} data={data as OrderData} num={num} onResolve={onResolve} mode={mode} />;
       case "tf": return <TrueFalse ref={ref} data={data as TFData} num={num} onResolve={onResolve} mode={mode} />;
       case "cloze": return <Cloze ref={ref} data={data as ClozeData} num={num} onResolve={onResolve} mode={mode} />;
+      case "chrono": return <Chrono ref={ref} data={data as ChronoData} num={num} onResolve={onResolve} mode={mode} />;
     }
     // Sem isto, um `kind` novo sem case aqui não renderiza NADA — e, pior, na
     // Prova o ref fica null e o item vale zero calado, sem erro nenhum. Fica

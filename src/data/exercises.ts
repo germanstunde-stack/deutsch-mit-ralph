@@ -1,4 +1,4 @@
-import { animals, food, colors, greet, phrases, weekdays, opposites, measures, cognates, falseFriends, helvetisms, type Noun, type Word } from "./vocab";
+import { animals, food, colors, greet, phrases, weekdays, months, opposites, measures, cognates, falseFriends, helvetisms, type Noun, type Word } from "./vocab";
 import { numDE } from "../lib/numbers";
 import { rand, sample, shuffle, type Question } from "./generators";
 import { buildRound } from "./exSampler";
@@ -33,6 +33,29 @@ export interface ClozeGap { answer: string }
 export interface ClozeLine { segments: string[]; gaps: ClozeGap[]; speak?: string; tr?: string }
 export interface ClozeData { title: string; lines: ClozeLine[]; bank: string[]; single: boolean }
 
+// Linha do tempo: pôr eventos em ordem cronológica.
+//
+// Kind próprio, não variante do "montar frase": o Order pontua tudo-ou-nada sem
+// ramo de `single`, e dar crédito parcial a ele mudaria a nota da parte 3 da
+// Prova em 11 capítulos — regressão no único componente que libera módulo. Ele
+// também compara por VALOR (dois eventos com palavra em comum se confundiriam),
+// e o validador trata resposta de `order` como alemão escrito, o que seria falso
+// pra rótulo em português.
+//
+// `events` fica na ordem canônica (cronológica); quem embaralha é o componente.
+// Guardar uma cópia já embaralhada seria uma segunda fonte de verdade.
+export interface ChronoEvent {
+  id: string;
+  /** chave de ordenação: o ano na História, o número do mês nos meses. Empate é
+   *  permitido de propósito — dois eventos no mesmo ano não podem virar cilada. */
+  at: number;
+  /** o que o aluno lê */
+  label: string;
+  /** o que aparece ao corrigir (o ano, "Januar"…); padrão é o próprio `at` */
+  show?: string;
+}
+export interface ChronoData { title: string; events: ChronoEvent[]; single: boolean }
+
 export type ExSpec =
   | { kind: "mc"; gen: () => Question }
   | { kind: "typed"; gen: () => TypedQ }
@@ -42,7 +65,8 @@ export type ExSpec =
   | { kind: "enum"; gen: () => EnumData }
   | { kind: "order"; gen: () => OrderData }
   | { kind: "tf"; gen: () => TFData }
-  | { kind: "cloze"; gen: () => ClozeData };
+  | { kind: "cloze"; gen: () => ClozeData }
+  | { kind: "chrono"; gen: () => ChronoData };
 
 // ---- typed / dict ----
 export const gTypeColor = (): TypedQ => { const c = rand(colors); return { promptHTML: `Escreva <span class="big">${c.pt}</span> em alemão:`, answer: c.de, speak: c.de, word: c.de, wordpt: c.pt }; };
@@ -130,6 +154,22 @@ const clozeFrases = (pool: Word[], nn = 3, single = true) => (): ClozeData => {
   };
 };
 
+// ---- linha do tempo ----
+// Estreia com os meses: é conteúdo que o A0 já ensina, a ordem é objetiva, e
+// exercita o motor antes de existir a cronologia da Suíça. Sorteia uma JANELA
+// contígua (março→julho), não meses soltos — ordenar cinco meses aleatórios
+// testa memória de lista, ordenar uma sequência testa o que interessa.
+const chronoMeses = (nn = 5, single = true) => (): ChronoData => {
+  const ini = Math.floor(Math.random() * (months.length - nn + 1));
+  return {
+    title: "Ponha os meses em ordem, do primeiro ao último:",
+    single,
+    events: months.slice(ini, ini + nn).map(([de, pt], k) => ({
+      id: de, at: ini + k, label: de, show: pt,
+    })),
+  };
+};
+
 // ---- wordsearch ----
 const wsFrom = (arr: Noun[], nn = 5, single = true) => (): WSData => { const pick = sample(arr, nn).filter((a) => a.de.length <= 8).map((a) => ({ w: a.de, pt: a.pt })); return { title: "Caça-palavras: clique na 1ª e na última letra. Ao achar, ouça + tradução! 🎁", pairs: pick, size: 9, single }; };
 
@@ -152,7 +192,8 @@ const dictFood = food.map((a) => [a.de, a.pt] as [string, string]);
 const SPECS: Record<string, ExSpec[]> = {
   alfabeto: [{ kind: "mc", gen: mcGen("alfabeto") }, { kind: "dict", gen: gDictate(dictAnimals) }, { kind: "mc", gen: mcGen("alfabeto") }, { kind: "ws", gen: wsFrom(animals, 4) }],
   numeros: [{ kind: "mc", gen: mcGen("numeros") }, { kind: "typed", gen: gTypeNumber }, { kind: "dict", gen: gDictate(dictNumbers) }, { kind: "mc", gen: mcGen("numeros") }],
-  dias: [{ kind: "mc", gen: mcGen("dias") }, { kind: "typed", gen: gTypeWeekday }, { kind: "dict", gen: gDictate(weekdays.map((d) => [d.de, d.pt] as [string, string])) }],
+  dias: [{ kind: "mc", gen: mcGen("dias") }, { kind: "typed", gen: gTypeWeekday }, { kind: "dict", gen: gDictate(weekdays.map((d) => [d.de, d.pt] as [string, string])) },
+    { kind: "chrono", gen: chronoMeses(5) }],
   cores: [{ kind: "mc", gen: mcGen("cores") }, { kind: "connect", gen: conColors(5) }, { kind: "typed", gen: gTypeColor }, { kind: "dict", gen: gDictate(dictColors) }],
   animais: [{ kind: "connect", gen: conNouns(animals, 5) }, { kind: "mc", gen: mcGen("animais") }, { kind: "enum", gen: enumFrom(animals, 5) }, { kind: "dict", gen: gDictate(dictAnimals) }],
   comidas: [{ kind: "connect", gen: conNouns(food, 5) }, { kind: "mc", gen: mcGen("comidas") }, { kind: "ws", gen: wsFrom(food, 4) }, { kind: "dict", gen: gDictate(dictFood) }],

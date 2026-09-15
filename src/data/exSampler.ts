@@ -5,10 +5,10 @@
 // Aqui o conteúdo é gerado na hora de montar a rodada, guardando o que já saiu
 // e re-sorteando quando colide. O spec devolvido só entrega o item já pronto,
 // então nenhum componente precisa mudar.
-import type { ExSpec, TypedQ, ConnectData, WSData, EnumData, OrderData, TFData, ClozeData } from "./exercises";
+import type { ExSpec, TypedQ, ConnectData, WSData, EnumData, OrderData, TFData, ClozeData, ChronoData } from "./exercises";
 import type { Question } from "./generators";
 
-type ExItem = Question | TypedQ | ConnectData | WSData | EnumData | OrderData | TFData | ClozeData;
+type ExItem = Question | TypedQ | ConnectData | WSData | EnumData | OrderData | TFData | ClozeData | ChronoData;
 
 const MAX_TRIES = 8;
 
@@ -58,6 +58,12 @@ export function itemKey(kind: ExSpec["kind"], item: ExItem): string {
         ln.segments.reduce((acc, seg, i) => acc + seg + (i < ln.gaps.length ? `[${ln.gaps[i].answer}]` : ""), ""),
       ).join(" / ");
       return `cloze|${clean(cheio)}`;
+    }
+    case "chrono": {
+      // por id, ordenado. Não por ano (dois eventos podem dividir um) nem por
+      // rótulo (é traduzível, então a versão em inglês pareceria item novo).
+      const c = item as ChronoData;
+      return `chrono|${c.events.map((e) => e.id).sort().join(",")}`;
     }
     case "tf": {
       // ordenado porque o componente embaralha as afirmações; e o =1/=0 no fim

@@ -122,6 +122,21 @@ a{color:var(--brand-ink)}
 .wswords .ww{cursor:pointer}
 .wswords .ww.pick{border-color:var(--brand);box-shadow:inset 0 0 0 2px var(--brand)}
 .wswords .ww.used{opacity:.3;cursor:default}
+/* linha do tempo: coluna vertical com ordinal, porque "primeiro -> ultimo" numa
+   linha horizontal que quebra e ambiguo (a vaga 4 e a proxima depois da 3 ou o
+   comeco da 2a linha?). O conector entre duas vagas E a unidade de nota — verde
+   = as duas na ordem certa. .n reusa o circulo numerado do enumerar. */
+.chrono{margin-top:10px}
+.chrono .slot{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;width:100%;min-height:50px;text-align:left;border:2.5px dashed var(--border);border-radius:14px;background:var(--surface);color:var(--ink);font:inherit;font-weight:800;padding:8px 11px;cursor:pointer}
+.chrono .slot.filled{border-style:solid;box-shadow:0 3px 0 var(--shadow)}
+.chrono .slot:disabled{cursor:default}
+.chrono .slot .n{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--brand);color:#fff;font-family:"Baloo 2",sans-serif;font-size:.78rem;flex:0 0 auto}
+.chrono .slot .ev{font-size:.9rem;min-width:0;overflow-wrap:anywhere;line-height:1.25}
+.chrono .slot .yr{font-family:"Baloo 2",sans-serif;font-weight:800;color:var(--brand-ink);font-size:.88rem}
+.chrono .link{width:4px;height:14px;margin:2px 0 2px 22px;background:var(--border);border-radius:2px}
+.chrono .link.ok{background:var(--good)} .chrono .link.no{background:var(--bad)}
+.chronopool{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.chronopool .chunk{width:100%;text-align:left;font-size:.9rem;padding:9px 12px;overflow-wrap:anywhere}
 .tflist{display:grid;gap:8px;margin-top:10px}
 .tfrow{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;border:2.5px solid var(--border);background:var(--surface);border-radius:12px;padding:8px 10px}
 .tfrow .st{font-weight:800;font-size:.92rem;min-width:0;overflow-wrap:anywhere}
