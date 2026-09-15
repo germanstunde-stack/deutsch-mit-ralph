@@ -7,7 +7,7 @@ export interface Pair { a: string; b: string; ptA: string; ptB: string; emoA: st
 export interface Cognate { de: string; pt: string; emo: string; }
 export interface FalseFriend { de: string; real: string; trap: string; emo: string; }
 
-export const alphabet: [string, string][] = [["A","á"],["B","bê"],["C","tsê"],["D","dê"],["E","ê"],["F","éf"],["G","guê"],["H","rá"],["I","í"],["J","iót"],["K","cá"],["L","él"],["M","ém"],["N","én"],["O","ô"],["P","pê"],["Q","cú"],["R","ér"],["S","és"],["T","tê"],["U","ú"],["V","fau"],["W","vê"],["X","iks"],["Y","ípsilon"],["Z","tsét"],["Ä","é"],["Ö","œ"],["Ü","ü"],["ß","es-tsét"]];
+export const alphabet: [string, string][] = [["A","á"],["B","bê"],["C","tsê"],["D","dê"],["E","ê"],["F","éf"],["G","guê"],["H","rá"],["I","í"],["J","iót"],["K","cá"],["L","él"],["M","ém"],["N","én"],["O","ô"],["P","pê"],["Q","cú"],["R","ér"],["S","és"],["T","tê"],["U","ú"],["V","fau"],["W","vê"],["X","iks"],["Y","ípsilon"],["Z","tsét"],["Ä","é"],["Ö","œ"],["Ü","ü"]];
 
 export const colors: Color[] = [
   { de: "rot", pt: "vermelho", hex: "#FF5A5F" }, { de: "blau", pt: "azul", hex: "#3AA0FF" },
@@ -15,7 +15,7 @@ export const colors: Color[] = [
   { de: "orange", pt: "laranja", hex: "#FF9F45" }, { de: "lila", pt: "roxo", hex: "#9B6DE0" },
   { de: "rosa", pt: "rosa", hex: "#FF8FC7" }, { de: "braun", pt: "marrom", hex: "#B07B4F" },
   { de: "grau", pt: "cinza", hex: "#9AA3AD" }, { de: "schwarz", pt: "preto", hex: "#2B2630" },
-  { de: "weiß", pt: "branco", hex: "#FFFFFF" }, { de: "türkis", pt: "turquesa", hex: "#2BC8C8" },
+  { de: "weiss", pt: "branco", hex: "#FFFFFF" }, { de: "türkis", pt: "turquesa", hex: "#2BC8C8" },
   { de: "gold", pt: "dourado", hex: "#E5B23B" }, { de: "silber", pt: "prateado", hex: "#C7CCD1" },
 ];
 
@@ -56,7 +56,7 @@ export const greet: Word[] = [
   { de: "Auf Wiedersehen", pt: "até logo", emo: "🤝" }, { de: "Danke", pt: "obrigado", emo: "🙏" },
   { de: "Bitte", pt: "por favor / de nada", emo: "😊" }, { de: "Ja", pt: "sim", emo: "✅" },
   { de: "Nein", pt: "não", emo: "❌" }, { de: "Entschuldigung", pt: "desculpa / licença", emo: "🙇" },
-  { de: "Ich heiße…", pt: "meu nome é…", emo: "🧑‍🍳" }, { de: "Wie geht's?", pt: "como vai?", emo: "🙂" },
+  { de: "Ich heisse…", pt: "meu nome é…", emo: "🧑‍🍳" }, { de: "Wie geht's?", pt: "como vai?", emo: "🙂" },
   { de: "Gut, danke", pt: "bem, obrigado", emo: "👍" }, { de: "Bis bald", pt: "até breve", emo: "👋" },
 ];
 
@@ -80,7 +80,7 @@ export const daywords: Word[] = [
 export const months: [string, string][] = [["Januar","janeiro"],["Februar","fevereiro"],["März","março"],["April","abril"],["Mai","maio"],["Juni","junho"],["Juli","julho"],["August","agosto"],["September","setembro"],["Oktober","outubro"],["November","novembro"],["Dezember","dezembro"]];
 
 export const opposites: Pair[] = [
-  { a:"groß", b:"klein", ptA:"grande", ptB:"pequeno", emoA:"🐘", emoB:"🐭" },
+  { a:"gross", b:"klein", ptA:"grande", ptB:"pequeno", emoA:"🐘", emoB:"🐭" },
   { a:"lang", b:"kurz", ptA:"longo", ptB:"curto", emoA:"📏", emoB:"✂️" },
   { a:"hoch", b:"niedrig", ptA:"alto", ptB:"baixo", emoA:"🏔️", emoB:"🕳️" },
   { a:"schnell", b:"langsam", ptA:"rápido", ptB:"devagar", emoA:"🐆", emoB:"🐌" },

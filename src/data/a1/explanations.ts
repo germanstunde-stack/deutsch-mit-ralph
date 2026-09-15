@@ -34,7 +34,7 @@ const explanationsPT: Record<string, string> = {
     '<p>Exemplo: <span class="de" data-say="kommen">kommen</span> (vir) → <span class="de" data-say="ich komme">ich komme</span>, <span class="de" data-say="du kommst">du kommst</span>, <span class="de" data-say="er kommt">er kommt</span>…</p>' +
     '<h3>⚠️ Duas exceções de pronúncia</h3><ul>' +
     '<li><b class="de">arbeiten</b> (trabalhar): o radical termina em <b>-t</b>, então entra um <b>-e-</b> extra pra não travar a fala: <span class="de" data-say="du arbeitest">du arbeitest</span>, <span class="de" data-say="er arbeitet">er arbeitet</span> (não “arbeitst”/“arbeitt”).</li>' +
-    '<li><b class="de">heißen</b> (chamar-se): o radical já termina no som de “s” (<b class="de">ß</b>), então du/er não dobram o -s: <span class="de" data-say="du heißt">du heißt</span>, <span class="de" data-say="er heißt">er heißt</span> (não “heißst”).</li></ul>' +
+    '<li><b class="de">heissen</b> (chamar-se): o radical já termina no som de “s” (<b class="de">ss</b>), então du/er não dobram o -s: <span class="de" data-say="du heisst">du heisst</span>, <span class="de" data-say="er heisst">er heisst</span> (não “heissst”).</li></ul>' +
     '<h3>O verbo <span class="de" data-say="haben">haben</span> (ter)</h3>' +
     '<table class="br"><tr><td>ich</td><td><span class="de" data-say="habe">habe</span></td></tr>' +
     '<tr><td>du</td><td><span class="de" data-say="hast">hast</span></td></tr>' +
@@ -176,7 +176,7 @@ const explanationsPT: Record<string, string> = {
     '<tr><td><span class="de" data-say="warum">warum</span></td><td>por quê</td></tr>' +
     '<tr><td><span class="de" data-say="wie">wie</span></td><td>como</td></tr>' +
     '<tr><td><span class="de" data-say="woher">woher</span></td><td>de onde</td></tr></table>' +
-    '<p><span class="de" data-say="Wie heißt du">Wie heißt du?</span> — <b>wie</b> (posição 1), <b>heißt</b> (posição 2, o verbo), <b>du</b> (sujeito).</p>' +
+    '<p><span class="de" data-say="Wie heisst du">Wie heisst du?</span> — <b>wie</b> (posição 1), <b>heisst</b> (posição 2, o verbo), <b>du</b> (sujeito).</p>' +
     '<h3>Ja-/Nein-Fragen (perguntas fechadas)</h3><p>Sem palavra interrogativa — o <b>verbo vai pro início</b> da frase: <span class="de" data-say="Er kommt">Er kommt.</span> → <span class="de" data-say="Kommt er">Kommt er?</span> (ele vem → ele vem?)</p>' +
     '<h3>📐 Regra de ouro: o verbo sempre na posição 2</h3><p>Já vimos isso com <b class="de">sein</b>, <b class="de">haben</b>, modais, Perfekt e separáveis. Vale pra frase inteira: se outra coisa (não o sujeito) for pra posição 1, o <b>sujeito pula pra depois do verbo</b>: <span class="de" data-say="Morgen kommt er">Morgen kommt er.</span> (amanhã ele vem — não “morgen er kommt”).</p>' +
     '<h3>Negação com <span class="de">nicht</span></h3><p><b class="de">nicht</b> nega o verbo/a frase toda; <b class="de">kein</b> nega um substantivo com <b class="de">ein</b> (visto no capítulo de artigos). <span class="de" data-say="Ich komme nicht">Ich komme nicht.</span> (eu não venho) × <span class="de" data-say="Das ist kein Auto">Das ist kein Auto.</span> (não é um carro).</p>' +
@@ -219,7 +219,7 @@ const explanationsEN: Record<string, string> = {
     '<p>Example: <span class="de" data-say="kommen">kommen</span> (to come) → <span class="de" data-say="ich komme">ich komme</span>, <span class="de" data-say="du kommst">du kommst</span>, <span class="de" data-say="er kommt">er kommt</span>…</p>' +
     '<h3>⚠️ Two pronunciation exceptions</h3><ul>' +
     '<li><b class="de">arbeiten</b> (to work): the stem ends in <b>-t</b>, so an extra <b>-e-</b> is inserted so it doesn\'t trip on itself: <span class="de" data-say="du arbeitest">du arbeitest</span>, <span class="de" data-say="er arbeitet">er arbeitet</span> (not "arbeitst"/"arbeitt").</li>' +
-    '<li><b class="de">heißen</b> (to be called): the stem already ends in an "s" sound (<b class="de">ß</b>), so du/er don\'t double the -s: <span class="de" data-say="du heißt">du heißt</span>, <span class="de" data-say="er heißt">er heißt</span> (not "heißst").</li></ul>' +
+    '<li><b class="de">heissen</b> (to be called): the stem already ends in an "s" sound (<b class="de">ss</b>), so du/er don\'t double the -s: <span class="de" data-say="du heisst">du heisst</span>, <span class="de" data-say="er heisst">er heisst</span> (not "heissst").</li></ul>' +
     '<h3>The verb <span class="de" data-say="haben">haben</span> (to have)</h3>' +
     '<table class="br"><tr><td>ich</td><td><span class="de" data-say="habe">habe</span></td></tr>' +
     '<tr><td>du</td><td><span class="de" data-say="hast">hast</span></td></tr>' +
@@ -361,7 +361,7 @@ const explanationsEN: Record<string, string> = {
     '<tr><td><span class="de" data-say="warum">warum</span></td><td>why</td></tr>' +
     '<tr><td><span class="de" data-say="wie">wie</span></td><td>how</td></tr>' +
     '<tr><td><span class="de" data-say="woher">woher</span></td><td>where from</td></tr></table>' +
-    '<p><span class="de" data-say="Wie heißt du">Wie heißt du?</span> — <b>wie</b> (position 1), <b>heißt</b> (position 2, the verb), <b>du</b> (subject).</p>' +
+    '<p><span class="de" data-say="Wie heisst du">Wie heisst du?</span> — <b>wie</b> (position 1), <b>heisst</b> (position 2, the verb), <b>du</b> (subject).</p>' +
     '<h3>Ja-/Nein-Fragen (closed questions)</h3><p>No question word — the <b>verb moves to the front</b> of the sentence: <span class="de" data-say="Er kommt">Er kommt.</span> → <span class="de" data-say="Kommt er">Kommt er?</span> (he is coming → is he coming?)</p>' +
     '<h3>📐 Golden rule: the verb is always in position 2</h3><p>We already saw this with <b class="de">sein</b>, <b class="de">haben</b>, modals, Perfekt and separable verbs. It holds for every sentence: if something other than the subject takes position 1, the <b>subject jumps after the verb</b>: <span class="de" data-say="Morgen kommt er">Morgen kommt er.</span> (tomorrow he is coming — not "morgen er kommt").</p>' +
     '<h3>Negation with <span class="de">nicht</span></h3><p><b class="de">nicht</b> negates the verb/the whole sentence; <b class="de">kein</b> negates a noun that has <b class="de">ein</b> (seen in the articles chapter). <span class="de" data-say="Ich komme nicht">Ich komme nicht.</span> (I am not coming) vs <span class="de" data-say="Das ist kein Auto">Das ist kein Auto.</span> (it is not a car).</p>' +

@@ -2,10 +2,11 @@
 // Palavras com data-say são faladas ao clicar (delegação no TopicView).
 export const explanations: Record<string, string> = {
   alfabeto:
-    '<p>O alemão usa as mesmas 26 letras + <b class="de">ä ö ü</b> (Umlaut) e o <b class="de">ß</b> (“eszett”, som de “ss”).</p>' +
+    '<p>O alemão usa as mesmas 26 letras + <b class="de">ä ö ü</b> (Umlaut).</p>' +
+    '<p class="chbox">🇨🇭 <b>Aqui é diferente da Alemanha:</b> na Suíça o <b class="de">ß</b> (“eszett”) <b>não existe</b>. Onde a Alemanha escreve <i>Straße, groß, weiß, dreißig</i>, a Suíça escreve <b class="de">Strasse, gross, weiss, dreissig</b> — em jornal, contrato, escola e placa. Se você vir um ß, é texto da Alemanha.</p>' +
     '<h3>Vogais (Vokale)</h3><p><span class="de" data-say="a e i o u">a e i o u</span> podem ser <b>curtas ou longas</b>. As Umlaut mudam o som:</p>' +
     '<table class="br"><tr><td>ä</td><td>como “é” de <i>pé</i> — <span class="de" data-say="Käse">Käse</span> (queijo)</td></tr><tr><td>ö</td><td>“ê” com boca de “ô” — <span class="de" data-say="schön">schön</span> (bonito)</td></tr><tr><td>ü</td><td>“i” com bico de “u” — <span class="de" data-say="fünf">fünf</span> (cinco)</td></tr></table>' +
-    '<h3>Consoantes que mudam</h3><table class="br"><tr><td>W</td><td>som de “V” — <span class="de" data-say="Wasser">Wasser</span> (água)</td></tr><tr><td>V</td><td>som de “F” — <span class="de" data-say="Vogel">Vogel</span> (pássaro)</td></tr><tr><td>Z</td><td>som de “TS” — <span class="de" data-say="zwei">zwei</span> (dois)</td></tr><tr><td>S</td><td>“Z” antes de vogal — <span class="de" data-say="sieben">sieben</span> (sete)</td></tr><tr><td>J</td><td>som de “I” — <span class="de" data-say="ja">ja</span> (sim)</td></tr><tr><td>Sch</td><td>som de “X” — <span class="de" data-say="Schaf">Schaf</span> (ovelha)</td></tr><tr><td>ß</td><td>som de “SS” — <span class="de" data-say="weiß">weiß</span> (branco)</td></tr></table>' +
+    '<h3>Consoantes que mudam</h3><table class="br"><tr><td>W</td><td>som de “V” — <span class="de" data-say="Wasser">Wasser</span> (água)</td></tr><tr><td>V</td><td>som de “F” — <span class="de" data-say="Vogel">Vogel</span> (pássaro)</td></tr><tr><td>Z</td><td>som de “TS” — <span class="de" data-say="zwei">zwei</span> (dois)</td></tr><tr><td>S</td><td>“Z” antes de vogal — <span class="de" data-say="sieben">sieben</span> (sete)</td></tr><tr><td>J</td><td>som de “I” — <span class="de" data-say="ja">ja</span> (sim)</td></tr><tr><td>Sch</td><td>som de “X” — <span class="de" data-say="Schaf">Schaf</span> (ovelha)</td></tr><tr><td>ss</td><td>som de “SS” — <span class="de" data-say="weiss">weiss</span> (branco). Na Alemanha isto seria <i>weiß</i>.</td></tr></table>' +
     '<h3>⚠️ Erros comuns de brasileiro</h3><ul>' +
     '<li><b>H sopra!</b> Não é mudo: <span class="de" data-say="Hallo">Hallo</span> (olá) ≈ “Rálo” com ar.</li>' +
     '<li><b>R na garganta</b>, não o “r” de <i>caro</i>: <span class="de" data-say="rot">rot</span> (vermelho).</li>' +
@@ -24,7 +25,7 @@ export const explanations: Record<string, string> = {
     '<h3>13 a 19 = unidade + zehn</h3><p><span class="de" data-say="dreizehn">dreizehn</span> (13). ⚠️ <span class="de" data-say="sechzehn">sechzehn</span> (16, sem o “s”) e <span class="de" data-say="siebzehn">siebzehn</span> (17, sem o “en”).</p>' +
     '<h3>⚠️ O “und” invertido</h3><p>De 21 pra cima, a <b>unidade primeiro</b> + <span class="k">und</span> + dezena: <span class="de" data-say="einundzwanzig">einundzwanzig</span> (21 = “um-e-vinte”), <span class="de" data-say="siebenundvierzig">siebenundvierzig</span> (47). Erro nº 1 de brasileiro.</p>' +
     '<h3>Centenas & mil</h3><p><span class="de" data-say="hundert">hundert</span> (100), <span class="de" data-say="tausend">tausend</span> (1000). E <span class="de" data-say="eins">eins</span> vira <span class="de" data-say="ein">ein</span> nos compostos.</p>' +
-    '<h3>No dia a dia</h3><p>Idade: <span class="de" data-say="Ich bin dreißig Jahre alt">Ich bin dreißig Jahre alt</span> (tenho 30 anos). Preço: <span class="de" data-say="Das kostet zehn Franken">Das kostet zehn Franken</span> (custa 10 francos).</p>' +
+    '<h3>No dia a dia</h3><p>Idade: <span class="de" data-say="Ich bin dreissig Jahre alt">Ich bin dreissig Jahre alt</span> (tenho 30 anos). Preço: <span class="de" data-say="Das kostet zehn Franken">Das kostet zehn Franken</span> (custa 10 francos).</p>' +
     '<div class="note">🔧 Contas faladas, relógio e calendário chegam na Fase 2b.</div>',
 
   dias:
@@ -57,12 +58,12 @@ export const explanations: Record<string, string> = {
     '<p>As fórmulas do dia a dia — e uma regra cultural importante.</p><h3>⚠️ du × Sie</h3><p>Com amigos: <span class="de" data-say="du">du</span> (você, informal). Com estranhos, clientes, no trabalho: <span class="de" data-say="Sie">Sie</span> (formal). Importa muito na Suíça!</p>' +
     '<p>Informal: <span class="de" data-say="Wie geht es dir?">Wie geht es dir?</span> (como vai?). Formal: <span class="de" data-say="Wie geht es Ihnen?">Wie geht es Ihnen?</span> (como o senhor está?).</p>' +
     '<h3>Bom dia por horário</h3><p><span class="de" data-say="Guten Morgen">Guten Morgen</span> (de manhã), <span class="de" data-say="Guten Tag">Guten Tag</span> (dia/tarde), <span class="de" data-say="Guten Abend">Guten Abend</span> (ao chegar à noite), <span class="de" data-say="Gute Nacht">Gute Nacht</span> (ao dormir).</p>' +
-    '<h3>Se apresentar</h3><p><span class="de" data-say="Ich heiße Ralph">Ich heiße Ralph</span> ou <span class="de" data-say="Ich bin Ralph">Ich bin Ralph</span>.</p>' +
+    '<h3>Se apresentar</h3><p><span class="de" data-say="Ich heisse Ralph">Ich heisse Ralph</span> ou <span class="de" data-say="Ich bin Ralph">Ich bin Ralph</span>.</p>' +
     '<div class="dialog">— <b>Hallo! Wie geht\'s?</b> (Oi! Como vai?)<br>— <b>Gut, danke! Und dir?</b> (Bem! E você?)</div>',
 
   tamanhos:
-    '<p>Adjetivos que descrevem as coisas — em pares de opostos.</p><h3>Descrever</h3><p><span class="k">ist</span> (é/está): <span class="de" data-say="Das Haus ist groß">Das Haus ist groß</span> (a casa é grande), <span class="de" data-say="Die Suppe ist warm">Die Suppe ist warm</span> (a sopa está quente).</p>' +
-    '<h3>Opostos</h3><p><span class="de" data-say="groß">groß</span> (grande) / <span class="de" data-say="klein">klein</span> (pequeno), <span class="de" data-say="lang">lang</span> (longo) / <span class="de" data-say="kurz">kurz</span> (curto)…</p>' +
+    '<p>Adjetivos que descrevem as coisas — em pares de opostos.</p><h3>Descrever</h3><p><span class="k">ist</span> (é/está): <span class="de" data-say="Das Haus ist gross">Das Haus ist gross</span> (a casa é grande), <span class="de" data-say="Die Suppe ist warm">Die Suppe ist warm</span> (a sopa está quente).</p>' +
+    '<h3>Opostos</h3><p><span class="de" data-say="gross">gross</span> (grande) / <span class="de" data-say="klein">klein</span> (pequeno), <span class="de" data-say="lang">lang</span> (longo) / <span class="de" data-say="kurz">kurz</span> (curto)…</p>' +
     '<h3>“muito” e “mais”</h3><p><span class="de" data-say="sehr">sehr</span> (muito), <span class="de" data-say="mehr">mehr</span> (mais) / <span class="de" data-say="weniger">weniger</span> (menos).</p>' +
     '<h3>📏 Medidas</h3><p>Peso: <span class="de" data-say="Kilogramm">Kilogramm</span> (kg), <span class="de" data-say="Gramm">Gramm</span> (g). Distância: <span class="de" data-say="Meter">Meter</span> (m), <span class="de" data-say="Kilometer">Kilometer</span> (km). Volume: <span class="de" data-say="Liter">Liter</span> (l), <span class="de" data-say="Milliliter">Milliliter</span> (ml).</p>',
 

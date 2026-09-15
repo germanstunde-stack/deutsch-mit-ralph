@@ -92,7 +92,9 @@ function checkTaught(): Violation[] {
 
 // A Suíça nunca escreve ß. As únicas strings que podem conter o caractere são as
 // que ENSINAM essa regra ("se você vir ß, é texto da Alemanha").
-const SS_ALLOW = [/texto da Alemanha/i, /nunca (usa|se escreve)/i, /na Alemanha se escreve/i];
+// Basta a string citar a Alemanha: ela está contrastando as duas grafias de
+// propósito. Uma frase alemã de exercício nunca contém a palavra "Alemanha".
+const SS_ALLOW = [/Alemanha/i];
 
 function checkNoEszett(): Violation[] {
   const out: Violation[] = [];

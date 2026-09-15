@@ -85,7 +85,7 @@ export const verbsCap8: Word[] = [
   { de: "lieben", pt: "amar", en: "to love", hint: "+ Akkusativ · ich liebe dich" },
   { de: "danken", pt: "agradecer", en: "to thank", hint: "+ Dativ! · ich danke, er dankt" },
   { de: "gefallen", pt: "agradar, gostar", en: "to please", hint: "+ Dativ! · das gefällt mir" },
-  { de: "wissen", pt: "saber", en: "to know", hint: "ich weiß, du weißt, er weiß" },
+  { de: "wissen", pt: "saber", en: "to know", hint: "ich weiss, du weisst, er weiss" },
 ];
 
 export const verbsCap11: Word[] = [

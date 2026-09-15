@@ -69,7 +69,7 @@ const sentencesPT: Record<string, [string, string][]> = {
     ["Am Wochenende schlafe ich lange.", "No fim de semana eu durmo até tarde."],
   ],
   [CH_PERGUNTAS]: [
-    ["Wie heißt du?", "Como você se chama?"],
+    ["Wie heisst du?", "Como você se chama?"],
     ["Woher kommst du?", "De onde você vem?"],
     ["Ich komme nicht, denn ich bin krank.", "Eu não venho, porque estou doente."],
     ["Möchtest du Kaffee oder Tee?", "Você quer café ou chá?"],
@@ -138,7 +138,7 @@ const sentencesEN: Record<string, [string, string][]> = {
     ["Am Wochenende schlafe ich lange.", "On the weekend I sleep in."],
   ],
   [CH_PERGUNTAS]: [
-    ["Wie heißt du?", "What is your name?"],
+    ["Wie heisst du?", "What is your name?"],
     ["Woher kommst du?", "Where are you from?"],
     ["Ich komme nicht, denn ich bin krank.", "I am not coming, because I am sick."],
     ["Möchtest du Kaffee oder Tee?", "Do you want coffee or tea?"],

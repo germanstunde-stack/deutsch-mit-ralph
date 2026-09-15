@@ -39,7 +39,7 @@ const extraVerbs: DictVerb[] = [
   { inf: "suchen", meaning: { pt: "procurar", en: "to look for" } },
   { inf: "zeigen", meaning: { pt: "mostrar", en: "to show" } },
   { inf: "öffnen", meaning: { pt: "abrir", en: "to open" } },
-  { inf: "schließen", meaning: { pt: "fechar", en: "to close" } },
+  { inf: "schliessen", meaning: { pt: "fechar", en: "to close" } },
   { inf: "beginnen", meaning: { pt: "começar", en: "to begin" } },
   { inf: "bleiben", meaning: { pt: "ficar / permanecer", en: "to stay" } },
   { inf: "waschen", meaning: { pt: "lavar", en: "to wash" } },
@@ -57,7 +57,7 @@ function dedupe(pool: { inf: string; meaning: Record<Lang, string> }[]): DictVer
   return out;
 }
 
-// Ordem alfabética alemã (ä/ö/ü/ß ordenam junto de a/o/u/ss) — é um
+// Ordem alfabética alemã (ä/ö/ü ordenam junto de a/o/u) — é um
 // dicionário de consulta, então tem que dar pra achar o verbo pela letra.
 export const allVerbs: DictVerb[] = dedupe([
   ...coreVerbs,

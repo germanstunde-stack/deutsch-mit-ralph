@@ -76,7 +76,7 @@ export const seinPredicates: FactoryPredicate[] = [
   { de: "durstig", en: "thirsty", link: "estar", pt: "com sede", allow: ["person"] },
   { de: "fertig", en: "ready", link: "estar", pt: ["pronto", "pronta", "prontos", "prontas"], allow: ["person"] },
   { de: "zu Hause", en: "at home", link: "estar", pt: "em casa", allow: ["person"] },
-  { de: "groß", en: "tall", link: "ser", pt: ["alto", "alta", "altos", "altas"], allow: ["person"] },
+  { de: "gross", en: "tall", link: "ser", pt: ["alto", "alta", "altos", "altas"], allow: ["person"] },
   { de: "klein", en: "short", link: "ser", pt: ["baixo", "baixa", "baixos", "baixas"], allow: ["person"] },
   { de: "jung", en: "young", link: "ser", pt: ["jovem", "jovem", "jovens", "jovens"], allow: ["person"] },
   { de: "alt", en: "old", link: "ser", pt: ["velho", "velha", "velhos", "velhas"], allow: ["person"] },
@@ -128,7 +128,7 @@ export const regularVerbs: Verb[] = [
   { inf: "wohnen", meaning: { pt: "morar", en: "to live (reside)" }, forms: { ich: "wohne", du: "wohnst", er: "wohnt", wir: "wohnen", ihr: "wohnt", sie: "wohnen" } },
   { inf: "lieben", meaning: { pt: "amar", en: "to love" }, forms: { ich: "liebe", du: "liebst", er: "liebt", wir: "lieben", ihr: "liebt", sie: "lieben" } },
   { inf: "arbeiten", meaning: { pt: "trabalhar", en: "to work" }, forms: { ich: "arbeite", du: "arbeitest", er: "arbeitet", wir: "arbeiten", ihr: "arbeitet", sie: "arbeiten" } },
-  { inf: "heißen", meaning: { pt: "chamar-se", en: "to be called" }, forms: { ich: "heiße", du: "heißt", er: "heißt", wir: "heißen", ihr: "heißt", sie: "heißen" } },
+  { inf: "heissen", meaning: { pt: "chamar-se", en: "to be called" }, forms: { ich: "heisse", du: "heisst", er: "heisst", wir: "heissen", ihr: "heisst", sie: "heissen" } },
   // estes três aparecem nas frases dos capítulos seguintes ("warum lernst du
   // Deutsch", "was trinkt ihr", "wie oft geht ihr ins Kino"), então precisam ser
   // ensinados aqui, onde a conjugação regular é explicada.
@@ -292,7 +292,7 @@ const pronounSentencesHand: OrderSentence[] = [
   { chunks: ["dich", "ich", "liebe"], answer: ["ich", "liebe", "dich"], meaning: { pt: "eu te amo", en: "I love you" } },
   { chunks: ["gefällt", "mir", "das"], answer: ["das", "gefällt", "mir"], meaning: { pt: "eu gosto disso", en: "I like that" } },
   { chunks: ["ihm", "ich", "helfe"], answer: ["ich", "helfe", "ihm"], meaning: { pt: "eu ajudo ele", en: "I help him" } },
-  { chunks: ["nichts", "weiß", "ich"], answer: ["ich", "weiß", "nichts"], meaning: { pt: "eu não sei nada", en: "I know nothing" } },
+  { chunks: ["nichts", "weiss", "ich"], answer: ["ich", "weiss", "nichts"], meaning: { pt: "eu não sei nada", en: "I know nothing" } },
 ];
 export const pronounSentences: OrderSentence[] = mergeSentences(pronounSentencesHand, buildFrames(pronounFrames));
 
@@ -368,7 +368,7 @@ export const questionWords: QuestionWord[] = [
   { de: "wo", meaning: { pt: "onde", en: "where" }, example: "Wo wohnst du?", exampleMeaning: { pt: "onde você mora?", en: "where do you live?" } },
   { de: "wann", meaning: { pt: "quando", en: "when" }, example: "Wann kommst du?", exampleMeaning: { pt: "quando você vem?", en: "when are you coming?" } },
   { de: "warum", meaning: { pt: "por quê", en: "why" }, example: "Warum lernst du Deutsch?", exampleMeaning: { pt: "por que você aprende alemão?", en: "why are you learning German?" } },
-  { de: "wie", meaning: { pt: "como", en: "how" }, example: "Wie heißt du?", exampleMeaning: { pt: "qual é o seu nome?", en: "what is your name?" } },
+  { de: "wie", meaning: { pt: "como", en: "how" }, example: "Wie heisst du?", exampleMeaning: { pt: "qual é o seu nome?", en: "what is your name?" } },
   { de: "woher", meaning: { pt: "de onde", en: "where from" }, example: "Woher kommst du?", exampleMeaning: { pt: "de onde você vem?", en: "where are you from?" } },
 ];
 
@@ -394,7 +394,7 @@ export const connectors: Connector[] = [
 ];
 
 const questionSentencesHand: OrderSentence[] = [
-  { chunks: ["heißt", "du", "wie"], answer: ["wie", "heißt", "du"], meaning: { pt: "como você se chama", en: "what is your name" } },
+  { chunks: ["heisst", "du", "wie"], answer: ["wie", "heisst", "du"], meaning: { pt: "como você se chama", en: "what is your name" } },
   { chunks: ["kommst", "du", "woher"], answer: ["woher", "kommst", "du"], meaning: { pt: "de onde você vem", en: "where do you come from" } },
   { chunks: ["kommt", "morgen", "er"], answer: ["morgen", "kommt", "er"], meaning: { pt: "amanhã ele vem", en: "tomorrow he is coming" } },
   { chunks: ["nicht", "ich", "komme"], answer: ["ich", "komme", "nicht"], meaning: { pt: "eu não venho", en: "I am not coming" } },

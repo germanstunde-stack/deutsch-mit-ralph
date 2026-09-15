@@ -1,5 +1,5 @@
 const ONES = ["null","eins","zwei","drei","vier","fünf","sechs","sieben","acht","neun","zehn","elf","zwölf","dreizehn","vierzehn","fünfzehn","sechzehn","siebzehn","achtzehn","neunzehn"];
-const TENS = ["","","zwanzig","dreißig","vierzig","fünfzig","sechzig","siebzig","achtzig","neunzig"];
+const TENS = ["","","zwanzig","dreissig","vierzig","fünfzig","sechzig","siebzig","achtzig","neunzig"];
 
 export function numDE(n: number): string {
   if (n < 20) return ONES[n];

@@ -3,14 +3,14 @@
   --ink:#3A3140; --ink-soft:#736A7B; --border:#EADDCE; --shadow:rgba(120,95,60,.18);
   --rot:#FF5A5F; --gelb:#FFC93C; --gruen:#3FBF6F; --blau:#3AA0FF;
   --brand:#3AA0FF; --brand-ink:#0B5FB0; --der:#3AA0FF; --die:#FF6FA5; --das:#3FBF6F;
-  --good:#2FB16B; --bad:#FF5A5F; --hi:#FFE38A; --radius:20px;
+  --good:#2FB16B; --bad:#FF5A5F; --ch:#D8232A; --hi:#FFE38A; --radius:20px;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#1E2233; --bg2:#2A2338; --surface:#2E2A3C; --surface2:#38334A; --ink:#F4EEE8; --ink-soft:#C6BBD1; --border:#463C57; --shadow:rgba(0,0,0,.5);
-  --brand:#5DB2FF; --brand-ink:#CDE6FF; --der:#5DB2FF; --die:#FF8FBE; --das:#5FD08C; --hi:#6b5a1f;}}
+  --brand:#5DB2FF; --brand-ink:#CDE6FF; --der:#5DB2FF; --die:#FF8FBE; --das:#5FD08C; --ch:#FF6B72; --hi:#6b5a1f;}}
 :root[data-theme="dark"]{
   --bg:#1E2233; --bg2:#2A2338; --surface:#2E2A3C; --surface2:#38334A; --ink:#F4EEE8; --ink-soft:#C6BBD1; --border:#463C57; --shadow:rgba(0,0,0,.5);
-  --brand:#5DB2FF; --brand-ink:#CDE6FF; --der:#5DB2FF; --die:#FF8FBE; --das:#5FD08C; --hi:#6b5a1f;}
+  --brand:#5DB2FF; --brand-ink:#CDE6FF; --der:#5DB2FF; --die:#FF8FBE; --das:#5FD08C; --ch:#FF6B72; --hi:#6b5a1f;}
 
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -137,6 +137,11 @@ a{color:var(--brand-ink)}
 .expl ul{margin:6px 0;padding-left:20px} .expl li{margin:3px 0}
 .expl .k{background:var(--hi);border-radius:5px;padding:0 4px;font-weight:900}
 .expl [data-say]{cursor:pointer;color:var(--brand-ink);border-bottom:2px dotted var(--brand)}
+/* caixa "aqui é diferente da Alemanha" — marca todo ponto em que o suíço diverge
+   do alemão padrão (ß, Velo, Billett...). Vermelho só como acento de identidade:
+   --bad também é vermelho, então a borda usa --ch pra não virar cara de erro. */
+.expl .chbox{background:color-mix(in srgb,var(--ch) 9%, var(--surface));border:2px solid color-mix(in srgb,var(--ch) 38%, var(--border));border-radius:13px;padding:9px 12px;margin:10px 0;font-size:.87rem}
+.expl .chbox i{color:var(--ink-soft);text-decoration:line-through;font-style:normal}
 .dialog{background:var(--surface2);border:2.5px solid var(--border);border-radius:14px;padding:12px;margin:10px 0;font-weight:700} .dialog b{color:var(--brand-ink)}
 table.br{width:100%;border-collapse:collapse;font-size:.86rem;font-weight:700;margin:8px 0}
 table.br td{border:2px solid var(--border);padding:6px 8px} table.br td:first-child{font-family:"Baloo 2",sans-serif;color:var(--brand-ink);white-space:nowrap}
