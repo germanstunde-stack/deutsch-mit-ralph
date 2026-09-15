@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from "react";
 import { CardGrid } from "./Cards";
 import { Exercise } from "./Engines";
 import { Flashcards } from "./Flashcards";
@@ -7,60 +6,34 @@ import { ProgressDots } from "./ProgressDots";
 import type { ModuleDef } from "../data/modules";
 import { speak } from "../lib/speech";
 import { sayOnClick } from "../lib/sayDelegation";
-import { useScoredRound } from "../lib/scoring";
-import { saveTopicScore } from "../data/topicScores";
+import { useExerciseRound } from "../lib/useExerciseRound";
 import { usePlayer } from "../auth/AuthProvider";
 import { useI18n } from "../i18n/I18nProvider";
-import { supabase } from "../lib/supabase";
 
 const TOPIC_SIZE = 20;
 
 export function TopicView({ id, mod, onResult, next }: { id: string; mod: ModuleDef; onResult: (correct: number, wrong: number) => void; next: { id: string; label: string } | null }) {
-  const { session, profile } = usePlayer();
+  const { profile } = usePlayer();
   const { lang, t } = useI18n();
   const meta = mod.topicsFor(lang).find((tp) => tp.id === id)!;
-  const [round, setRound] = useState(0);
-  const [specs, setSpecs] = useState(() => mod.exSpecsForTopic(id, lang, TOPIC_SIZE));
-  const scored = useScoredRound(TOPIC_SIZE);
   const deck = mod.deckForTopic(id, lang);
   const sents = mod.sentencesForTopic(id, profile, lang);
-  const submittedRef = useRef(false);
+
+  // a rodada em si (gerar, contar, trocar, mandar pro ranking) vive em
+  // useExerciseRound — as seções de Geografia e História usam a mesma.
+  // A chave do placar leva o módulo na frente pra não colidir entre A0/A1.
+  const { specs, round, scored, resolve, trocar, submit } = useExerciseRound({
+    size: TOPIC_SIZE,
+    make: () => mod.exSpecsForTopic(id, lang, TOPIC_SIZE),
+    onResult,
+    scoreKey: `${mod.id}:${id}`,
+  });
 
   function goNext() {
-    // fecha a rodada atual: quem pulou sem responder perde o ponto (mesma regra do "trocar").
-    // flushUnresolved devolve o que ELE somou agora — soma ao "scored.wrong" atual (o state só
-    // atualiza no próximo render, então não dá pra ler scored.wrong direto aqui e confiar nele).
-    const addedNow = scored.flushUnresolved(() => 1);
-    // manda pro ranking (categoria "Exercícios") só uma vez por rodada — global, não filtrado
-    // por módulo (mesmo comportamento de hoje, ver plano do A1).
-    if (session && !submittedRef.current) {
-      submittedRef.current = true;
-      supabase.rpc("add_exercise_result", { p_correct: scored.correct, p_wrong: scored.wrong + addedNow }).then(({ error }) => {
-        if (error) console.warn("ranking (exercícios):", error.message);
-      });
-    }
+    submit();
     const target = next ? "top-" + next.id : "prova";
     document.getElementById(target)?.scrollIntoView({ behavior: "smooth" });
   }
-
-  function resolve(i: number, c: number, w: number) {
-    if (scored.resolve(i, c, w)) onResult(c, w);
-  }
-  function trocar() {
-    const added = scored.flushUnresolved(() => 1);
-    if (added > 0) onResult(0, added);
-    scored.reset(TOPIC_SIZE);
-    submittedRef.current = false;
-    setSpecs(mod.exSpecsForTopic(id, lang, TOPIC_SIZE));
-    setRound((r) => r + 1);
-  }
-
-  // guarda a pontuação da rodada (20 pts) por capítulo — chave prefixada com o módulo
-  // pra não colidir entre A0/A1/etc. Só o último round, sem histórico.
-  useEffect(() => {
-    if (scored.correct + scored.wrong === 0) return;
-    saveTopicScore(`${mod.id}:${id}`, { correct: scored.correct, wrong: scored.wrong, total: TOPIC_SIZE, at: Date.now() });
-  }, [mod.id, id, scored.correct, scored.wrong]);
 
   return (
     <section className="panel topic-sec" id={"top-" + id}>
