@@ -52,7 +52,9 @@ function AppContent() {
       <BgArt moduleId={activeModule} />
       <div className="wrap">
         <div className="top">
-          <div className="brand"><span className="flag">🇩🇪</span><div><small>German</small><b>Stunde</b></div></div>
+          {/* cruz desenhada em CSS, não o emoji 🇨🇭: no Windows a bandeira não
+              renderiza como bandeira, sai como as duas letras "CH" */}
+          <div className="brand"><span className="flag chflag" aria-label="Suíça" /><div><small>Swiss</small><b>Stunde</b></div></div>
           <div className="tbtns">
             <span className="tbtn" title={t("score_title")}>✅ {stats.correct} · ❌ {stats.wrong}</span>
             <button className="tbtn" onClick={() => setLang(lang === "en" ? "pt" : "en")} title="idioma / language">{lang === "en" ? "🇬🇧 English" : "🇧🇷 Português"}</button>

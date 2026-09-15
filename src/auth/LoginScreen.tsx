@@ -24,7 +24,7 @@ export function LoginScreen() {
     <div className="login-wrap">
       <div className="login">
         <Mascot className="mascot" />
-        <h1><span className="hallo plush">Hallo!</span> GermanStunde</h1>
+        <h1><span className="hallo plush">Grüezi!</span> SwissStunde</h1>
         {pendingConfirm ? (
           <p>📬 Sua conta foi criada, mas o Supabase pediu confirmação por e-mail. Confira sua caixa de entrada, ou peça pra desativar essa confirmação nas configurações do projeto.</p>
         ) : (

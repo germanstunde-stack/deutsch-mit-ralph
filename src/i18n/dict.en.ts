@@ -1,7 +1,7 @@
 import type { DictKey } from "./dict.pt";
 
 export const en: Record<DictKey, string> = {
-  welcome: "Welcome to GermanStunde.",
+  welcome: "Welcome to SwissStunde.",
   hero_sub: "Scroll down, listen and practice each topic. The exam comes at the end. 🎧",
   score_title: "right/wrong this session",
   speed_slow: "🐢 Slow",
@@ -14,7 +14,7 @@ export const en: Record<DictKey, string> = {
   nav_caderno: "📓 Notebook",
   nav_prova: "📝 Exam",
   nav_ranking: "🏆 Leaderboard",
-  footer: "GermanStunde · Module {module} — built to grow all the way to C2. Viel Erfolg! 🎉",
+  footer: "SwissStunde · Module {module} — built to grow all the way to C2. Viel Erfolg! 🎉",
   next_chapter_btn: "Add points and next: {label} →",
   next_exam_btn: "Add points and go to the Exam 📝 →",
   card_click_hint: "click to listen",

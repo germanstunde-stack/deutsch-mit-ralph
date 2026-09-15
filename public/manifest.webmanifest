@@ -1,7 +1,7 @@
 {
-  "name": "GermanStunde - Deutsch mit Ralph",
-  "short_name": "GermanStunde",
-  "description": "Aprenda alemão do zero, em português, de graça — com o Ralph.",
+  "name": "SwissStunde",
+  "short_name": "SwissStunde",
+  "description": "Aprenda o alemão da Suíça do zero, em português, de graça.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

@@ -2,7 +2,7 @@
 // cada módulo (vocabulário, explicações, frases) vive nos arquivos do próprio
 // módulo — este dicionário é só pra UI comum (App.tsx, TopicView.tsx, Prova.tsx).
 export const pt = {
-  welcome: "Bem-vindo à GermanStunde.",
+  welcome: "Bem-vindo à SwissStunde.",
   hero_sub: "Role a página, ouça e pratique cada tema. No fim, a prova. 🎧",
   score_title: "acertos/erros nesta sessão",
   speed_slow: "🐢 Devagar",
@@ -15,7 +15,7 @@ export const pt = {
   nav_caderno: "📓 Caderno",
   nav_prova: "📝 Prova",
   nav_ranking: "🏆 Ranking",
-  footer: "GermanStunde · Módulo {module} — feito pra crescer até o C2. Viel Erfolg! 🎉",
+  footer: "SwissStunde · Módulo {module} — feito pra crescer até o C2. Viel Erfolg! 🎉",
   next_chapter_btn: "Somar pontos e próximo: {label} →",
   next_exam_btn: "Somar pontos e ir pra Prova 📝 →",
   card_click_hint: "clique pra ouvir",
