@@ -5,10 +5,10 @@
 // Aqui o conteúdo é gerado na hora de montar a rodada, guardando o que já saiu
 // e re-sorteando quando colide. O spec devolvido só entrega o item já pronto,
 // então nenhum componente precisa mudar.
-import type { ExSpec, TypedQ, ConnectData, WSData, EnumData, OrderData } from "./exercises";
+import type { ExSpec, TypedQ, ConnectData, WSData, EnumData, OrderData, TFData } from "./exercises";
 import type { Question } from "./generators";
 
-type ExItem = Question | TypedQ | ConnectData | WSData | EnumData | OrderData;
+type ExItem = Question | TypedQ | ConnectData | WSData | EnumData | OrderData | TFData;
 
 const MAX_TRIES = 8;
 
@@ -48,6 +48,13 @@ export function itemKey(kind: ExSpec["kind"], item: ExItem): string {
     case "enum": {
       const e = item as EnumData;
       return `enum|${clean(e.title)}|${e.items.map((i) => i.de).sort().join(",")}`;
+    }
+    case "tf": {
+      // ordenado porque o componente embaralha as afirmações; e o =1/=0 no fim
+      // mantém "Bern é a capital (verdadeiro)" distinto da mesma frase marcada
+      // como falsa — senão as duas versões contariam como o mesmo exercício.
+      const t = item as TFData;
+      return `tf|${clean(t.title)}|${t.statements.map((s) => `${clean(s.html)}=${s.correct ? 1 : 0}`).sort().join(",")}`;
     }
     default: {
       // Um `kind` novo sem case aqui devolveria undefined em runtime — e como o

@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { speak, speakAll } from "../lib/speech";
 import { rand, shuffle, type Question } from "../data/generators";
-import { norm, type ExSpec, type TypedQ, type ConnectData, type WSData, type EnumData, type OrderData } from "../data/exercises";
+import { norm, type ExSpec, type TypedQ, type ConnectData, type WSData, type EnumData, type OrderData, type TFData } from "../data/exercises";
 import { MultipleChoice } from "./MultipleChoice";
 import { addHard, easeHard } from "../data/caderno";
 import type { ExMode, ExamHandle } from "./examTypes";
@@ -424,6 +424,89 @@ const Order = forwardRef<ExamHandle, { data: OrderData; num: number; onResolve: 
   }
 );
 
+/* ---------- TrueFalse (verdadeiro ou falso em lote) ---------- */
+// Em lote de propósito: uma afirmação por card daria 50% de acerto no chute.
+// Cinco em lote com `single` põem o chute cego em 3%.
+const TrueFalse = forwardRef<ExamHandle, { data: TFData; num: number; onResolve: Resolve; mode?: ExMode }>(
+  function TrueFalse({ data, num, onResolve, mode = "practice" }, ref) {
+    const n = data.statements.length;
+    const [order] = useState(() => shuffle(data.statements.map((_, i) => i)));
+    const [picks, setPicks] = useState<Record<number, boolean>>({});
+    const [checked, setChecked] = useState(false);
+
+    function countCorrect(p: Record<number, boolean>) {
+      let c = 0;
+      order.forEach((idx) => { if (p[idx] === data.statements[idx].correct) c++; });
+      return c;
+    }
+
+    useImperativeHandle(ref, () => ({
+      getScore: () => {
+        const c = countCorrect(picks);
+        return data.single ? (c === n ? { correct: 1, wrong: 0 } : { correct: 0, wrong: 1 }) : { correct: c, wrong: n - c };
+      },
+      reveal: () => setChecked(true),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }), [picks, data.single, n]);
+
+    // prática: resolve sozinho quando tudo está marcado e certo
+    useEffect(() => {
+      if (mode !== "practice" || checked) return;
+      if (order.some((idx) => picks[idx] === undefined)) return;
+      const c = countCorrect(picks);
+      if (c === n) { setChecked(true); onResolve(data.single ? 1 : c, 0); }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [picks]);
+
+    function verify() {
+      if (checked) return;
+      const c = countCorrect(picks);
+      setChecked(true);
+      onResolve(data.single ? (c === n ? 1 : 0) : c, data.single ? (c === n ? 0 : 1) : n - c);
+    }
+
+    const acertos = countCorrect(picks);
+    return (
+      <div className="qcard">
+        <p className="q">
+          <span className={"num" + (checked ? (acertos === n ? " ok" : " no") : "")}>{num}</span>
+          <span className="txt">{data.title}</span>
+          {/* lê todas as afirmações, inclusive as falsas — o áudio não entrega
+              nada aqui, então não precisa do bloqueio de prova que o Order tem */}
+          <button className="listen" onClick={() => speakAll(order.map((i) => data.statements[i].speak ?? "").filter(Boolean))}>🔊 ouvir</button>
+        </p>
+        <div className="tflist">
+          {order.map((idx) => {
+            const st = data.statements[idx];
+            const escolha = picks[idx];
+            return (
+              <div className="tfrow" key={idx}>
+                <span className="st" dangerouslySetInnerHTML={{ __html: st.html }} />
+                {[true, false].map((val) => {
+                  const marcado = escolha === val;
+                  const cls = "opt"
+                    + (!checked && marcado ? " sel" : "")
+                    + (checked && val === st.correct ? " correct" : "")
+                    + (checked && marcado && val !== st.correct ? " wrong" : "")
+                    + (checked && val !== st.correct && !marcado ? " dim" : "");
+                  return (
+                    <button key={String(val)} className={cls} disabled={checked}
+                      onClick={() => setPicks((p) => ({ ...p, [idx]: val }))}>
+                      {val ? "✅ certo" : "❌ errado"}
+                    </button>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+        {mode !== "exam" && !checked && <div className="btnrow"><button className="btn blue" onClick={verify}>✅ Verificar</button></div>}
+        {mode !== "exam" && checked && <p className="fb" style={{ color: acertos === n ? "var(--good)" : "var(--bad)" }}>{acertos} / {n} {acertos === n ? "🎉" : ""}</p>}
+      </div>
+    );
+  }
+);
+
 /* ---------- dispatcher ---------- */
 export const Exercise = forwardRef<ExamHandle, { spec: ExSpec; num: number; onResolve: Resolve; mode?: ExMode }>(
   function Exercise({ spec, num, onResolve, mode = "practice" }, ref) {
@@ -439,6 +522,7 @@ export const Exercise = forwardRef<ExamHandle, { spec: ExSpec; num: number; onRe
       case "ws": return <WordSearch ref={ref} data={data as WSData} num={num} onResolve={onResolve} mode={mode} />;
       case "enum": return <Enumerate ref={ref} data={data as EnumData} num={num} onResolve={onResolve} mode={mode} />;
       case "order": return <Order ref={ref} data={data as OrderData} num={num} onResolve={onResolve} mode={mode} />;
+      case "tf": return <TrueFalse ref={ref} data={data as TFData} num={num} onResolve={onResolve} mode={mode} />;
     }
     // Sem isto, um `kind` novo sem case aqui não renderiza NADA — e, pior, na
     // Prova o ref fica null e o item vale zero calado, sem erro nenhum. Fica

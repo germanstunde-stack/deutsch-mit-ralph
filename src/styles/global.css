@@ -106,6 +106,14 @@ a{color:var(--brand-ink)}
 .opt.correct{border-color:var(--good);background:color-mix(in srgb,var(--good) 22%, var(--surface))} .opt.correct:after{content:" ✓"}
 .opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 16%, var(--surface))}
 .opt.dim{opacity:.55}
+/* verdadeiro/falso em lote: a afirmacao a esquerda, os dois botoes a direita.
+   Reusa .opt inteiro — inclusive .sel/.correct/.wrong/.dim, que ja dao selecao
+   na prova e revelacao na correcao sem uma linha de CSS nova. */
+.tflist{display:grid;gap:8px;margin-top:10px}
+.tfrow{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;border:2.5px solid var(--border);background:var(--surface);border-radius:12px;padding:8px 10px}
+.tfrow .st{font-weight:800;font-size:.92rem;min-width:0;overflow-wrap:anywhere}
+.tfrow .opt{padding:6px 12px;box-shadow:0 3px 0 var(--shadow);font-size:.82rem;white-space:nowrap}
+@media(max-width:560px){.tfrow{grid-template-columns:1fr 1fr;justify-items:stretch}.tfrow .st{grid-column:1 / -1}}
 .fb{font-weight:800;margin-top:8px;min-height:1.1em;font-size:.9rem}
 
 .btn{font-family:"Baloo 2",sans-serif;font-weight:800;font-size:1rem;border:3px solid transparent;cursor:pointer;padding:12px 18px;border-radius:14px;box-shadow:0 5px 0 var(--shadow)}

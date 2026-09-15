@@ -15,6 +15,10 @@ export interface ConnectData { title: string; pairs: ConnectPair[]; single: bool
 export interface WSData { title: string; pairs: { w: string; pt: string }[]; size: number; single: boolean; }
 export interface EnumData { title: string; items: { emo: string; de: string }[]; single: boolean; }
 export interface OrderData { title: string; chunks: string[]; answer: string[]; single: boolean; }
+// Verdadeiro/falso em LOTE — várias afirmações num card, nunca uma por card:
+// duas opções são 50% de chute, cinco em lote são 3%.
+export interface TFStatement { html: string; correct: boolean; speak?: string; }
+export interface TFData { title: string; statements: TFStatement[]; single: boolean; }
 
 export type ExSpec =
   | { kind: "mc"; gen: () => Question }
@@ -23,7 +27,8 @@ export type ExSpec =
   | { kind: "connect"; gen: () => ConnectData }
   | { kind: "ws"; gen: () => WSData }
   | { kind: "enum"; gen: () => EnumData }
-  | { kind: "order"; gen: () => OrderData };
+  | { kind: "order"; gen: () => OrderData }
+  | { kind: "tf"; gen: () => TFData };
 
 // ---- typed / dict ----
 export const gTypeColor = (): TypedQ => { const c = rand(colors); return { promptHTML: `Escreva <span class="big">${c.pt}</span> em alemão:`, answer: c.de, speak: c.de, word: c.de, wordpt: c.pt }; };
@@ -42,6 +47,27 @@ const conOpp = (nn = 5, single = true) => (): ConnectData => { const pick = samp
 const conCognate = (nn = 5, single = true) => (): ConnectData => { const pick = sample(cognates, nn); return { title: "Ligue o cognato ao português:", pairs: pick.map((c) => ({ l: c.de, r: c.pt, key: c.de })), single }; };
 // suíço ↔ alemão: é o contraste que o capítulo ensina, então ele vira exercício
 const conHelv = (nn = 5, single = true) => (): ConnectData => { const pick = sample(helvetisms, nn); return { title: "Ligue a palavra suíça à forma usada na Alemanha:", pairs: pick.map((h) => ({ l: h.ch, r: h.de, key: h.ch })), single }; };
+
+// ---- verdadeiro ou falso (em lote) ----
+// Metade das afirmações vem trocada de propósito: a forma alemã apresentada
+// como se fosse a suíça. É o erro que o aluno de fato comete, então é o que o
+// exercício tem que treinar a reconhecer.
+const tfHelv = (nn = 5, single = true) => (): TFData => {
+  const pick = sample(helvetisms, nn);
+  return {
+    title: "Verdadeiro ou falso: é assim que se diz na Suíça?",
+    single,
+    statements: pick.map((h) => {
+      const verdadeiro = Math.random() < 0.5;
+      const forma = verdadeiro ? (h.art ? `${h.art} ${h.ch}` : h.ch) : h.de;
+      return {
+        html: `Na Suíça, “${h.pt}” é <b>${forma}</b>`,
+        correct: verdadeiro,
+        speak: forma,
+      };
+    }),
+  };
+};
 
 // ---- wordsearch ----
 const wsFrom = (arr: Noun[], nn = 5, single = true) => (): WSData => { const pick = sample(arr, nn).filter((a) => a.de.length <= 8).map((a) => ({ w: a.de, pt: a.pt })); return { title: "Caça-palavras: clique na 1ª e na última letra. Ao achar, ouça + tradução! 🎁", pairs: pick, size: 9, single }; };
@@ -75,7 +101,7 @@ const SPECS: Record<string, ExSpec[]> = {
   // que e o contraste que o capitulo ensina
   helvetismos: [{ kind: "mc", gen: mcGen("helvetismos") }, { kind: "mc", gen: mcGen("helvetismos") },
     { kind: "dict", gen: gDictate(helvetisms.map((h) => [h.ch, h.pt] as [string, string])) },
-    { kind: "connect", gen: conHelv(5) }],
+    { kind: "connect", gen: conHelv(5) }, { kind: "tf", gen: tfHelv(5) }],
   similar: [{ kind: "mc", gen: mcGen("similar") }, { kind: "connect", gen: conCognate(5) }, { kind: "mc", gen: mcGen("similar") }, { kind: "typed", gen: gTypeCognate }, { kind: "dict", gen: gDictate(cognates.map((c) => [c.de, c.pt] as [string, string])) }],
 };
 
@@ -99,6 +125,9 @@ const interactiveGens: Array<() => ExSpec> = [
   () => ({ kind: "enum", gen: enumFrom(animals, 5) }),
   () => ({ kind: "ws", gen: wsFrom(animals, 4) }),
   () => ({ kind: "ws", gen: wsFrom(food, 4) }),
+  // `single: true` é obrigatório aqui: a Prova soma só os acertos e divide por
+  // um total fixo de 50, então um item que valesse 5 pontos estouraria os 100%.
+  () => ({ kind: "tf", gen: tfHelv(5, true) }),
 ];
 
 export function examSpecsA0(): ExSpec[] {
