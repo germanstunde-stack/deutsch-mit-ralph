@@ -14,7 +14,7 @@
 // distância — distância elegia um fragmento colado no rótulo, e Graubünden, o
 // maior cantão do país, saía com 12 pontos. O resultado passou por dez
 // conferências geográficas (GE a oeste, GR a leste, SH ao norte, AR abraçando
-// AI...) e foi visto renderizado. Ver scratchpad/extrai_mapa.py.
+// AI...) e foi visto renderizado. Ver scripts/extrai_mapa.py.
 //
 // viewBox 1000x700, o mesmo do arquivo de origem.
 export const MAP_VIEWBOX = "0 0 1000 700";
