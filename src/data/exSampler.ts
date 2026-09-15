@@ -49,6 +49,15 @@ export function itemKey(kind: ExSpec["kind"], item: ExItem): string {
       const e = item as EnumData;
       return `enum|${clean(e.title)}|${e.items.map((i) => i.de).sort().join(",")}`;
     }
+    default: {
+      // Um `kind` novo sem case aqui devolveria undefined em runtime — e como o
+      // tsconfig não liga noImplicitReturns, isso passa batido na compilação.
+      // Set.has(undefined) faria TODO item parecer repetido e a anti-repetição
+      // desligaria em silêncio. O `never` transforma o esquecimento em erro de
+      // tipo; o throw cobre o caso de um kind vir de dado, não de código.
+      const nunca: never = kind;
+      throw new Error(`itemKey: falta o case do exercício "${String(nunca)}"`);
+    }
   }
 }
 

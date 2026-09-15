@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CardGrid } from "./Cards";
 import { Exercise } from "./Engines";
 import { Flashcards } from "./Flashcards";
@@ -6,6 +6,7 @@ import { Calc, Clock, Calendar } from "./Tools";
 import { ProgressDots } from "./ProgressDots";
 import type { ModuleDef } from "../data/modules";
 import { speak } from "../lib/speech";
+import { sayOnClick } from "../lib/sayDelegation";
 import { useScoredRound } from "../lib/scoring";
 import { saveTopicScore } from "../data/topicScores";
 import { usePlayer } from "../auth/AuthProvider";
@@ -53,10 +54,6 @@ export function TopicView({ id, mod, onResult, next }: { id: string; mod: Module
     setSpecs(mod.exSpecsForTopic(id, lang, TOPIC_SIZE));
     setRound((r) => r + 1);
   }
-  function explClick(e: MouseEvent) {
-    const el = (e.target as HTMLElement).closest("[data-say]");
-    if (el) speak(el.getAttribute("data-say") || "");
-  }
 
   // guarda a pontuação da rodada (20 pts) por capítulo — chave prefixada com o módulo
   // pra não colidir entre A0/A1/etc. Só o último round, sem histórico.
@@ -75,7 +72,7 @@ export function TopicView({ id, mod, onResult, next }: { id: string; mod: Module
         </div>
         <div className="tcol right">
           <div className="subhead">{t("explanation_title")}</div>
-          <div className="expl" onClick={explClick} dangerouslySetInnerHTML={{ __html: mod.explanationsFor(lang)[id] ?? meta.explanationHTML }} />
+          <div className="expl" onClick={sayOnClick} dangerouslySetInnerHTML={{ __html: mod.explanationsFor(lang)[id] ?? meta.explanationHTML }} />
 
           {id === "numeros" && (<>
             <div className="subhead">🧮 Calculadora falante <span style={{ fontWeight: 400, fontSize: ".75rem", color: "var(--ink-soft)" }}>· acerte pra ouvir a conta</span></div>
