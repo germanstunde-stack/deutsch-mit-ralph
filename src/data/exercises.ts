@@ -1,4 +1,4 @@
-import { animals, food, colors, weekdays, opposites, measures, cognates, falseFriends, helvetisms, type Noun } from "./vocab";
+import { animals, food, colors, greet, phrases, weekdays, opposites, measures, cognates, falseFriends, helvetisms, type Noun, type Word } from "./vocab";
 import { numDE } from "../lib/numbers";
 import { rand, sample, shuffle, type Question } from "./generators";
 import { buildRound } from "./exSampler";
@@ -20,6 +20,19 @@ export interface OrderData { title: string; chunks: string[]; answer: string[]; 
 export interface TFStatement { html: string; correct: boolean; speak?: string; }
 export interface TFData { title: string; statements: TFStatement[]; single: boolean; }
 
+// Lacunas com banco de palavras compartilhado.
+//
+// `segments` + `gaps` em vez de uma frase com marcador tipo "Ich ___ aus ___":
+// o marcador seria uma segunda fonte de verdade, podendo discordar de
+// gaps.length, e palavra composta alemã legitimamente tem underscore. Assim
+// vale sempre a invariante segments.length === gaps.length + 1.
+//
+// Várias linhas dividindo UM banco é o formato que interessa (as quatro linhas
+// de uma rima com um banco só). Uma frase só é lines: [uma].
+export interface ClozeGap { answer: string }
+export interface ClozeLine { segments: string[]; gaps: ClozeGap[]; speak?: string; tr?: string }
+export interface ClozeData { title: string; lines: ClozeLine[]; bank: string[]; single: boolean }
+
 export type ExSpec =
   | { kind: "mc"; gen: () => Question }
   | { kind: "typed"; gen: () => TypedQ }
@@ -28,7 +41,8 @@ export type ExSpec =
   | { kind: "ws"; gen: () => WSData }
   | { kind: "enum"; gen: () => EnumData }
   | { kind: "order"; gen: () => OrderData }
-  | { kind: "tf"; gen: () => TFData };
+  | { kind: "tf"; gen: () => TFData }
+  | { kind: "cloze"; gen: () => ClozeData };
 
 // ---- typed / dict ----
 export const gTypeColor = (): TypedQ => { const c = rand(colors); return { promptHTML: `Escreva <span class="big">${c.pt}</span> em alemão:`, answer: c.de, speak: c.de, word: c.de, wordpt: c.pt }; };
@@ -69,6 +83,53 @@ const tfHelv = (nn = 5, single = true) => (): TFData => {
   };
 };
 
+// ---- lacunas com banco de palavras ----
+// Tira uma palavra de conteúdo da frase (>=4 letras, pra não virar caça ao
+// artigo) e devolve os pedaços em volta dela. A pontuação grudada na palavra
+// fica no pedaço, senão a lacuna pediria "es?" em vez de "es".
+function lacunaDe(frase: string, tr: string): ClozeLine | null {
+  const palavras = frase.split(" ");
+  // frase curta demais não sobra contexto: com "Nein" a linha vira uma lacuna
+  // sozinha, que não é leitura, é adivinhação.
+  if (palavras.length < 3) return null;
+  // A lacuna tem que ser um trecho CONTÍGUO de letras dentro da palavra. Tirar
+  // toda pontuação produzia "gehts" a partir de "geht's" — um pedaço que não
+  // existe na frase, então indexOf devolvia -1 e os segmentos em volta saíam
+  // desalinhados ("Wie geht' [gehts] 's?").
+  const cands: { i: number; ini: number; limpo: string }[] = [];
+  palavras.forEach((w, i) => {
+    const m = w.match(/[A-Za-zÄÖÜäöü]{4,}/);
+    if (m && m.index !== undefined) cands.push({ i, ini: m.index, limpo: m[0] });
+  });
+  if (!cands.length) return null;
+  const { i, ini, limpo } = rand(cands);
+  const w = palavras[i];
+  const antes = palavras.slice(0, i).join(" ") + (i > 0 ? " " : "") + w.slice(0, ini);
+  const depois = w.slice(ini + limpo.length) + (i < palavras.length - 1 ? " " + palavras.slice(i + 1).join(" ") : "");
+  return { segments: [antes, depois], gaps: [{ answer: limpo }], speak: frase, tr };
+}
+
+// Três frases dividindo UM banco: é isso que obriga a ler a frase inteira em
+// vez de reconhecer a palavra isolada. Dois distratores entram junto pra o
+// banco não se esgotar em eliminação.
+const clozeFrases = (pool: Word[], nn = 3, single = true) => (): ClozeData => {
+  // sorteia com folga porque lacunaDe recusa frase curta — senão o card sairia
+  // com menos linhas que o pedido
+  const linhas = sample(pool, pool.length).map((p) => lacunaDe(p.de.replace("…", ""), p.pt)).filter((l): l is ClozeLine => l !== null).slice(0, nn);
+  const certas = linhas.map((l) => l.gaps[0].answer);
+  const distratores = sample(pool, pool.length)
+    .flatMap((p) => p.de.split(" "))
+    .map((w) => (w.match(/[A-Za-zÄÖÜäöü]{4,}/) ?? [""])[0])
+    .filter((w, i, arr) => w.length >= 4 && !certas.includes(w) && arr.indexOf(w) === i)
+    .slice(0, 2);
+  return {
+    title: "Complete as frases com as palavras do banco:",
+    lines: linhas,
+    bank: shuffle([...certas, ...distratores]),
+    single,
+  };
+};
+
 // ---- wordsearch ----
 const wsFrom = (arr: Noun[], nn = 5, single = true) => (): WSData => { const pick = sample(arr, nn).filter((a) => a.de.length <= 8).map((a) => ({ w: a.de, pt: a.pt })); return { title: "Caça-palavras: clique na 1ª e na última letra. Ao achar, ouça + tradução! 🎁", pairs: pick, size: 9, single }; };
 
@@ -95,7 +156,8 @@ const SPECS: Record<string, ExSpec[]> = {
   cores: [{ kind: "mc", gen: mcGen("cores") }, { kind: "connect", gen: conColors(5) }, { kind: "typed", gen: gTypeColor }, { kind: "dict", gen: gDictate(dictColors) }],
   animais: [{ kind: "connect", gen: conNouns(animals, 5) }, { kind: "mc", gen: mcGen("animais") }, { kind: "enum", gen: enumFrom(animals, 5) }, { kind: "dict", gen: gDictate(dictAnimals) }],
   comidas: [{ kind: "connect", gen: conNouns(food, 5) }, { kind: "mc", gen: mcGen("comidas") }, { kind: "ws", gen: wsFrom(food, 4) }, { kind: "dict", gen: gDictate(dictFood) }],
-  cumprimentos: [{ kind: "mc", gen: mcGen("cumprimentos") }, { kind: "mc", gen: mcGen("cumprimentos") }],
+  cumprimentos: [{ kind: "mc", gen: mcGen("cumprimentos") }, { kind: "mc", gen: mcGen("cumprimentos") },
+    { kind: "cloze", gen: clozeFrases([...greet, ...phrases], 3) }],
   tamanhos: [{ kind: "connect", gen: conOpp(5) }, { kind: "mc", gen: mcGen("tamanhos") }, { kind: "dict", gen: gDictate(opposites.map((p) => [p.a, p.ptA] as [string, string])) }, { kind: "dict", gen: gDictate(measures.map((m) => [m.de, m.pt] as [string, string])) }],
   // ditado usa a forma SUICA (e a que se escreve); o connect liga suico<->alemao,
   // que e o contraste que o capitulo ensina
@@ -128,6 +190,7 @@ const interactiveGens: Array<() => ExSpec> = [
   // `single: true` é obrigatório aqui: a Prova soma só os acertos e divide por
   // um total fixo de 50, então um item que valesse 5 pontos estouraria os 100%.
   () => ({ kind: "tf", gen: tfHelv(5, true) }),
+  () => ({ kind: "cloze", gen: clozeFrases([...greet, ...phrases], 3, true) }),
 ];
 
 export function examSpecsA0(): ExSpec[] {

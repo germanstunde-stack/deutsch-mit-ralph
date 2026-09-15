@@ -10,6 +10,7 @@
 // Roda sozinho no `npm run dev` (ver src/main.tsx). O guard import.meta.env.DEV
 // faz o bundler descartar tudo isto do build de produção.
 import { MODULES } from "../modules";
+import type { ExSpec, TypedQ, OrderData, ClozeData } from "../exercises";
 import { mundartEntries, mundartIndexSize } from "../mundart";
 import {
   seinSentences, verbSentences, separableSentences, perfektSentences,
@@ -131,6 +132,19 @@ function checkNoEszett(): Violation[] {
 // gabarito. Os geradores usam só "mc", mas isso é convenção; estas regras tornam
 // a garantia mecânica — se alguém um dia puser uma grafia dialetal como resposta
 // de ditado ou de montar-frase, o check quebra.
+// Quais tipos de exercício pedem ESCRITA, e como tirar a resposta de cada um.
+// Antes era um filtro de três kinds lendo `item.answer` no chute — e um tipo
+// novo (o cloze) sairia da varredura em silêncio, afrouxando a garantia sem
+// ninguém notar. Um tipo que não pede escrita simplesmente não entra no mapa.
+const ESCRITOS: Partial<Record<ExSpec["kind"], (it: unknown) => string[]>> = {
+  typed: (it) => [(it as TypedQ).answer],
+  dict: (it) => [(it as TypedQ).answer],
+  order: (it) => [(it as OrderData).answer.join(" ")],
+  // o banco de palavras é tecnicamente múltipla escolha, mas um banco que vai
+  // esvaziando vira ditado por eliminação — então dialeto não entra aqui também
+  cloze: (it) => (it as ClozeData).lines.flatMap((l) => l.gaps.map((g) => g.answer)),
+};
+
 function checkMundart(): Violation[] {
   const out: Violation[] = [];
   const dialetais = new Set(mundartEntries.map((e) => e.mundart.toLowerCase()));
@@ -141,15 +155,15 @@ function checkMundart(): Violation[] {
       // sorteia várias rodadas porque os exercícios são gerados, não fixos
       for (let r = 0; r < 6; r++) {
         mod.exSpecsForTopic(tp.id, "pt", 20).forEach((spec) => {
-          if (spec.kind !== "typed" && spec.kind !== "dict" && spec.kind !== "order") return;
-          let alvo = "";
-          try {
-            const item = spec.gen() as { answer?: string | string[] };
-            alvo = Array.isArray(item.answer) ? item.answer.join(" ") : item.answer ?? "";
-          } catch { return; }
-          if (dialetais.has(alvo.toLowerCase())) {
-            out.push({ rule: "Mundart cobrado escrito", where: `${modId}/${tp.id} (${spec.kind})`, what: alvo });
-          }
+          const extrair = ESCRITOS[spec.kind];
+          if (!extrair) return;
+          let alvos: string[] = [];
+          try { alvos = extrair(spec.gen()); } catch { return; }
+          alvos.forEach((alvo) => {
+            if (dialetais.has(alvo.toLowerCase())) {
+              out.push({ rule: "Mundart cobrado escrito", where: `${modId}/${tp.id} (${spec.kind})`, what: alvo });
+            }
+          });
         });
       }
     });

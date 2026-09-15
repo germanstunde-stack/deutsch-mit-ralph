@@ -167,6 +167,7 @@ const BUCKET: Record<ExSpec["kind"], Bucket> = {
   enum: "interactive",
   order: "interactive",
   tf: "interactive",
+  cloze: "written",
 };
 
 // ---- Prova A1: mesmo formato 50 pts / 3 partes do A0 ----

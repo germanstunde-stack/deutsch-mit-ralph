@@ -5,10 +5,10 @@
 // Aqui o conteúdo é gerado na hora de montar a rodada, guardando o que já saiu
 // e re-sorteando quando colide. O spec devolvido só entrega o item já pronto,
 // então nenhum componente precisa mudar.
-import type { ExSpec, TypedQ, ConnectData, WSData, EnumData, OrderData, TFData } from "./exercises";
+import type { ExSpec, TypedQ, ConnectData, WSData, EnumData, OrderData, TFData, ClozeData } from "./exercises";
 import type { Question } from "./generators";
 
-type ExItem = Question | TypedQ | ConnectData | WSData | EnumData | OrderData | TFData;
+type ExItem = Question | TypedQ | ConnectData | WSData | EnumData | OrderData | TFData | ClozeData;
 
 const MAX_TRIES = 8;
 
@@ -48,6 +48,16 @@ export function itemKey(kind: ExSpec["kind"], item: ExItem): string {
     case "enum": {
       const e = item as EnumData;
       return `enum|${clean(e.title)}|${e.items.map((i) => i.de).sort().join(",")}`;
+    }
+    case "cloze": {
+      // nunca pelo `bank`: ele tem os distratores e é embaralhado. A identidade
+      // é o texto com as lacunas preenchidas. O título fica de fora de
+      // propósito — a mesma frase pedida por dois capítulos É o mesmo exercício.
+      const c = item as ClozeData;
+      const cheio = c.lines.map((ln) =>
+        ln.segments.reduce((acc, seg, i) => acc + seg + (i < ln.gaps.length ? `[${ln.gaps[i].answer}]` : ""), ""),
+      ).join(" / ");
+      return `cloze|${clean(cheio)}`;
     }
     case "tf": {
       // ordenado porque o componente embaralha as afirmações; e o =1/=0 no fim

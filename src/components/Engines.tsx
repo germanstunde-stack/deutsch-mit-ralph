@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { speak, speakAll } from "../lib/speech";
 import { rand, shuffle, type Question } from "../data/generators";
-import { norm, type ExSpec, type TypedQ, type ConnectData, type WSData, type EnumData, type OrderData, type TFData } from "../data/exercises";
+import { norm, type ExSpec, type TypedQ, type ConnectData, type WSData, type EnumData, type OrderData, type TFData, type ClozeData } from "../data/exercises";
 import { MultipleChoice } from "./MultipleChoice";
 import { addHard, easeHard } from "../data/caderno";
 import type { ExMode, ExamHandle } from "./examTypes";
@@ -507,6 +507,119 @@ const TrueFalse = forwardRef<ExamHandle, { data: TFData; num: number; onResolve:
   }
 );
 
+/* ---------- Cloze (lacunas com banco de palavras) ---------- */
+// Dois cliques, igual ao Connect: escolhe a palavra no banco, escolhe a lacuna.
+// Clicar numa lacuna preenchida devolve a palavra pro banco.
+const Cloze = forwardRef<ExamHandle, { data: ClozeData; num: number; onResolve: Resolve; mode?: ExMode }>(
+  function Cloze({ data, num, onResolve, mode = "practice" }, ref) {
+    // as lacunas são indexadas de forma contínua entre as linhas
+    const gaps = useMemo(() => data.lines.flatMap((ln, li) => ln.gaps.map((g, gi) => ({ ...g, li, gi }))), [data.lines]);
+    const n = gaps.length;
+    const [bankOrder] = useState(() => shuffle(data.bank.map((_, i) => i)));
+    const [sel, setSel] = useState<number | null>(null);
+    const [fills, setFills] = useState<Record<number, number>>({}); // lacuna -> índice no banco
+    const [checked, setChecked] = useState(false);
+
+    // por VALOR, não por índice: se o banco tem "in" duas vezes, pôr a outra
+    // cópia na lacuna continua certo. Mesmo espírito do Connect, que compara
+    // pela chave do par e não pela posição.
+    function gapOk(i: number) {
+      const b = fills[i];
+      return b !== undefined && norm(data.bank[b]) === norm(gaps[i].answer);
+    }
+    function countCorrect() { let c = 0; for (let i = 0; i < n; i++) if (gapOk(i)) c++; return c; }
+
+    useImperativeHandle(ref, () => ({
+      getScore: () => {
+        const c = countCorrect();
+        return data.single ? (c === n ? { correct: 1, wrong: 0 } : { correct: 0, wrong: 1 }) : { correct: c, wrong: n - c };
+      },
+      reveal: () => {
+        // preenche o que ficou vazio com a resposta certa (padrão do Connect)
+        setFills((f) => {
+          const novo = { ...f };
+          gaps.forEach((g, i) => {
+            if (novo[i] !== undefined) return;
+            const b = data.bank.findIndex((w, bi) => norm(w) === norm(g.answer) && !Object.values(novo).includes(bi));
+            if (b >= 0) novo[i] = b;
+          });
+          return novo;
+        });
+        setChecked(true);
+      },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }), [fills, data.single, n]);
+
+    useEffect(() => {
+      if (mode !== "practice" || checked) return;
+      if (Object.keys(fills).length !== n) return;
+      if (countCorrect() === n) { setChecked(true); onResolve(data.single ? 1 : n, 0); }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fills]);
+
+    function clickGap(i: number) {
+      if (checked) return;
+      if (fills[i] !== undefined) { setFills((f) => { const x = { ...f }; delete x[i]; return x; }); return; }
+      if (sel === null) return;
+      setFills((f) => ({ ...f, [i]: sel }));
+      setSel(null);
+    }
+    function verify() {
+      if (checked) return;
+      const c = countCorrect();
+      setChecked(true);
+      onResolve(data.single ? (c === n ? 1 : 0) : c, data.single ? (c === n ? 0 : 1) : n - c);
+    }
+
+    const usados = new Set(Object.values(fills));
+    const acertos = countCorrect();
+    let idx = -1; // contador contínuo de lacunas ao percorrer as linhas
+    return (
+      <div className="qcard">
+        <p className="q">
+          <span className={"num" + (checked ? (acertos === n ? " ok" : " no") : "")}>{num}</span>
+          <span className="txt">{data.title}</span>
+          {/* só na prática: na prova o áudio da frase completa entregaria as lacunas */}
+          {mode !== "exam" && data.lines.some((l) => l.speak) && (
+            <button className="listen" onClick={() => speakAll(data.lines.map((l) => l.speak ?? "").filter(Boolean))}>🔊 ouvir</button>
+          )}
+        </p>
+        <div className="clztext">
+          {data.lines.map((ln, li) => (
+            <p className="clzline" key={li}>
+              {ln.segments.map((seg, si) => {
+                const temLacuna = si < ln.gaps.length;
+                if (temLacuna) idx++;
+                const i = idx;
+                return (
+                  <span key={si}>
+                    {seg}
+                    {temLacuna && (
+                      <button className={"gap" + (fills[i] !== undefined ? " filled" : "") + (checked ? (gapOk(i) ? " ok" : " no") : "")}
+                        disabled={checked} onClick={() => clickGap(i)}>
+                        {fills[i] !== undefined ? data.bank[fills[i]] : " "}
+                      </button>
+                    )}
+                  </span>
+                );
+              })}
+              {ln.tr && <span className="clztr">{ln.tr}</span>}
+            </p>
+          ))}
+        </div>
+        <div className="wswords">
+          {bankOrder.map((b) => (
+            <button key={b} className={"ww" + (sel === b ? " pick" : "") + (usados.has(b) ? " used" : "")}
+              disabled={checked || usados.has(b)} onClick={() => setSel(sel === b ? null : b)}>{data.bank[b]}</button>
+          ))}
+        </div>
+        {mode !== "exam" && !checked && <div className="btnrow"><button className="btn blue" onClick={verify}>✅ Verificar</button><button className="btn ghost" onClick={() => { setFills({}); setSel(null); }}>🔁 Refazer</button></div>}
+        {mode !== "exam" && checked && <p className="fb" style={{ color: acertos === n ? "var(--good)" : "var(--bad)" }}>{acertos} / {n} {acertos === n ? "🎉" : ""}</p>}
+      </div>
+    );
+  }
+);
+
 /* ---------- dispatcher ---------- */
 export const Exercise = forwardRef<ExamHandle, { spec: ExSpec; num: number; onResolve: Resolve; mode?: ExMode }>(
   function Exercise({ spec, num, onResolve, mode = "practice" }, ref) {
@@ -523,6 +636,7 @@ export const Exercise = forwardRef<ExamHandle, { spec: ExSpec; num: number; onRe
       case "enum": return <Enumerate ref={ref} data={data as EnumData} num={num} onResolve={onResolve} mode={mode} />;
       case "order": return <Order ref={ref} data={data as OrderData} num={num} onResolve={onResolve} mode={mode} />;
       case "tf": return <TrueFalse ref={ref} data={data as TFData} num={num} onResolve={onResolve} mode={mode} />;
+      case "cloze": return <Cloze ref={ref} data={data as ClozeData} num={num} onResolve={onResolve} mode={mode} />;
     }
     // Sem isto, um `kind` novo sem case aqui não renderiza NADA — e, pior, na
     // Prova o ref fica null e o item vale zero calado, sem erro nenhum. Fica
