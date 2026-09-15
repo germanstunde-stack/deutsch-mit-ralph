@@ -45,8 +45,8 @@ wann warum wo woher wer was wie alt
 // Nomes próprios, cidades e países: o aluno reconhece na hora e eles não entram
 // em card de propósito.
 const PROPRIOS = new Set(`
-Anna Max Ralph Zuerich Zürich Bern Basel Luzern Genf Schweiz
-Berlin Hamburg Muenchen München Wien Brasilien Deutschland Portugal Japan
+Anna Max Ralph Zürich Bern Basel Luzern Genf Schweiz
+Brasilien Deutschland Portugal Japan Italien Frankreich Österreich
 Deutsch Portugiesisch Englisch Spanisch Montag Wochenende Uhr Hause
 `.trim().split(/\s+/));
 

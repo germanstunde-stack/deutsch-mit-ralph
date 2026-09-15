@@ -109,7 +109,7 @@ function buildSeinSentences(): OrderSentence[] {
 
 // escritas à mão (padrões que a fábrica não cobre) + as combinadas
 const seinSentencesHand: OrderSentence[] = [
-  { chunks: ["ist", "er", "aus", "Berlin"], answer: ["er", "ist", "aus", "Berlin"], meaning: { pt: "ele é de Berlim", en: "he is from Berlin" } },
+  { chunks: ["ist", "er", "aus", "Basel"], answer: ["er", "ist", "aus", "Basel"], meaning: { pt: "ele é da Basileia", en: "he is from Basel" } },
   { chunks: ["bin", "ich", "glücklich"], answer: ["ich", "bin", "glücklich"], meaning: { pt: "eu estou feliz", en: "I am happy" } },
   { chunks: ["sind", "wir", "Freunde"], answer: ["wir", "sind", "Freunde"], meaning: { pt: "nós somos amigos", en: "we are friends" } },
   { chunks: ["bist", "du", "müde"], answer: ["du", "bist", "müde"], meaning: { pt: "você está cansado", en: "you are tired" } },
@@ -160,7 +160,7 @@ const verbSentencesHand: OrderSentence[] = [
   { chunks: ["komme", "ich", "aus", "Brasilien"], answer: ["ich", "komme", "aus", "Brasilien"], meaning: { pt: "eu venho do Brasil", en: "I come from Brazil" } },
   { chunks: ["einen", "er", "hat", "Hund"], answer: ["er", "hat", "einen", "Hund"], meaning: { pt: "ele tem um cachorro", en: "he has a dog" } },
   { chunks: ["gut", "sprichst", "du", "Deutsch"], answer: ["du", "sprichst", "gut", "Deutsch"], meaning: { pt: "você fala bem alemão", en: "you speak German well" } },
-  { chunks: ["wohnen", "in", "wir", "Berlin"], answer: ["wir", "wohnen", "in", "Berlin"], meaning: { pt: "nós moramos em Berlim", en: "we live in Berlin" } },
+  { chunks: ["wohnen", "in", "wir", "Zürich"], answer: ["wir", "wohnen", "in", "Zürich"], meaning: { pt: "nós moramos em Zurique", en: "we live in Zürich" } },
   { chunks: ["isst", "sie", "gern", "Pizza"], answer: ["sie", "isst", "gern", "Pizza"], meaning: { pt: "ela come pizza com gosto", en: "she likes eating pizza" } },
   { chunks: ["viel", "arbeitet", "er"], answer: ["er", "arbeitet", "viel"], meaning: { pt: "ele trabalha muito", en: "he works a lot" } },
 ];
@@ -338,7 +338,7 @@ export const articleSentences: OrderSentence[] = mergeSentences(articleSentences
 export interface Preposition { de: string; meaning: Record<Lang, string>; example: string; template: string; exampleMeaning: Record<Lang, string>; category: "lugar" | "tempo" | "modo"; }
 export const prepositions: Preposition[] = [
   { de: "aus", meaning: { pt: "de (origem)", en: "from (origin)" }, example: "Ich komme aus Deutschland.", template: "Ich komme ___ Deutschland.", exampleMeaning: { pt: "eu venho da Alemanha", en: "I come from Germany" }, category: "lugar" },
-  { de: "nach", meaning: { pt: "para (direção, sem artigo)", en: "to (direction, no article)" }, example: "Ich fahre nach Berlin.", template: "Ich fahre ___ Berlin.", exampleMeaning: { pt: "eu vou pra Berlim", en: "I'm going to Berlin" }, category: "lugar" },
+  { de: "nach", meaning: { pt: "para (direção, sem artigo)", en: "to (direction, no article)" }, example: "Ich fahre nach Bern.", template: "Ich fahre ___ Bern.", exampleMeaning: { pt: "eu vou pra Berna", en: "I'm going to Bern" }, category: "lugar" },
   { de: "im", meaning: { pt: "em (lugar parado — in+dem)", en: "in (static place — in+dem)" }, example: "Ich wohne im Haus.", template: "Ich wohne ___ Haus.", exampleMeaning: { pt: "eu moro na casa", en: "I live in the house" }, category: "lugar" },
   { de: "ins", meaning: { pt: "pra dentro de (movimento — in+das)", en: "into (movement — in+das)" }, example: "Wir gehen ins Kino.", template: "Wir gehen ___ Kino.", exampleMeaning: { pt: "nós vamos ao cinema", en: "we're going to the cinema" }, category: "lugar" },
   { de: "auf", meaning: { pt: "em cima de", en: "on top of" }, example: "Das Buch ist auf dem Tisch.", template: "Das Buch ist ___ dem Tisch.", exampleMeaning: { pt: "o livro está em cima da mesa", en: "the book is on the table" }, category: "lugar" },
@@ -425,6 +425,6 @@ const perfektSentencesHand: OrderSentence[] = [
   { chunks: ["gegessen", "wir", "haben", "Pizza"], answer: ["wir", "haben", "Pizza", "gegessen"], meaning: { pt: "nós comemos pizza", en: "we ate pizza" } },
   { chunks: ["ist", "er", "gegangen", "nach Hause"], answer: ["er", "ist", "nach Hause", "gegangen"], meaning: { pt: "ele foi pra casa", en: "he went home" } },
   { chunks: ["hat", "sie", "ein Buch", "gelesen"], answer: ["sie", "hat", "ein Buch", "gelesen"], meaning: { pt: "ela leu um livro", en: "she read a book" } },
-  { chunks: ["bist", "du", "gefahren", "nach Berlin"], answer: ["du", "bist", "nach Berlin", "gefahren"], meaning: { pt: "você viajou pra Berlim", en: "you went to Berlin" } },
+  { chunks: ["bist", "du", "gefahren", "nach Bern"], answer: ["du", "bist", "nach Bern", "gefahren"], meaning: { pt: "você viajou pra Berna", en: "you went to Bern" } },
 ];
 export const perfektSentences: OrderSentence[] = mergeSentences(perfektSentencesHand, buildFrames(perfektFrames));

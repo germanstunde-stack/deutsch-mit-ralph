@@ -20,8 +20,8 @@ const explanationsPT: Record<string, string> = {
     '<tr><td>wir</td><td><span class="de" data-say="sind">sind</span></td></tr>' +
     '<tr><td>ihr</td><td><span class="de" data-say="seid">seid</span></td></tr>' +
     '<tr><td>sie/Sie</td><td><span class="de" data-say="sind">sind</span></td></tr></table>' +
-    '<p><b class="de">sein</b> serve pra: informação pessoal (<span class="de" data-say="Ich bin 22 Jahre alt">Ich bin 22 Jahre alt</span> = tenho 22 anos), estado de espírito (<span class="de" data-say="Ich bin glücklich">Ich bin glücklich</span> = estou feliz) e lugar (<span class="de" data-say="Er ist aus Berlin">Er ist aus Berlin</span> = ele é de Berlim).</p>' +
-    '<h3>📐 Ordem da frase</h3><p>Assim como em português, sujeito vem antes do verbo: <span class="de" data-say="Ich bin müde">Ich bin müde</span>. Mas em alemão o verbo <b>sempre</b> fica na 2ª posição da frase — mesmo quando outra coisa vem primeiro: <span class="de" data-say="Morgen bin ich in Berlin">Morgen bin ich in Berlin</span> (amanhã eu estou em Berlim — repare que "ich" pulou pra depois do verbo).</p>' +
+    '<p><b class="de">sein</b> serve pra: informação pessoal (<span class="de" data-say="Ich bin 22 Jahre alt">Ich bin 22 Jahre alt</span> = tenho 22 anos), estado de espírito (<span class="de" data-say="Ich bin glücklich">Ich bin glücklich</span> = estou feliz) e lugar (<span class="de" data-say="Er ist aus Basel">Er ist aus Basel</span> = ele é da Basileia).</p>' +
+    '<h3>📐 Ordem da frase</h3><p>Assim como em português, sujeito vem antes do verbo: <span class="de" data-say="Ich bin müde">Ich bin müde</span>. Mas em alemão o verbo <b>sempre</b> fica na 2ª posição da frase — mesmo quando outra coisa vem primeiro: <span class="de" data-say="Morgen bin ich in Zürich">Morgen bin ich in Zürich</span> (amanhã eu estou em Zurique — repare que "ich" pulou pra depois do verbo).</p>' +
     '<h3>⚠️ Cuidado</h3><ul>' +
     '<li><b class="de">sie</b> minúsculo = ela OU eles/elas (depende do contexto); <b class="de">Sie</b> maiúsculo = você/vocês formal — só a maiúscula muda tudo, sempre escreva com atenção!</li>' +
     '<li><b class="de">du</b> × <b class="de">ihr</b> × <b class="de">Sie</b>: du = 1 pessoa informal, ihr = várias pessoas informal, Sie = formal (1 ou várias, sempre maiúsculo).</li>' +
@@ -150,7 +150,7 @@ const explanationsPT: Record<string, string> = {
   [CH_PREPOSICOES]:
     '<h3>Preposições de lugar</h3><ul>' +
     '<li><b class="de">aus</b> = origem (de onde): <span class="de" data-say="Ich komme aus Deutschland">Ich komme aus Deutschland.</span></li>' +
-    '<li><b class="de">nach</b> = direção a cidade/país, sem artigo: <span class="de" data-say="Ich fahre nach Berlin">Ich fahre nach Berlin.</span></li>' +
+    '<li><b class="de">nach</b> = direção a cidade/país, sem artigo: <span class="de" data-say="Ich fahre nach Bern">Ich fahre nach Bern.</span></li>' +
     '<li><b class="de">in</b> = "em" — <b>Dativ</b> se for lugar parado (onde?): <span class="de" data-say="im Haus">im Haus</span> (in+dem); <b>Akkusativ</b> se for movimento (pra onde?): <span class="de" data-say="ins Kino">ins Kino</span> (in+das).</li>' +
     '<li><b class="de">auf</b> = em cima de: <span class="de" data-say="auf dem Tisch">auf dem Tisch</span>.</li>' +
     '<li><b class="de">bei</b> / <b class="de">zu</b> = na casa/com alguém: <span class="de" data-say="beim Arzt">beim Arzt</span> (bei+dem, já estou lá), <span class="de" data-say="zum Arzt">zum Arzt</span> (zu+dem, movimento).</li></ul>' +
@@ -205,8 +205,8 @@ const explanationsEN: Record<string, string> = {
     '<tr><td>wir</td><td><span class="de" data-say="sind">sind</span></td></tr>' +
     '<tr><td>ihr</td><td><span class="de" data-say="seid">seid</span></td></tr>' +
     '<tr><td>sie/Sie</td><td><span class="de" data-say="sind">sind</span></td></tr></table>' +
-    '<p><b class="de">sein</b> is used for: personal information (<span class="de" data-say="Ich bin 22 Jahre alt">Ich bin 22 Jahre alt</span> = I am 22 years old), a state of mind (<span class="de" data-say="Ich bin glücklich">Ich bin glücklich</span> = I am happy), and place (<span class="de" data-say="Er ist aus Berlin">Er ist aus Berlin</span> = he is from Berlin).</p>' +
-    '<h3>📐 Sentence order</h3><p>Just like in English, the subject comes before the verb: <span class="de" data-say="Ich bin müde">Ich bin müde</span>. But in German the verb is <b>always</b> in 2nd position — even when something else comes first: <span class="de" data-say="Morgen bin ich in Berlin">Morgen bin ich in Berlin</span> (tomorrow I am in Berlin — notice "ich" jumped after the verb).</p>' +
+    '<p><b class="de">sein</b> is used for: personal information (<span class="de" data-say="Ich bin 22 Jahre alt">Ich bin 22 Jahre alt</span> = I am 22 years old), a state of mind (<span class="de" data-say="Ich bin glücklich">Ich bin glücklich</span> = I am happy), and place (<span class="de" data-say="Er ist aus Basel">Er ist aus Basel</span> = he is from Basel).</p>' +
+    '<h3>📐 Sentence order</h3><p>Just like in English, the subject comes before the verb: <span class="de" data-say="Ich bin müde">Ich bin müde</span>. But in German the verb is <b>always</b> in 2nd position — even when something else comes first: <span class="de" data-say="Morgen bin ich in Zürich">Morgen bin ich in Zürich</span> (tomorrow I am in Zürich — notice "ich" jumped after the verb).</p>' +
     '<h3>⚠️ Watch out</h3><ul>' +
     '<li>lowercase <b class="de">sie</b> = she OR they (context decides); capital <b class="de">Sie</b> = formal you — only the capital letter changes everything, always write it carefully!</li>' +
     '<li><b class="de">du</b> vs <b class="de">ihr</b> vs <b class="de">Sie</b>: du = 1 person informal, ihr = several people informal, Sie = formal (1 or several, always capitalized).</li>' +
@@ -335,7 +335,7 @@ const explanationsEN: Record<string, string> = {
   [CH_PREPOSICOES]:
     '<h3>Prepositions of place</h3><ul>' +
     '<li><b class="de">aus</b> = origin (where from): <span class="de" data-say="Ich komme aus Deutschland">Ich komme aus Deutschland.</span></li>' +
-    '<li><b class="de">nach</b> = direction to a city/country, no article: <span class="de" data-say="Ich fahre nach Berlin">Ich fahre nach Berlin.</span></li>' +
+    '<li><b class="de">nach</b> = direction to a city/country, no article: <span class="de" data-say="Ich fahre nach Bern">Ich fahre nach Bern.</span></li>' +
     '<li><b class="de">in</b> = "in" — <b>Dative</b> for a static place (where?): <span class="de" data-say="im Haus">im Haus</span> (in+dem); <b>Accusative</b> for movement (where to?): <span class="de" data-say="ins Kino">ins Kino</span> (in+das).</li>' +
     '<li><b class="de">auf</b> = on top of: <span class="de" data-say="auf dem Tisch">auf dem Tisch</span>.</li>' +
     '<li><b class="de">bei</b> / <b class="de">zu</b> = at someone’s place: <span class="de" data-say="beim Arzt">beim Arzt</span> (bei+dem, already there), <span class="de" data-say="zum Arzt">zum Arzt</span> (zu+dem, movement).</li></ul>' +

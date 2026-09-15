@@ -38,7 +38,11 @@ export const food: Noun[] = [
   n("das","Gemüse","legumes","🥦"), n("das","Salz","sal","🧂"), n("der","Zucker","açúcar","🍬"),
   n("der","Wein","vinho","🍷"), n("das","Bier","cerveja","🍺"), n("der","Reis","arroz","🍚"),
   n("die","Nudeln","macarrão","🍜"), n("die","Suppe","sopa","🍲"), n("der","Salat","salada","🥗"),
-  n("das","Hähnchen","frango","🍗"), n("die","Kartoffel","batata","🥔"), n("die","Tomate","tomate","🍅"), n("die","Zwiebel","cebola","🧅"),
+  n("das","Poulet","frango","🍗"), n("die","Kartoffel","batata","🥔"), n("die","Tomate","tomate","🍅"), n("die","Zwiebel","cebola","🧅"),
+  // comida do dia a dia suíço — o aluno encontra estas palavras na Migros, na
+  // padaria e no cardápio, e nenhuma delas se diz assim na Alemanha
+  n("das","Gipfeli","croissant","🥐"), n("die","Glace","sorvete","🍦"), n("das","Rüebli","cenoura","🥕"),
+  n("das","Znüni","lanche da manhã","🥪"), n("das","Zvieri","lanche da tarde","🍪"),
 ];
 
 export const measures: Noun[] = [
@@ -92,6 +96,30 @@ export const opposites: Pair[] = [
   { a:"laut", b:"leise", ptA:"alto (som)", ptB:"baixo (som)", emoA:"📢", emoB:"🤫" },
   { a:"gut", b:"schlecht", ptA:"bom", ptB:"ruim", emoA:"😀", emoB:"🙁" },
   { a:"hell", b:"dunkel", ptA:"claro", ptB:"escuro", emoA:"☀️", emoB:"🌑" },
+];
+
+// Helvetismos: palavras do dia a dia em que a Suíça e a Alemanha divergem. O
+// contraste É o conteúdo, então o card mostra as duas — o aluno escreve a suíça
+// e reconhece a alemã, que vai aparecer em livro, legenda e site.
+// Boa parte vem do francês, herança de um país com quatro línguas oficiais.
+export interface Helvetism { art?: Article; ch: string; de: string; pt: string; emo: string; }
+export const helvetisms: Helvetism[] = [
+  { art: "das", ch: "Velo", de: "das Fahrrad", pt: "bicicleta", emo: "🚲" },
+  { art: "das", ch: "Tram", de: "die Strassenbahn", pt: "bonde", emo: "🚋" },
+  { art: "das", ch: "Billett", de: "die Fahrkarte", pt: "bilhete / passagem", emo: "🎫" },
+  { art: "das", ch: "Trottoir", de: "der Gehsteig", pt: "calçada", emo: "🚶" },
+  { art: "das", ch: "Spital", de: "das Krankenhaus", pt: "hospital", emo: "🏥" },
+  { art: "das", ch: "Natel", de: "das Handy", pt: "celular", emo: "📱" },
+  { art: "das", ch: "Poulet", de: "das Hähnchen", pt: "frango", emo: "🍗" },
+  { art: "das", ch: "Rüebli", de: "die Karotte", pt: "cenoura", emo: "🥕" },
+  { art: "die", ch: "Glace", de: "das Eis", pt: "sorvete", emo: "🍦" },
+  { art: "das", ch: "Gipfeli", de: "das Croissant", pt: "croissant", emo: "🥐" },
+  { art: "der", ch: "Coiffeur", de: "der Friseur", pt: "cabeleireiro", emo: "💇" },
+  { art: "der", ch: "Fahrausweis", de: "der Führerschein", pt: "carteira de motorista", emo: "🪪" },
+  { ch: "parkieren", de: "parken", pt: "estacionar", emo: "🅿️" },
+  { ch: "grillieren", de: "grillen", pt: "grelhar", emo: "🔥" },
+  { art: "das", ch: "Morgenessen", de: "das Frühstück", pt: "café da manhã", emo: "🍳" },
+  { art: "das", ch: "Nachtessen", de: "das Abendessen", pt: "jantar", emo: "🍲" },
 ];
 
 export const cognates: Cognate[] = [

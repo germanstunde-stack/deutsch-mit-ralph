@@ -1,4 +1,4 @@
-import { animals, food, colors, weekdays, opposites, measures, cognates, falseFriends, type Noun } from "./vocab";
+import { animals, food, colors, weekdays, opposites, measures, cognates, falseFriends, helvetisms, type Noun } from "./vocab";
 import { numDE } from "../lib/numbers";
 import { rand, sample, shuffle, type Question } from "./generators";
 import { buildRound } from "./exSampler";
@@ -40,6 +40,8 @@ const conNouns = (arr: Noun[], nn = 5, single = true) => (): ConnectData => { co
 const conColors = (nn = 5, single = true) => (): ConnectData => { const pick = sample(colors, nn); return { title: "Ligue a cor ao nome:", pairs: pick.map((c) => ({ l: `<span style="width:26px;height:26px;border-radius:50%;background:${c.hex};${c.hex === "#FFFFFF" ? "box-shadow:inset 0 0 0 2px var(--border);" : ""}display:inline-block"></span>`, r: c.de, key: c.de })), single }; };
 const conOpp = (nn = 5, single = true) => (): ConnectData => { const pick = sample(opposites, nn); return { title: "Ligue cada palavra ao seu oposto:", pairs: pick.map((p) => ({ l: p.a, r: p.b, key: p.a })), single }; };
 const conCognate = (nn = 5, single = true) => (): ConnectData => { const pick = sample(cognates, nn); return { title: "Ligue o cognato ao português:", pairs: pick.map((c) => ({ l: c.de, r: c.pt, key: c.de })), single }; };
+// suíço ↔ alemão: é o contraste que o capítulo ensina, então ele vira exercício
+const conHelv = (nn = 5, single = true) => (): ConnectData => { const pick = sample(helvetisms, nn); return { title: "Ligue a palavra suíça à forma usada na Alemanha:", pairs: pick.map((h) => ({ l: h.ch, r: h.de, key: h.ch })), single }; };
 
 // ---- wordsearch ----
 const wsFrom = (arr: Noun[], nn = 5, single = true) => (): WSData => { const pick = sample(arr, nn).filter((a) => a.de.length <= 8).map((a) => ({ w: a.de, pt: a.pt })); return { title: "Caça-palavras: clique na 1ª e na última letra. Ao achar, ouça + tradução! 🎁", pairs: pick, size: 9, single }; };
@@ -69,6 +71,11 @@ const SPECS: Record<string, ExSpec[]> = {
   comidas: [{ kind: "connect", gen: conNouns(food, 5) }, { kind: "mc", gen: mcGen("comidas") }, { kind: "ws", gen: wsFrom(food, 4) }, { kind: "dict", gen: gDictate(dictFood) }],
   cumprimentos: [{ kind: "mc", gen: mcGen("cumprimentos") }, { kind: "mc", gen: mcGen("cumprimentos") }],
   tamanhos: [{ kind: "connect", gen: conOpp(5) }, { kind: "mc", gen: mcGen("tamanhos") }, { kind: "dict", gen: gDictate(opposites.map((p) => [p.a, p.ptA] as [string, string])) }, { kind: "dict", gen: gDictate(measures.map((m) => [m.de, m.pt] as [string, string])) }],
+  // ditado usa a forma SUICA (e a que se escreve); o connect liga suico<->alemao,
+  // que e o contraste que o capitulo ensina
+  helvetismos: [{ kind: "mc", gen: mcGen("helvetismos") }, { kind: "mc", gen: mcGen("helvetismos") },
+    { kind: "dict", gen: gDictate(helvetisms.map((h) => [h.ch, h.pt] as [string, string])) },
+    { kind: "connect", gen: conHelv(5) }],
   similar: [{ kind: "mc", gen: mcGen("similar") }, { kind: "connect", gen: conCognate(5) }, { kind: "mc", gen: mcGen("similar") }, { kind: "typed", gen: gTypeCognate }, { kind: "dict", gen: gDictate(cognates.map((c) => [c.de, c.pt] as [string, string])) }],
 };
 

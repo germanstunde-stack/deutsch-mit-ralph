@@ -57,28 +57,33 @@ export function mergeSentences(...pools: OrderSentence[][]): OrderSentence[] {
 
 /* ---------------- complementos compartilhados ---------------- */
 
+// "die Schweiz" é um dos poucos países que levam artigo, então vem com 3 chunks
+// onde os irmãos têm 2 — buildFrames aceita comprimento variável.
 const ORIGENS: Complement[] = [
+  { de: ["aus", "der", "Schweiz"], pt: "da Suíça", en: "from Switzerland" },
   { de: ["aus", "Brasilien"], pt: "do Brasil", en: "from Brazil" },
-  { de: ["aus", "Deutschland"], pt: "da Alemanha", en: "from Germany" },
   { de: ["aus", "Portugal"], pt: "de Portugal", en: "from Portugal" },
-  { de: ["aus", "Japan"], pt: "do Japão", en: "from Japan" },
+  { de: ["aus", "Deutschland"], pt: "da Alemanha", en: "from Germany" },
+  { de: ["aus", "Italien"], pt: "da Itália", en: "from Italy" },
 ];
 
 // lugar PARADO (wohnen, sein) — "in" + dativo
 const LUGARES: Complement[] = [
-  { de: ["in", "Berlin"], pt: "em Berlim", en: "in Berlin" },
-  { de: ["in", "Hamburg"], pt: "em Hamburgo", en: "in Hamburg" },
-  { de: ["in", "München"], pt: "em Munique", en: "in Munich" },
-  { de: ["in", "Wien"], pt: "em Viena", en: "in Vienna" },
+  { de: ["in", "Zürich"], pt: "em Zurique", en: "in Zurich" },
+  { de: ["in", "Bern"], pt: "em Berna", en: "in Bern" },
+  { de: ["in", "Basel"], pt: "na Basileia", en: "in Basel" },
+  { de: ["in", "Luzern"], pt: "em Lucerna", en: "in Lucerne" },
+  { de: ["in", "Genf"], pt: "em Genebra", en: "in Geneva" },
 ];
 
 // lugar como DESTINO (fahren, gehen) — cidade pede "nach", não "in".
-// "ich bin in Berlin gefahren" seria "dirigi dentro de Berlim", não "fui pra Berlim".
+// "ich bin in Zürich gefahren" seria "dirigi dentro de Zurique", não "fui pra Zurique".
 const RUMO_CIDADE: Complement[] = [
-  { de: ["nach", "Berlin"], pt: "pra Berlim", en: "to Berlin" },
-  { de: ["nach", "Hamburg"], pt: "pra Hamburgo", en: "to Hamburg" },
-  { de: ["nach", "München"], pt: "pra Munique", en: "to Munich" },
-  { de: ["nach", "Wien"], pt: "pra Viena", en: "to Vienna" },
+  { de: ["nach", "Zürich"], pt: "pra Zurique", en: "to Zurich" },
+  { de: ["nach", "Bern"], pt: "pra Berna", en: "to Bern" },
+  { de: ["nach", "Basel"], pt: "pra Basileia", en: "to Basel" },
+  { de: ["nach", "Luzern"], pt: "pra Lucerna", en: "to Lucerne" },
+  { de: ["nach", "Genf"], pt: "pra Genebra", en: "to Geneva" },
 ];
 
 const OBJETOS: Complement[] = [
@@ -375,16 +380,20 @@ export const articleFrames: Frame[] = [
 
 /* ---------------- cap. 10: preposições ----------------------------------- */
 
+// das Velo e das Tram são as formas suíças (na Alemanha: das Fahrrad, die
+// Strassenbahn). Os dois são neutros, então "mit dem" serve pros dois.
 const TRANSPORTES: Complement[] = [
-  { de: ["mit", "dem", "Bus"], pt: "de ônibus", en: "by bus" },
-  { de: ["mit", "dem", "Auto"], pt: "de carro", en: "by car" },
   { de: ["mit", "dem", "Zug"], pt: "de trem", en: "by train" },
-  { de: ["mit", "dem", "Fahrrad"], pt: "de bicicleta", en: "by bike" },
+  { de: ["mit", "dem", "Tram"], pt: "de bonde", en: "by tram" },
+  { de: ["mit", "dem", "Bus"], pt: "de ônibus", en: "by bus" },
+  { de: ["mit", "dem", "Velo"], pt: "de bicicleta", en: "by bike" },
+  { de: ["mit", "dem", "Auto"], pt: "de carro", en: "by car" },
 ];
 
 const DESTINOS: Complement[] = [
   { de: ["ins", "Kino"], pt: "ao cinema", en: "to the cinema" },
   { de: ["ins", "Restaurant"], pt: "ao restaurante", en: "to the restaurant" },
+  { de: ["ins", "Spital"], pt: "ao hospital", en: "to the hospital" },
   { de: ["zum", "Arzt"], pt: "ao médico", en: "to the doctor" },
   { de: ["nach", "Hause"], pt: "pra casa", en: "home" },
 ];

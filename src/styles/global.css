@@ -62,6 +62,9 @@ a{color:var(--brand-ink)}
 .card:hover{transform:translateY(-3px);box-shadow:0 7px 0 var(--shadow)} .card:active{transform:translateY(2px);box-shadow:0 2px 0 var(--shadow)}
 .card .emo{font-size:1.7rem;line-height:1}
 .card .de{font-family:"Baloo 2",sans-serif;font-weight:700;font-size:.98rem;overflow-wrap:anywhere;max-width:100%;line-height:1.15}
+/* forma usada na Alemanha, quando diverge da suíça — o aluno escreve a suíça,
+   mas precisa reconhecer a alemã em livro e legenda. Apagada de propósito. */
+.card .dede{color:var(--ink-soft);opacity:.72;font-size:.62rem;font-weight:700}
 .card .pt{color:var(--ink-soft);font-weight:700;font-size:.72rem} .card .say{color:var(--brand-ink);font-weight:800;font-size:.66rem}
 .art.der{color:var(--der)} .art.die{color:var(--die)} .art.das{color:var(--das)}
 .legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin:6px 0 12px;font-weight:800;font-size:.8rem}

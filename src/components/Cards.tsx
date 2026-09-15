@@ -1,6 +1,6 @@
 import { speak } from "../lib/speech";
 import { numDE } from "../lib/numbers";
-import { alphabet, animals, food, colors, greet, phrases, weekdays, daywords, months, opposites, measures, cognates, falseFriends, type Noun } from "../data/vocab";
+import { alphabet, animals, food, colors, greet, phrases, weekdays, daywords, months, opposites, measures, cognates, falseFriends, helvetisms, type Noun } from "../data/vocab";
 
 export interface CardItem { emo?: string; deHTML: string; pt?: string; ptBad?: string; speak: string; swatch?: string; say?: string; }
 export interface CardsData { items: CardItem[]; gridClass: string; legend?: boolean; }
@@ -43,6 +43,15 @@ export function cardsForTopicA0(id: string): CardsData {
         ...cognates.map((c) => ({ emo: c.emo, deHTML: c.de, pt: c.pt, speak: c.de })),
         ...falseFriends.map((f) => ({ emo: f.emo, deHTML: f.de, pt: f.real, ptBad: `❌ não “${f.trap}”`, speak: f.de })),
       ] };
+    case "helvetismos":
+      // a forma suíça grande (é a que se escreve), a alemã pequena embaixo — o
+      // mesmo layout de duas linhas do card de falso amigo
+      return { gridClass: "grid", items: helvetisms.map((h) => ({
+        emo: h.emo,
+        deHTML: (h.art ? `<span class="art ${h.art}">${h.art}</span> ` : "") + h.ch + `<br><small class="dede">🇩🇪 ${h.de}</small>`,
+        pt: h.pt,
+        speak: (h.art ? h.art + " " : "") + h.ch,
+      })) };
     default:
       return { gridClass: "grid", items: [] };
   }

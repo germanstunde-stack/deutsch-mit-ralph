@@ -1,4 +1,4 @@
-import { alphabet, animals, food, colors, greet, phrases, weekdays, months, opposites, measures, cognates, falseFriends } from "./vocab";
+import { alphabet, animals, food, colors, greet, phrases, weekdays, months, opposites, measures, cognates, falseFriends, helvetisms } from "./vocab";
 import { numDE } from "../lib/numbers";
 import type { Profile } from "../auth/AuthProvider";
 
@@ -49,6 +49,7 @@ export function deckForTopic(id: string): Flash[] {
     case "cumprimentos": return [...greet.map((g) => ({ de: g.de.replace("…", ""), pt: g.pt, emo: g.emo })), ...phrases.map((p) => ({ de: p.de, pt: p.pt, emo: p.emo }))];
     case "tamanhos": return [...opposites.map((p) => ({ de: p.a + " ↔ " + p.b, pt: p.ptA + " / " + p.ptB, emo: p.emoA + p.emoB })), ...measures.map((m) => ({ de: m.art + " " + m.de, pt: m.pt, emo: m.emo }))];
     case "similar": return [...cognates.map((c) => ({ de: c.de, pt: c.pt, emo: c.emo })), ...falseFriends.map((f) => ({ de: f.de, pt: f.real + " (≠ " + f.trap + ")", emo: f.emo }))];
+    case "helvetismos": return helvetisms.map((h) => ({ de: (h.art ? h.art + " " : "") + h.ch, pt: h.pt + " (na Alemanha: " + h.de + ")", emo: h.emo }));
     default: return [];
   }
 }

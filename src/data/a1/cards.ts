@@ -3,7 +3,7 @@ import type { CardItem } from "../../components/Cards";
 import { CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES, CH_PERGUNTAS, CH_DICIONARIO_VERBOS } from "./exercises";
 import { pronouns, seinForms, seinPredicates, ptForm, regularVerbs, vowelChangeVerbs, habenForms, imperativeVerbs, separableVerbs, perfektHabenRegular, perfektHabenIrregular, perfektSein, modalVerbs, nounsPlural, caseNouns, personalPronouns, indefPronouns, possessives, possessiveNouns, prepositions, questionWords, connectors, type Verb, type PerfektVerb } from "./vocab";
 import { allVerbs } from "./verbDictionary";
-import { nounCards, wordCards, nounsCap1, nounsCap2, nounsCap3, tempoCap3, nounsCap4, nounsCap10, verbsCap5, verbsCap7, verbsCap8, verbsCap11, adjsCap6, adjsCap9 } from "./chapterVocab";
+import { nounCards, wordCards, nounsCap1, nounsCap2, paisCap2, nounsCap3, tempoCap3, nounsCap4, nounsCap10, verbsCap5, verbsCap7, verbsCap8, verbsCap11, adjsCap6, adjsCap9 } from "./chapterVocab";
 
 export interface CardsData { items: CardItem[]; gridClass: string; legend?: boolean; }
 
@@ -104,7 +104,7 @@ export function cardsForTopic(id: string, lang: Lang): CardsData {
     return { gridClass: "grid", items: [...pronounCards(lang), ...seinCards(lang), ...adjCards(lang), ...nounCards(nounsCap1, lang)] };
   }
   if (id === CH_VERBOS_HABEN) {
-    return { gridClass: "grid", items: [...verbCards(regularVerbs, lang), ...habenCards(lang), ...verbCards(vowelChangeVerbs, lang), ...nounCards(nounsCap2, lang)] };
+    return { gridClass: "grid", items: [...verbCards(regularVerbs, lang), ...habenCards(lang), ...verbCards(vowelChangeVerbs, lang), ...nounCards(nounsCap2, lang), ...wordCards(paisCap2, lang)] };
   }
   if (id === CH_IMPERATIVO) {
     return { gridClass: "grid", items: [...imperativeCards(lang), ...separableCards(lang), ...nounCards(nounsCap3, lang), ...wordCards(tempoCap3, lang)] };

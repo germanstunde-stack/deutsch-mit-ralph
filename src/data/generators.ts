@@ -1,4 +1,4 @@
-import { animals, food, colors, greet, phrases, weekdays, months, opposites, measures, cognates, falseFriends, type Noun, type Word } from "./vocab";
+import { animals, food, colors, greet, phrases, weekdays, months, opposites, measures, cognates, falseFriends, helvetisms, type Noun, type Word } from "./vocab";
 import { numDE } from "../lib/numbers";
 
 export interface Option { label: string; correct: boolean; sw?: string; }
@@ -156,6 +156,31 @@ function gNumberNext(): Question {
   });
 }
 
+/* ---- helvetismos: o contraste suíço × alemão É o conteúdo do capítulo ---- */
+
+function gHelvSentido(): Question {
+  const h = rand(helvetisms);
+  const opts = sample(helvetisms, 3, h).map((o) => ({ label: o.pt, correct: false }));
+  opts.push({ label: h.pt, correct: true });
+  return q({ promptHTML: '🇨🇭 O que significa <span class="big">' + h.ch + "</span>?", speak: (h.art ? h.art + " " : "") + h.ch, options: opts, word: h.ch, wordpt: h.pt });
+}
+function gHelvDaqui(): Question {
+  // dá a forma alemã e pede a suíça: é o sentido em que o aluno precisa produzir
+  const h = rand(helvetisms);
+  const opts = sample(helvetisms, 3, h).map((o) => ({ label: o.ch, correct: false }));
+  opts.push({ label: h.ch, correct: true });
+  return q({ promptHTML: 'Nos livros de alemão é <span class="big">' + h.de + "</span> (" + h.pt + "). Como se diz na Suíça?", speak: (h.art ? h.art + " " : "") + h.ch, options: opts, word: h.ch, wordpt: h.pt });
+}
+function gHelvArtigo(): Question {
+  const pool = helvetisms.filter((h) => h.art);
+  const h = rand(pool);
+  return q({
+    promptHTML: 'Qual artigo vai com <span class="big">' + h.ch + "</span> (" + h.pt + ")?",
+    speak: h.art + " " + h.ch, word: h.ch, wordpt: h.pt,
+    options: [{ label: "der", correct: h.art === "der" }, { label: "die", correct: h.art === "die" }, { label: "das", correct: h.art === "das" }],
+  });
+}
+
 type Gen = () => Question;
 const BANK: Record<string, Gen[]> = {
   alfabeto: [gMissing, gMissing, () => gPickName(animals)],
@@ -167,6 +192,7 @@ const BANK: Record<string, Gen[]> = {
   cumprimentos: [() => gWord(greet), () => gWord(phrases)],
   tamanhos: [gOpposite, gMeasure],
   similar: [gCognate, gFalse, gFalse],
+  helvetismos: [gHelvSentido, gHelvDaqui, gHelvArtigo],
 };
 
 export function questionsForTopic(id: string, count = 8): Question[] {
@@ -190,5 +216,6 @@ export function allMcGens(): Gen[] {
     // a prova do A0 nao tinha nenhuma pergunta de numero, embora o modulo tenha
     // um capitulo so pra isso
     gNumberMeaning, gNumberWrite, gNumberNext,
+    gHelvSentido, gHelvDaqui, gHelvArtigo,
   ];
 }

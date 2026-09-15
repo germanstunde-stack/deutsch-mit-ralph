@@ -21,4 +21,6 @@ export const topics: TopicMeta[] = [
     explanationHTML: "<p>Opostos em par (gross/klein…) e medidas (kg, g, m, km, l, ml).</p>" },
   { id: "similar", icon: "🤝", name: "Similares", cardTitle: "📖 Cognatos & falsos amigos",
     explanationHTML: "<p>Milhares de palavras quase iguais! Padrões: -tion→-ção, -tät→-dade, -ie→-ia. Mas cuidado com os falsos amigos (Chef = chefe, não cozinheiro).</p>" },
+  { id: "helvetismos", icon: "🇨🇭", name: "Suíço × alemão", cardTitle: "📖 Helvetismen — o alemão daqui",
+    explanationHTML: "<p>O que se escreve na Suíça nem sempre é o que os livros de alemão ensinam. Estas são as palavras do dia a dia que <b>divergem</b> — e é a forma suíça que você vai ver na Migros, no cartaz da SBB e no formulário.</p><p class='chbox'>🇨🇭 Muitas vêm do <b>francês</b> (Billett, Trottoir, Coiffeur, Glace) — herança de um país com quatro línguas oficiais. A forma alemã aparece em cinza no card: você não escreve, mas precisa reconhecer.</p>" },
 ];

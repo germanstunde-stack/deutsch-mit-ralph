@@ -11,7 +11,10 @@
 import type { Lang } from "../../i18n/types";
 import type { CardItem } from "../../components/Cards";
 
-interface Noun { art: "der" | "die" | "das"; de: string; plural?: string; pt: string; en: string }
+// `deDE` = como a mesma coisa se chama na Alemanha. Só aparece quando as duas
+// formas divergem, e entra no card como contraste — o aluno escreve a suíça,
+// mas vai ler a alemã em livro, legenda e site.
+interface Noun { art: "der" | "die" | "das"; de: string; plural?: string; pt: string; en: string; deDE?: string }
 interface Word { de: string; pt: string; en: string; hint?: string }
 
 /* ---- substantivos ---- */
@@ -50,10 +53,18 @@ export const nounsCap4: Noun[] = [
 
 export const nounsCap10: Noun[] = [
   { art: "der", de: "Zug", plural: "Züge", pt: "trem", en: "train" },
-  { art: "das", de: "Fahrrad", plural: "Fahrräder", pt: "bicicleta", en: "bike" },
+  { art: "das", de: "Tram", plural: "Trams", pt: "bonde", en: "tram", deDE: "die Strassenbahn" },
+  { art: "das", de: "Velo", plural: "Velos", pt: "bicicleta", en: "bike", deDE: "das Fahrrad" },
+  { art: "das", de: "Spital", plural: "Spitäler", pt: "hospital", en: "hospital", deDE: "das Krankenhaus" },
   { art: "das", de: "Restaurant", plural: "Restaurants", pt: "restaurante", en: "restaurant" },
   { art: "das", de: "Kino", plural: "Kinos", pt: "cinema", en: "cinema" },
   { art: "der", de: "Arzt", plural: "Ärzte", pt: "médico", en: "doctor" },
+];
+
+// "die Schweiz" é um dos poucos países com artigo — por isso ganha card próprio,
+// com as preposições que o aluno vai precisar.
+export const paisCap2: Word[] = [
+  { de: "die Schweiz", pt: "a Suíça", en: "Switzerland", hint: "ich komme aus der Schweiz · ich wohne in der Schweiz" },
 ];
 
 /* ---- verbos ---- */
@@ -107,7 +118,9 @@ export const adjsCap9: Word[] = [
 
 export function nounCards(pool: Noun[], lang: Lang): CardItem[] {
   return pool.map((n) => ({
-    deHTML: `<span class="art ${n.art}">${n.art}</span> ${n.de}${n.plural ? `<br><small>die ${n.plural}</small>` : ""}`,
+    deHTML: `<span class="art ${n.art}">${n.art}</span> ${n.de}`
+      + (n.plural ? `<br><small>die ${n.plural}</small>` : "")
+      + (n.deDE ? `<br><small class="dede">🇩🇪 ${n.deDE}</small>` : ""),
     pt: lang === "pt" ? n.pt : n.en,
     speak: `${n.art} ${n.de}`,
   }));
