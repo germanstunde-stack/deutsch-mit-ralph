@@ -2,6 +2,8 @@ import { animals, food, colors, greet, phrases, weekdays, months, opposites, mea
 import { numDE } from "../lib/numbers";
 import { rand, sample, shuffle, type Question } from "./generators";
 import { buildRound } from "./exSampler";
+import { cantons } from "./ch/cantons";
+import { CANTON_CENTERS } from "./ch/cantonPaths";
 
 export function norm(s: string): string {
   return (s || "").toString().toLowerCase().trim()
@@ -56,6 +58,19 @@ export interface ChronoEvent {
 }
 export interface ChronoData { title: string; events: ChronoEvent[]; single: boolean }
 
+// Clicar o cantão no mapa. Um clique = um ponto, então `single` é sempre true —
+// existe só pra honrar a convenção das outras interfaces.
+export interface MapData {
+  title: string;
+  /** código de duas letras, ex. "ZH" */
+  answer: string;
+  /** subconjunto clicável; sempre contém a resposta */
+  choices: string[];
+  /** nome alemão do cantão, falado só depois de acertar */
+  speak?: string;
+  single: boolean;
+}
+
 export type ExSpec =
   | { kind: "mc"; gen: () => Question }
   | { kind: "typed"; gen: () => TypedQ }
@@ -66,7 +81,8 @@ export type ExSpec =
   | { kind: "order"; gen: () => OrderData }
   | { kind: "tf"; gen: () => TFData }
   | { kind: "cloze"; gen: () => ClozeData }
-  | { kind: "chrono"; gen: () => ChronoData };
+  | { kind: "chrono"; gen: () => ChronoData }
+  | { kind: "map"; gen: () => MapData };
 
 // ---- typed / dict ----
 export const gTypeColor = (): TypedQ => { const c = rand(colors); return { promptHTML: `Escreva <span class="big">${c.pt}</span> em alemão:`, answer: c.de, speak: c.de, word: c.de, wordpt: c.pt }; };
@@ -170,6 +186,28 @@ const chronoMeses = (nn = 5, single = true) => (): ChronoData => {
   };
 };
 
+// ---- clique no mapa ----
+// Os distratores são os cantões VIZINHOS em posição, não sorteados do país
+// inteiro: acertar "qual é Nidwalden" entre Genf, Tessin e Thurgau não prova
+// nada, porque dá pra eliminar pela metade do mapa.
+const mapCantao = (nn = 4) => (): MapData => {
+  const alvo = rand(cantons);
+  const [ax, ay] = CANTON_CENTERS[alvo.code];
+  const perto = cantons
+    .filter((c) => c.code !== alvo.code)
+    .map((c) => ({ c, d: Math.hypot(CANTON_CENTERS[c.code][0] - ax, CANTON_CENTERS[c.code][1] - ay) }))
+    .sort((a, b) => a.d - b.d)
+    .slice(0, 6)
+    .map((x) => x.c);
+  return {
+    title: `Clique no cantão de ${alvo.de}${alvo.pt ? " (" + alvo.pt + ")" : ""}:`,
+    answer: alvo.code,
+    choices: shuffle([alvo.code, ...sample(perto, nn - 1).map((c) => c.code)]),
+    speak: alvo.de,
+    single: true,
+  };
+};
+
 // ---- wordsearch ----
 const wsFrom = (arr: Noun[], nn = 5, single = true) => (): WSData => { const pick = sample(arr, nn).filter((a) => a.de.length <= 8).map((a) => ({ w: a.de, pt: a.pt })); return { title: "Caça-palavras: clique na 1ª e na última letra. Ao achar, ouça + tradução! 🎁", pairs: pick, size: 9, single }; };
 
@@ -205,7 +243,7 @@ const SPECS: Record<string, ExSpec[]> = {
   helvetismos: [{ kind: "mc", gen: mcGen("helvetismos") }, { kind: "mc", gen: mcGen("helvetismos") },
     { kind: "dict", gen: gDictate(helvetisms.map((h) => [h.ch, h.pt] as [string, string])) },
     { kind: "connect", gen: conHelv(5) }, { kind: "tf", gen: tfHelv(5) }],
-  similar: [{ kind: "mc", gen: mcGen("similar") }, { kind: "connect", gen: conCognate(5) }, { kind: "mc", gen: mcGen("similar") }, { kind: "typed", gen: gTypeCognate }, { kind: "dict", gen: gDictate(cognates.map((c) => [c.de, c.pt] as [string, string])) }],
+  similar: [{ kind: "map", gen: mapCantao(4) }, { kind: "mc", gen: mcGen("similar") }, { kind: "connect", gen: conCognate(5) }, { kind: "mc", gen: mcGen("similar") }, { kind: "typed", gen: gTypeCognate }, { kind: "dict", gen: gDictate(cognates.map((c) => [c.de, c.pt] as [string, string])) }],
 };
 
 export function exSpecsForTopic(id: string, count = 20): ExSpec[] {

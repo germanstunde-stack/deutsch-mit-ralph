@@ -5,10 +5,10 @@
 // Aqui o conteúdo é gerado na hora de montar a rodada, guardando o que já saiu
 // e re-sorteando quando colide. O spec devolvido só entrega o item já pronto,
 // então nenhum componente precisa mudar.
-import type { ExSpec, TypedQ, ConnectData, WSData, EnumData, OrderData, TFData, ClozeData, ChronoData } from "./exercises";
+import type { ExSpec, TypedQ, ConnectData, WSData, EnumData, OrderData, TFData, ClozeData, ChronoData, MapData } from "./exercises";
 import type { Question } from "./generators";
 
-type ExItem = Question | TypedQ | ConnectData | WSData | EnumData | OrderData | TFData | ClozeData | ChronoData;
+type ExItem = Question | TypedQ | ConnectData | WSData | EnumData | OrderData | TFData | ClozeData | ChronoData | MapData;
 
 const MAX_TRIES = 8;
 
@@ -64,6 +64,11 @@ export function itemKey(kind: ExSpec["kind"], item: ExItem): string {
       // rótulo (é traduzível, então a versão em inglês pareceria item novo).
       const c = item as ChronoData;
       return `chrono|${c.events.map((e) => e.id).sort().join(",")}`;
+    }
+    case "map": {
+      // só a resposta: os distratores clicáveis mudam, mas "onde fica Uri" é
+      // sempre a mesma pergunta
+      return `map|${(item as MapData).answer}`;
     }
     case "tf": {
       // ordenado porque o componente embaralha as afirmações; e o =1/=0 no fim

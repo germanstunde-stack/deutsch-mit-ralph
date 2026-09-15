@@ -171,6 +171,7 @@ const BUCKET: Record<ExSpec["kind"], Bucket> = {
   // chrono e map só existem nas seções de Geografia e História, que não têm
   // Prova — "off" é o que os mantém fora do exame por tipo, sem lista de exceção
   chrono: "off",
+  map: "off",
 };
 
 // ---- Prova A1: mesmo formato 50 pts / 3 partes do A0 ----

@@ -126,6 +126,18 @@ a{color:var(--brand-ink)}
    linha horizontal que quebra e ambiguo (a vaga 4 e a proxima depois da 3 ou o
    comeco da 2a linha?). O conector entre duas vagas E a unidade de nota — verde
    = as duas na ordem certa. .n reusa o circulo numerado do enumerar. */
+/* mapa dos cantoes. Todas as cores vem de token, entao o modo escuro sai de
+   graca. Vermelho e EXCLUSIVO de resposta errada: --ch (o vermelho suico) nao
+   entra na superficie de resposta, senao selecionar leria como errar. */
+/* o card ja e --surface2, entao o cantao precisa ser --surface pra silhueta
+   aparecer — com os dois iguais o mapa some dentro do card. */
+.chmap{width:100%;max-width:560px;margin:12px auto 6px;display:block;background:color-mix(in srgb,var(--brand) 7%,var(--surface2));border-radius:14px;border:2px solid var(--border)}
+.chmap .cn{fill:var(--surface);stroke:var(--ink-soft);stroke-width:1.1;stroke-linejoin:round;transition:fill .12s}
+.chmap .cn.live{cursor:pointer}
+.chmap .cn.live:hover,.chmap .cn.live:focus-visible{fill:color-mix(in srgb,var(--brand) 16%,var(--surface2));outline:none}
+.chmap .cn.sel{fill:var(--brand)} .chmap .cn.ok{fill:var(--good)} .chmap .cn.no{fill:var(--bad)}
+.chmap .cl{font-family:"Baloo 2",sans-serif;font-size:15px;font-weight:800;fill:var(--ink-soft);pointer-events:none;text-anchor:middle}
+.chmap .cl.on{fill:#fff}
 .chrono{margin-top:10px}
 .chrono .slot{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;width:100%;min-height:50px;text-align:left;border:2.5px dashed var(--border);border-radius:14px;background:var(--surface);color:var(--ink);font:inherit;font-weight:800;padding:8px 11px;cursor:pointer}
 .chrono .slot.filled{border-style:solid;box-shadow:0 3px 0 var(--shadow)}

@@ -1,8 +1,9 @@
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { speak, speakAll } from "../lib/speech";
 import { rand, shuffle, type Question } from "../data/generators";
-import { norm, type ExSpec, type TypedQ, type ConnectData, type WSData, type EnumData, type OrderData, type TFData, type ClozeData, type ChronoData } from "../data/exercises";
+import { norm, type ExSpec, type TypedQ, type ConnectData, type WSData, type EnumData, type OrderData, type TFData, type ClozeData, type ChronoData, type MapData } from "../data/exercises";
 import { MultipleChoice } from "./MultipleChoice";
+import { SwissMap } from "./SwissMap";
 import { addHard, easeHard } from "../data/caderno";
 import type { ExMode, ExamHandle } from "./examTypes";
 
@@ -743,6 +744,63 @@ const Chrono = forwardRef<ExamHandle, { data: ChronoData; num: number; onResolve
   }
 );
 
+/* ---------- MapPick (clique no cantão) ---------- */
+// Um clique no mapa É uma múltipla escolha com afordância espacial, então o
+// comportamento copia o MultipleChoice: na prática o primeiro erro conta e
+// deixa tentar de novo; na prova só guarda a marcação.
+const MapPick = forwardRef<ExamHandle, { data: MapData; num: number; onResolve: Resolve; mode?: ExMode }>(
+  function MapPick({ data, num, onResolve, mode = "practice" }, ref) {
+    const [picked, setPicked] = useState<string | null>(null);
+    const [answered, setAnswered] = useState(false);
+    const [missed, setMissed] = useState(false);
+    const [revealed, setRevealed] = useState(false);
+    const enabled = useMemo(() => new Set(data.choices), [data.choices]);
+
+    useImperativeHandle(ref, () => ({
+      getScore: () => (picked === data.answer ? { correct: 1, wrong: 0 } : { correct: 0, wrong: 1 }),
+      reveal: () => setRevealed(true),
+    }), [picked, data.answer]);
+
+    function pick(code: string) {
+      if (mode === "exam") { if (!revealed) setPicked(code); return; }
+      if (answered) return;
+      setPicked(code);
+      if (code === data.answer) {
+        setAnswered(true);
+        if (!missed) easeHard(data.answer);
+        if (data.speak) speak(data.speak);
+        onResolve(missed ? 0 : 1, 0);
+      } else if (!missed) {
+        setMissed(true);
+        onResolve(0, 1);
+        addHard(data.answer, data.title);
+      }
+    }
+
+    const mostrar = mode === "exam" ? revealed : answered;
+    const certo = mostrar ? data.answer : null;
+    const errado = picked && picked !== data.answer ? picked : null;
+    return (
+      <div className="qcard">
+        <p className="q">
+          <span className={"num" + (answered ? " ok" : missed ? " no" : "")}>{num}</span>
+          <span className="txt">{data.title}</span>
+        </p>
+        <SwissMap selected={picked} correct={certo} wrong={errado} enabled={enabled} onPick={pick} labels={mostrar} />
+        {/* Sem isto o exercício é intocável num telefone de 320px, onde 26
+            contornos ficam menores que o dedo — e ele ainda salva a questão se
+            o mapa não renderizar, degradando pra múltipla escolha comum. */}
+        <div className="opts">
+          {data.choices.map((c) => (
+            <button key={c} className={"opt" + (picked === c && !mostrar ? " sel" : "") + (mostrar && c === data.answer ? " correct" : "") + (errado === c ? " wrong" : "")}
+              disabled={mostrar} onClick={() => pick(c)}>{c}</button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+);
+
 /* ---------- dispatcher ---------- */
 export const Exercise = forwardRef<ExamHandle, { spec: ExSpec; num: number; onResolve: Resolve; mode?: ExMode }>(
   function Exercise({ spec, num, onResolve, mode = "practice" }, ref) {
@@ -761,6 +819,7 @@ export const Exercise = forwardRef<ExamHandle, { spec: ExSpec; num: number; onRe
       case "tf": return <TrueFalse ref={ref} data={data as TFData} num={num} onResolve={onResolve} mode={mode} />;
       case "cloze": return <Cloze ref={ref} data={data as ClozeData} num={num} onResolve={onResolve} mode={mode} />;
       case "chrono": return <Chrono ref={ref} data={data as ChronoData} num={num} onResolve={onResolve} mode={mode} />;
+      case "map": return <MapPick ref={ref} data={data as MapData} num={num} onResolve={onResolve} mode={mode} />;
     }
     // Sem isto, um `kind` novo sem case aqui não renderiza NADA — e, pior, na
     // Prova o ref fica null e o item vale zero calado, sem erro nenhum. Fica
