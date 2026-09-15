@@ -1,5 +1,6 @@
 import { animals, food, colors, greet, phrases, weekdays, months, opposites, measures, cognates, falseFriends, helvetisms, type Noun, type Word } from "./vocab";
 import { numDE } from "../lib/numbers";
+import { mundartEntries } from "./mundart";
 
 export interface Option { label: string; correct: boolean; sw?: string; }
 // speak = o alemão do enunciado. speakFull = versão mais completa tocada só na
@@ -181,6 +182,44 @@ function gHelvArtigo(): Question {
   });
 }
 
+/* ---- Mundart: só RECONHECIMENTO, nunca produção escrita ----
+   Todos são "mc", então não existe campo onde digitar — a regra "dialeto não se
+   escreve" vale por construção. E `word` guarda sempre o Hochdeutsch: se
+   guardasse a grafia dialetal, o Caderno passaria a treinar uma escrita que não
+   tem forma certa. */
+
+function gMundartSentido(): Question {
+  const e = rand(mundartEntries);
+  const opts = sample(mundartEntries, 3, e).map((o) => ({ label: o.hoch, correct: false }));
+  opts.push({ label: e.hoch, correct: true });
+  return q({
+    promptHTML: '🗣️ Você ouve <span class="big">' + e.mundart + "</span> na rua. Em Hochdeutsch é?",
+    meaning: e.hint, speak: e.say ?? e.mundart,
+    options: opts, word: e.hoch, wordpt: e.hint ?? "",
+  });
+}
+function gMundartEscuta(): Question {
+  // sem texto no enunciado: o aluno só tem o áudio, que é a situação real
+  const e = rand(mundartEntries);
+  const opts = sample(mundartEntries, 3, e).map((o) => ({ label: o.hoch, correct: false }));
+  opts.push({ label: e.hoch, correct: true });
+  return q({
+    promptHTML: '🔊 <b>Dialeto</b> — ouça e escolha o que foi dito:',
+    speak: e.say ?? e.mundart,
+    options: opts, word: e.hoch, wordpt: e.hint ?? "",
+  });
+}
+function gMundartQualOuve(): Question {
+  const e = rand(mundartEntries);
+  const opts = sample(mundartEntries, 3, e).map((o) => ({ label: o.mundart, correct: false }));
+  opts.push({ label: e.mundart, correct: true });
+  return q({
+    promptHTML: 'Escrito é <span class="big">' + e.hoch + "</span>. O que você ouve na Suíça?",
+    speak: e.say ?? e.mundart,
+    options: opts, word: e.hoch, wordpt: e.hint ?? "",
+  });
+}
+
 type Gen = () => Question;
 const BANK: Record<string, Gen[]> = {
   alfabeto: [gMissing, gMissing, () => gPickName(animals)],
@@ -189,10 +228,10 @@ const BANK: Record<string, Gen[]> = {
   cores: [gColorSwatch, gColorMeaning],
   animais: [() => gPickName(animals), () => gArticle(animals), () => gMeaningNoun(animals)],
   comidas: [() => gPickName(food), () => gArticle(food), () => gMeaningNoun(food)],
-  cumprimentos: [() => gWord(greet), () => gWord(phrases)],
+  cumprimentos: [() => gWord(greet), () => gWord(phrases), gMundartSentido, gMundartEscuta],
   tamanhos: [gOpposite, gMeasure],
   similar: [gCognate, gFalse, gFalse],
-  helvetismos: [gHelvSentido, gHelvDaqui, gHelvArtigo],
+  helvetismos: [gHelvSentido, gHelvDaqui, gHelvArtigo, gMundartQualOuve],
 };
 
 export function questionsForTopic(id: string, count = 8): Question[] {
@@ -217,5 +256,6 @@ export function allMcGens(): Gen[] {
     // um capitulo so pra isso
     gNumberMeaning, gNumberWrite, gNumberNext,
     gHelvSentido, gHelvDaqui, gHelvArtigo,
+    gMundartSentido, gMundartEscuta, gMundartQualOuve,
   ];
 }

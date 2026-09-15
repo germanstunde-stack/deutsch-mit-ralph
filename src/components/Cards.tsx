@@ -1,8 +1,11 @@
 import { speak } from "../lib/speech";
+import { mundartFor } from "../data/mundart";
 import { numDE } from "../lib/numbers";
 import { alphabet, animals, food, colors, greet, phrases, weekdays, daywords, months, opposites, measures, cognates, falseFriends, helvetisms, type Noun } from "../data/vocab";
 
-export interface CardItem { emo?: string; deHTML: string; pt?: string; ptBad?: string; speak: string; swatch?: string; say?: string; }
+// `mundartKey` sobrescreve a busca no dicionário de dialeto (o padrão é usar o
+// próprio `speak`, que já é a forma falada limpa); `null` desliga o badge.
+export interface CardItem { emo?: string; deHTML: string; pt?: string; ptBad?: string; speak: string; swatch?: string; say?: string; mundartKey?: string | null; }
 export interface CardsData { items: CardItem[]; gridClass: string; legend?: boolean; }
 
 function nounCard(a: Noun): CardItem {
@@ -68,19 +71,34 @@ export function CardGrid({ items, gridClass, legend }: CardsData) {
         </div>
       )}
       <div className={gridClass}>
-        {items.map((it, i) => (
-          <button key={i} className="card" onClick={() => speak(it.speak)}>
-            {it.swatch ? (
-              <span className="emo" style={{ width: 28, height: 28, borderRadius: "50%", background: it.swatch, boxShadow: it.swatch === "#FFFFFF" ? "inset 0 0 0 2px var(--border)" : undefined }} />
-            ) : it.emo ? (
-              <span className="emo">{it.emo}</span>
-            ) : null}
-            <span className="de" dangerouslySetInnerHTML={{ __html: it.deHTML }} />
-            {it.pt && <span className="pt" style={it.ptBad ? { color: "var(--good)", fontWeight: 800 } : undefined}>{it.pt}</span>}
-            {it.ptBad && <span className="pt" style={{ color: "var(--bad)" }}>{it.ptBad}</span>}
-            <span className="say">{it.say ?? "🔊"}</span>
-          </button>
-        ))}
+        {items.map((it, i) => {
+          const m = it.mundartKey === null ? undefined : mundartFor(it.mundartKey ?? it.speak);
+          return (
+            <button key={i} className="card" onClick={(e) => {
+              // o badge não pode ser um <button> dentro do <button> do card, então
+              // um clique só decide pelo alvo: dentro do badge fala o dialeto.
+              const noBadge = (e.target as HTMLElement).closest(".mundart");
+              if (noBadge && m) speak(m.say ?? m.mundart, "gsw");
+              else speak(it.speak);
+            }}>
+              {it.swatch ? (
+                <span className="emo" style={{ width: 28, height: 28, borderRadius: "50%", background: it.swatch, boxShadow: it.swatch === "#FFFFFF" ? "inset 0 0 0 2px var(--border)" : undefined }} />
+              ) : it.emo ? (
+                <span className="emo">{it.emo}</span>
+              ) : null}
+              <span className="de" dangerouslySetInnerHTML={{ __html: it.deHTML }} />
+              {it.pt && <span className="pt" style={it.ptBad ? { color: "var(--good)", fontWeight: 800 } : undefined}>{it.pt}</span>}
+              {it.ptBad && <span className="pt" style={{ color: "var(--bad)" }}>{it.ptBad}</span>}
+              <span className="say">{it.say ?? "🔊"}</span>
+              {m && (
+                <span className="mundart" title={[m.hint, m.regiao].filter(Boolean).join(" · ")}>
+                  <small>você ouve</small>
+                  <b>{m.mundart} 🔊</b>
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
     </>
   );

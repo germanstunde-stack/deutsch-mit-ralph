@@ -10,6 +10,7 @@
 // Roda sozinho no `npm run dev` (ver src/main.tsx). O guard import.meta.env.DEV
 // faz o bundler descartar tudo isto do build de produção.
 import { MODULES } from "../modules";
+import { mundartEntries, mundartIndexSize } from "../mundart";
 import {
   seinSentences, verbSentences, separableSentences, perfektSentences,
   modalSentences, pluralSentences, caseSentences, pronounSentences,
@@ -124,10 +125,46 @@ function checkNoEszett(): Violation[] {
   return out;
 }
 
+/* ------------------------------------ regras 3-5: Mundart nunca é cobrado escrito */
+
+// Dialeto suíço não tem ortografia oficial, então cobrar digitação seria inventar
+// gabarito. Os geradores usam só "mc", mas isso é convenção; estas regras tornam
+// a garantia mecânica — se alguém um dia puser uma grafia dialetal como resposta
+// de ditado ou de montar-frase, o check quebra.
+function checkMundart(): Violation[] {
+  const out: Violation[] = [];
+  const dialetais = new Set(mundartEntries.map((e) => e.mundart.toLowerCase()));
+
+  (["A0", "A1"] as const).forEach((modId) => {
+    const mod = MODULES[modId];
+    mod.topicsFor("pt").forEach((tp) => {
+      // sorteia várias rodadas porque os exercícios são gerados, não fixos
+      for (let r = 0; r < 6; r++) {
+        mod.exSpecsForTopic(tp.id, "pt", 20).forEach((spec) => {
+          if (spec.kind !== "typed" && spec.kind !== "dict" && spec.kind !== "order") return;
+          let alvo = "";
+          try {
+            const item = spec.gen() as { answer?: string | string[] };
+            alvo = Array.isArray(item.answer) ? item.answer.join(" ") : item.answer ?? "";
+          } catch { return; }
+          if (dialetais.has(alvo.toLowerCase())) {
+            out.push({ rule: "Mundart cobrado escrito", where: `${modId}/${tp.id} (${spec.kind})`, what: alvo });
+          }
+        });
+      }
+    });
+  });
+
+  if (mundartIndexSize() !== mundartEntries.length) {
+    out.push({ rule: "colisão no índice de Mundart", where: "mundart.ts", what: `${mundartEntries.length} entradas viraram ${mundartIndexSize()} chaves` });
+  }
+  return out;
+}
+
 /* ------------------------------------------------------------------ execução */
 
 export function runVocabChecks(): Violation[] {
-  return [...checkTaught(), ...checkNoEszett()];
+  return [...checkTaught(), ...checkNoEszett(), ...checkMundart()];
 }
 
 export function reportVocabChecks() {
