@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTheme } from "./theme";
 import { MODULES } from "./data/modules";
-import { LEVELS } from "./data/levels";
+import { LEVELS, isSection, isLevelUnlocked } from "./data/levels";
 import { fetchMastery, computeUnlockedMax } from "./lib/progression";
 import { TopicView } from "./components/TopicView";
 import { Mascot } from "./components/Mascot";
@@ -39,8 +39,13 @@ function AppContent() {
 
   const unlockedMax = computeUnlockedMax(profile?.starting_level ?? null, mastery);
 
-  const mod = MODULES[activeModule];
-  const topics = mod.topicsFor(lang);
+  // Isto TEM que vir antes de qualquer uso de MODULES[activeModule]: o tsconfig
+  // não liga noUncheckedIndexedAccess, então `MODULES[id]` é tipado como
+  // ModuleDef mesmo quando o id é de uma seção — e viraria TypeError em runtime
+  // na linha seguinte, sem uma palavra do compilador.
+  const secao = isSection(activeModule);
+  const mod = secao ? null : MODULES[activeModule];
+  const topics = mod ? mod.topicsFor(lang) : [];
 
   function reportResult(correct: number, wrong: number) {
     if (correct === 0 && wrong === 0) return;
@@ -73,14 +78,19 @@ function AppContent() {
         </section>
 
         <div className="levels">
-          {LEVELS.map((lv, i) => {
-            const unlocked = i <= unlockedMax;
+          {LEVELS.map((lv) => {
+            // nunca pelo índice do trilho: as seções ficam DEPOIS do C2 no
+            // array, e comparar índice as deixaria trancadas até o C1 — o
+            // oposto de "sempre abertas".
+            const unlocked = isLevelUnlocked(lv, unlockedMax);
             const clickable = lv.builtYet && unlocked;
-            const title = !lv.builtYet ? "em breve" : !unlocked ? "complete a Prova do módulo anterior com 96% pra desbloquear" : "";
+            const title = !lv.builtYet ? "em breve"
+              : lv.kind === "section" ? "sempre aberto, em qualquer nível"
+              : !unlocked ? "complete a Prova do módulo anterior com 96% pra desbloquear" : "";
             return (
-              <button key={lv.id} className={"lvl" + (lv.id === activeModule ? " active" : "") + (clickable ? "" : " locked")}
+              <button key={lv.id} className={"lvl" + (lv.kind === "section" ? " section" : "") + (lv.id === activeModule ? " active" : "") + (clickable ? "" : " locked")}
                 title={title} onClick={() => clickable && setActiveModule(lv.id)}>
-                <div className="bub">{lv.id}</div><span className="lab">{lv.id}</span><span className="sub">{lv.sub}</span>
+                <div className="bub">{lv.icon ?? lv.id}</div><span className="lab">{lv.icon ? lv.sub : lv.id}</span>{lv.icon ? null : <span className="sub">{lv.sub}</span>}
               </button>
             );
           })}
@@ -91,20 +101,25 @@ function AppContent() {
           {topics.map((tp) => (
             <button key={tp.id} onClick={() => jump("top-" + tp.id)}>{tp.icon} {tp.name}</button>
           ))}
-          <button className="exam" onClick={() => jump("prova")}>{t("nav_prova")}</button>
+          {mod && <button className="exam" onClick={() => jump("prova")}>{t("nav_prova")}</button>}
           <button className="note" onClick={() => jump("ranking")}>{t("nav_ranking")}</button>
         </div>
 
         <CadernoPanel />
 
-        <div className={"topics-wrap" + (frost ? " exam-blur" : "")}>
-          {topics.map((tp, i) => (
-            <TopicView key={mod.id + ":" + tp.id} id={tp.id} mod={mod} onResult={reportResult}
-              next={topics[i + 1] ? { id: topics[i + 1].id, label: topics[i + 1].icon + " " + topics[i + 1].name } : null} />
-          ))}
-        </div>
+        {/* É esta linha que entrega "seção não tem Prova": o <Prova> era
+            renderizado sempre, e uma seção fingindo de módulo mostraria
+            "Prova GEO — 0 pontos" com 100*0/0 = NaN. */}
+        {mod && (<>
+          <div className={"topics-wrap" + (frost ? " exam-blur" : "")}>
+            {topics.map((tp, i) => (
+              <TopicView key={mod.id + ":" + tp.id} id={tp.id} mod={mod} onResult={reportResult}
+                next={topics[i + 1] ? { id: topics[i + 1].id, label: topics[i + 1].icon + " " + topics[i + 1].name } : null} />
+            ))}
+          </div>
 
-        <Prova key={mod.id} mod={mod} onFrost={setFrost} onSaved={refreshMastery} />
+          <Prova key={mod.id} mod={mod} onFrost={setFrost} onSaved={refreshMastery} />
+        </>)}
 
         <Ranking />
 

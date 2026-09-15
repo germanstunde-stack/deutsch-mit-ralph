@@ -1,5 +1,5 @@
 import { supabase } from "./supabase";
-import { LEVELS, lastBuiltLevelId } from "../data/levels";
+import { COURSE_LEVELS, lastBuiltLevelId } from "../data/levels";
 
 const MASTERY_THRESHOLD = 0.96;
 
@@ -18,7 +18,8 @@ export async function fetchMastery(userId: string): Promise<Record<string, boole
   return mastery;
 }
 
-// Índice (em LEVELS) até onde o usuário pode acessar: começa no nível de
+// Índice (em COURSE_LEVELS, NÃO no trilho visível) até onde o usuário pode
+// acessar: começa no nível de
 // início escolhido no cadastro, e avança um por um enquanto cada módulo
 // estiver com >=96% na Prova. Pode sempre "descer" pra qualquer nível <=
 // esse índice — só não pode pular pra frente sem completar o anterior.
@@ -26,8 +27,8 @@ export function computeUnlockedMax(startingLevelId: string | null, mastery: Reco
   // perfis antigos (de antes dessa funcionalidade) não escolheram nível —
   // ficam com acesso total ao que já existe, em vez de trancados de volta no A0.
   const effectiveStart = startingLevelId ?? lastBuiltLevelId();
-  const startIdx = Math.max(0, LEVELS.findIndex((l) => l.id === effectiveStart));
+  const startIdx = Math.max(0, COURSE_LEVELS.findIndex((l) => l.id === effectiveStart));
   let idx = startIdx;
-  while (idx + 1 < LEVELS.length && mastery[LEVELS[idx].id]) idx++;
+  while (idx + 1 < COURSE_LEVELS.length && mastery[COURSE_LEVELS[idx].id]) idx++;
   return idx;
 }

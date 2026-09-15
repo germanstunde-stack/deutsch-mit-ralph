@@ -47,6 +47,10 @@ a{color:var(--brand-ink)}
 .lvl.active .bub{background:var(--brand);color:#fff;border-color:transparent}
 .lvl .lab{font-weight:800;font-size:.76rem;color:var(--ink)} .lvl .sub{display:block;font-weight:700;font-size:.62rem;color:var(--ink-soft)}
 .lvl.locked{opacity:.6}
+/* seções (Geografia, História) não são degrau de nível — borda tracejada pra
+   ler como "trilha paralela", e nunca ficam apagadas porque nunca trancam */
+.lvl.section .bub{border-style:dashed;font-size:1.4rem}
+.lvl.section.active .bub{border-style:solid}
 
 .index{display:flex;gap:7px;overflow-x:auto;padding:8px 2px;position:sticky;top:6px;z-index:30;background:linear-gradient(180deg,var(--bg2),transparent)}
 .index button{flex:0 0 auto;font-family:"Baloo 2",sans-serif;font-weight:700;font-size:.82rem;padding:7px 13px;border-radius:999px;border:2.5px solid var(--border);background:var(--surface);color:var(--ink);box-shadow:0 3px 0 var(--shadow);white-space:nowrap;cursor:pointer}

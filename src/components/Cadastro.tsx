@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { usePlayer } from "../auth/AuthProvider";
 import { Mascot } from "./Mascot";
-import { LEVELS } from "../data/levels";
+// COURSE_LEVELS, não LEVELS: uma seção (Geografia/História) escolhida como
+// nível inicial seria gravada em profiles.starting_level e depois não seria
+// achada por computeUnlockedMax, que devolveria índice 0 — o aluno voltaria
+// calado pro A0, e isso o seguiria entre aparelhos.
+import { COURSE_LEVELS } from "../data/levels";
 import { MODULES } from "../data/modules";
 
 function summaryFor(levelId: string): string[] | null {
@@ -44,7 +48,7 @@ export function Cadastro({ onDone }: { onDone: () => void }) {
         <label className="desc" style={{ display: "block", textAlign: "left", margin: "10px 4px 4px", fontWeight: 800 }}>Nível de início</label>
         <p className="desc" style={{ textAlign: "left", margin: "0 4px 8px" }}>Já sabe um pouco de alemão? Comece de onde fizer sentido — dá pra revisar os níveis anteriores a qualquer hora, mas só avança pros próximos completando a Prova de cada módulo com 96% de acerto.</p>
         <div className="levels">
-          {LEVELS.map((lv) => (
+          {COURSE_LEVELS.map((lv) => (
             <button key={lv.id} type="button" className={"lvl" + (level === lv.id ? " active" : "") + (lv.builtYet ? "" : " locked")}
               title={lv.builtYet ? "" : "em breve"} onClick={() => lv.builtYet && setLevel(lv.id)}>
               <div className="bub">{lv.id}</div><span className="lab">{lv.id}</span><span className="sub">{lv.sub}</span>
