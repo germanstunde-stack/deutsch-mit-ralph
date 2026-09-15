@@ -440,5 +440,12 @@ export const Exercise = forwardRef<ExamHandle, { spec: ExSpec; num: number; onRe
       case "enum": return <Enumerate ref={ref} data={data as EnumData} num={num} onResolve={onResolve} mode={mode} />;
       case "order": return <Order ref={ref} data={data as OrderData} num={num} onResolve={onResolve} mode={mode} />;
     }
+    // Sem isto, um `kind` novo sem case aqui não renderiza NADA — e, pior, na
+    // Prova o ref fica null e o item vale zero calado, sem erro nenhum. Fica
+    // depois do switch (e não como `default:`) pra todo case continuar
+    // retornando; o `never` transforma o esquecimento em erro de compilação,
+    // igual à guarda que o itemKey já tem.
+    const nunca: never = spec;
+    throw new Error(`Exercise: falta o case do exercício "${String((nunca as ExSpec).kind)}"`);
   }
 );

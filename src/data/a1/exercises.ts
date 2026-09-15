@@ -35,7 +35,16 @@ export const CH_DICIONARIO_VERBOS = "dicionario-verbos";
 // gramática nova, só reúne e treina a memorização de todos os verbos vistos).
 export const CHAPTER_IDS = [CH_EU_VOCE_SEIN, CH_VERBOS_HABEN, CH_IMPERATIVO, CH_PERFEKT, CH_MODAIS, CH_GENERO_PLURAL, CH_CASOS, CH_PRONOMES, CH_ARTIGOS, CH_PREPOSICOES, CH_PERGUNTAS, CH_DICIONARIO_VERBOS];
 
-function specsForChapter(id: string, lang: Lang): ExSpec[] {
+// `aud` = pra quem esta lista de exercícios é. A Prova é uma corrida de 50
+// itens, então um capítulo pode mandar pra lá só parte do que oferece na
+// prática (é o caso do capítulo de textos, cuja compreensão de passagem longa
+// quebraria o ritmo do exame). O default cobre os capítulos que não se importam,
+// então nenhum deles precisou mudar — e o braço "exam" falha FECHADO: só vai pro
+// exame o que alguém escreveu lá explicitamente.
+type SpecAudience = "practice" | "exam";
+
+function specsForChapter(id: string, lang: Lang, aud: SpecAudience = "practice"): ExSpec[] {
+  void aud; // ainda não há capítulo que diferencie — o de textos vai usar
   switch (id) {
     case CH_EU_VOCE_SEIN:
       return [
@@ -143,12 +152,30 @@ export function exSpecsForTopic(id: string, lang: Lang, count = 20): ExSpec[] {
   return shuffle(buildRound(specsForChapter(id, lang), count));
 }
 
+// Em que parte da Prova cada tipo de exercício cai. Antes eram três `filter`
+// soltos, e um tipo novo não casava com nenhum — sumia da Prova sem aviso.
+// `Record<ExSpec["kind"], …>` é exaustivo: tipo novo sem classificação não
+// compila. "off" = nunca entra em Prova (as seções de Geografia e História não
+// têm Prova, então os exercícios exclusivos delas ficam de fora por tipo).
+type Bucket = "mc" | "written" | "interactive" | "off";
+const BUCKET: Record<ExSpec["kind"], Bucket> = {
+  mc: "mc",
+  typed: "written",
+  dict: "written",
+  connect: "interactive",
+  ws: "interactive",
+  enum: "interactive",
+  order: "interactive",
+};
+
 // ---- Prova A1: mesmo formato 50 pts / 3 partes do A0 ----
 export function examSpecsFor(lang: Lang): ExSpec[] {
-  const all = CHAPTER_IDS.flatMap((id) => specsForChapter(id, lang));
-  const mc: ExSpec[] = all.filter((s) => s.kind === "mc");
-  const typedDict: ExSpec[] = all.filter((s) => s.kind === "typed" || s.kind === "dict");
-  const interactive: ExSpec[] = all.filter((s) => s.kind === "connect" || s.kind === "ws" || s.kind === "enum" || s.kind === "order");
+  // "exam" em vez de "practice": o capítulo que quiser mandar só parte dos seus
+  // exercícios pra Prova decide isso dentro dele mesmo (ver specsForChapter).
+  const all = CHAPTER_IDS.flatMap((id) => specsForChapter(id, lang, "exam"));
+  const mc: ExSpec[] = all.filter((s) => BUCKET[s.kind] === "mc");
+  const typedDict: ExSpec[] = all.filter((s) => BUCKET[s.kind] === "written");
+  const interactive: ExSpec[] = all.filter((s) => BUCKET[s.kind] === "interactive");
 
   const part1: ExSpec[] = shuffle(buildRound(shuffle(mc), 20));
   const pool2: ExSpec[] = typedDict.length ? typedDict : mc;
