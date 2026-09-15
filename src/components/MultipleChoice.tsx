@@ -34,6 +34,7 @@ export const MultipleChoice = forwardRef<ExamHandle, Props>(function MultipleCho
     }
   }
 
+  const say = mode === "exam" ? q.speak : q.speakFull ?? q.speak;
   const showAnswered = mode === "exam" ? revealed : answered;
   const showPicked = mode === "exam" ? examSel : picked;
   const numCls = resultOk === true ? " ok" : resultOk === false ? " no"
@@ -44,7 +45,12 @@ export const MultipleChoice = forwardRef<ExamHandle, Props>(function MultipleCho
       <p className="q">
         <span className={"num" + numCls}>{num}</span>
         <span className="txt" dangerouslySetInnerHTML={{ __html: q.promptHTML }} />
-        {q.speak && <button className="listen" onClick={() => speak(q.speak!)}>🔊 ouvir</button>}
+        {/* na prática o áudio pode dar a sequência inteira (ouvir "91, 92" é o
+            que ensina a contagem); na prova isso entregaria o gabarito, então lá
+            toca só o enunciado — mesma regra do "ouvir frase" do montar frase.
+            Quando só existe speakFull, o botão some na prova: é o caso de "como
+            se escreve 427 em alemão?", onde o único alemão possível é a resposta. */}
+        {say && <button className="listen" onClick={() => speak(say)}>🔊 ouvir</button>}
       </p>
       {q.meaning && <p className="meaning" dangerouslySetInnerHTML={{ __html: q.meaning }} />}
       <div className="opts">

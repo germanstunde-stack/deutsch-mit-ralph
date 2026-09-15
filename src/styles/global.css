@@ -76,8 +76,13 @@ a{color:var(--brand-ink)}
 .qcard .q .txt{font-size:.98rem} .qcard .q .big{font-family:"Baloo 2",sans-serif;font-size:1.2rem;color:var(--ink)}
 .qcard .meaning{color:var(--ink-soft);font-weight:700;font-size:.82rem;margin:3px 0 0}
 .listen{border:2px solid var(--border);background:var(--surface);color:var(--ink);font:inherit;font-weight:800;font-size:.76rem;border-radius:999px;padding:3px 10px;cursor:pointer;box-shadow:0 2px 0 var(--shadow);margin-left:auto}
-.opts{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));margin-top:10px}
-.opt{border:2.5px solid var(--border);background:var(--surface);color:var(--ink);font:inherit;font-weight:800;padding:10px 8px;border-radius:12px;cursor:pointer;box-shadow:0 4px 0 var(--shadow);transition:transform .06s}
+/* minmax(92px,1fr) dimensiona a faixa pelo espaço livre, nunca pelo conteúdo, e
+   .opt não quebrava palavra — então "vierhundertsiebenundzwanzig" (27 letras,
+   ~240px) transbordava de uma faixa de ~109px e o botão vizinho, opaco, pintava
+   por cima. min(100%,140px) deixa a faixa crescer e overflow-wrap quebra a
+   palavra, igual .card .de e .cbtn já faziam. */
+.opts{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));margin-top:10px}
+.opt{border:2.5px solid var(--border);background:var(--surface);color:var(--ink);font:inherit;font-weight:800;padding:10px 8px;border-radius:12px;cursor:pointer;box-shadow:0 4px 0 var(--shadow);transition:transform .06s;min-width:0;overflow-wrap:anywhere;hyphens:auto}
 .opt:active{transform:translateY(2px);box-shadow:0 1px 0 var(--shadow)} .opt.big{font-family:"Baloo 2",sans-serif;font-size:1.1rem} .opt.swatch{height:50px}
 .opt.correct{border-color:var(--good);background:color-mix(in srgb,var(--good) 22%, var(--surface))} .opt.correct:after{content:" ✓"}
 .opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 16%, var(--surface))}

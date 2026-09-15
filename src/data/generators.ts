@@ -2,7 +2,10 @@ import { animals, food, colors, greet, phrases, weekdays, months, opposites, mea
 import { numDE } from "../lib/numbers";
 
 export interface Option { label: string; correct: boolean; sw?: string; }
-export interface Question { key: string; promptHTML: string; speak?: string; meaning?: string; big?: boolean; options: Option[]; word?: string; wordpt?: string; }
+// speak = o alemão do enunciado. speakFull = versão mais completa tocada só na
+// prática (ex.: a sequência "einundneunzig, zweiundneunzig"), porque na prova
+// ela entregaria a resposta.
+export interface Question { key: string; promptHTML: string; speak?: string; speakFull?: string; meaning?: string; big?: boolean; options: Option[]; word?: string; wordpt?: string; }
 
 let uid = 0;
 export function shuffle<T>(a: T[]): T[] { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
@@ -127,13 +130,30 @@ function gNumberWrite(): Question {
   const n = numeroSorteado();
   const opts = outrosNumeros(n, 3).map((o) => ({ label: numDE(o), correct: false }));
   opts.push({ label: numDE(n), correct: true });
-  return q({ promptHTML: 'Como se escreve <span class="big">' + n + "</span> em alemão?", speak: numDE(n), options: opts, word: numDE(n), wordpt: String(n) });
+  // sem `speak`: aqui o enunciado é um algarismo, então o único alemão que o
+  // botão poderia falar é a própria resposta — só na prática.
+  return q({ promptHTML: 'Como se escreve <span class="big">' + n + "</span> em alemão?", speakFull: numDE(n), options: opts, word: numDE(n), wordpt: String(n) });
+}
+// os distratores têm que ser VIZINHOS da resposta: sorteando do intervalo
+// inteiro, "qual vem depois de quarenta?" chegava a oferecer
+// "vierhundertsiebenundzwanzig" — implausível e a palavra mais longa do app.
+function vizinhos(alvo: number, qtd: number): number[] {
+  const out = new Set<number>();
+  for (let d = 1; out.size < qtd && d < 12; d++) {
+    if (alvo - d > 0) out.add(alvo - d);
+    if (out.size < qtd) out.add(alvo + d);
+  }
+  return shuffle([...out]).slice(0, qtd);
 }
 function gNumberNext(): Question {
   const n = 1 + Math.floor(Math.random() * 98);
-  const opts = outrosNumeros(n + 1, 3).map((o) => ({ label: numDE(o), correct: false }));
+  const opts = vizinhos(n + 1, 3).map((o) => ({ label: numDE(o), correct: false }));
   opts.push({ label: numDE(n + 1), correct: true });
-  return q({ promptHTML: 'Qual vem depois de <span class="big">' + numDE(n) + "</span>?", meaning: String(n) + " → ?", speak: numDE(n), options: opts, word: numDE(n + 1), wordpt: String(n + 1) });
+  return q({
+    promptHTML: 'Qual vem depois de <span class="big">' + numDE(n) + "</span>?", meaning: String(n) + " → ?",
+    speak: numDE(n), speakFull: numDE(n) + ", " + numDE(n + 1),
+    options: opts, word: numDE(n + 1), wordpt: String(n + 1),
+  });
 }
 
 type Gen = () => Question;
